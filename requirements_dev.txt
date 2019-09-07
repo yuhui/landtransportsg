@@ -1,0 +1,9 @@
+-r requirements.txt
+codecov
+freezegun
+nox
+pylint
+pytest
+pytest-cov
+requests-mock
+twine
