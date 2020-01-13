@@ -168,6 +168,7 @@ def test_class_passenger_volume_function_with_BAD_DATE_STRs(
         'bus_routes',
         'bus_stops',
         'taxi_availability',
+        'taxi_stands',
     ],
 )
 def test_class_function(

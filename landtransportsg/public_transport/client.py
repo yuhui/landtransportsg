@@ -221,6 +221,20 @@ class Client(__Client):
 
         return taxi_availabilities
 
+    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
+    def taxi_stands(self):
+        """Get detailed information of Taxi stands, such as location and whether
+        is it barrier free.
+
+        Returns:
+            (list) Detailed information of taxi stands .
+        """
+        taxi_stands = self.send_request(
+            TAXI_STANDS_API_ENDPOINT,
+        )
+
+        return taxi_stands
+
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_HOUR))
     def train_service_alerts(self):
         """Get detailed information on train service unavailability during

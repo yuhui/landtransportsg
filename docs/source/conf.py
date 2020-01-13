@@ -34,7 +34,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 from landtransportsg import name, author, version
 
 project = name
-copyright = '2019, {}'.format(author)
+copyright = '2020, {}'.format(author)
 
 # The full version, including alpha/beta/rc tags
 release = version
