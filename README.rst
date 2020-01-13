@@ -32,6 +32,12 @@ Install the package using ``pip``::
 Using the package
 -----------------
 
+Pre-requisite:
+
+- API key from LTA. `Request for API access`_.
+
+.. _Request for API access: https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html
+
 The main steps are:
 
 1. Import a class.
@@ -47,8 +53,6 @@ Usage overview
 
 Interacting with `LTA DataMall`_'s API is done through one of three clients,
 where each client corresponds with a set of endpoints.
-
-.. _LTA DataMall: https://www.mytransport.sg/content/mytransport/home/dataMall.html
 
 The three clients are: ``ActiveMobility``, ``PublicTransport`` and ``Traffic``.
 

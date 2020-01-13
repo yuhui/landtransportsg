@@ -39,11 +39,19 @@ Install the package using ``pip``::
 Using the package
 -----------------
 
+Pre-requisite:
+
+- API key. `Request for API access`_.
+
+.. _Request for API access: https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html
+
 The main steps are:
 
 1. Import a class.
 2. Instantiate an object from the class.
 3. Call a function on that object.
+
+Refer to any of the modules' documentation for specific examples.
 
 Contents
 --------

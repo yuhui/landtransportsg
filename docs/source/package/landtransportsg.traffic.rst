@@ -9,7 +9,7 @@ Example usage:
 
     # get the list of available car park spaces
     from landtransportsg import Traffic
-    client = Traffic()
+    client = Traffic(API_KEY)
     patents = client.carpark_availability()
 
 Methods

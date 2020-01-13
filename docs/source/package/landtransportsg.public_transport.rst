@@ -9,7 +9,7 @@ Example usage:
 
     # get the bus arrival information at a bus stop
     from landtransportsg import PublicTransport
-    client = PublicTransport()
+    client = PublicTransport(API_KEY)
     bus_arrival = client.bus_arrival('83139')
 
 Methods
