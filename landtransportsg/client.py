@@ -144,7 +144,10 @@ class __Client(object):
         """
         response = self.session.get(url, params=params, headers=headers)
 
-        response_json = response.json()
+        try:
+            response_json = response.json()
+        except ValueError:
+            pass
 
         if response.status_code == requests.codes['server_error'] and \
             'fault' in response_json:
