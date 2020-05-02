@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2020 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name = 'landtransportsg'
-version = '1.2'
-author = 'Yuhui'
-author_email = 'yuhuibc@gmail.com'
-
-from .active_mobility import Client as ActiveMobility
-from .geospatial import Client as Geospatial
-from .public_transport import Client as PublicTransport
-from .traffic import Client as Traffic
-
-__all__ = [
-    'ActiveMobility',
-    'Geospatial',
-    'PublicTransport',
-    'Traffic',
-]
+from .client import Client

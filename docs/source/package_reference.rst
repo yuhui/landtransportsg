@@ -6,5 +6,6 @@ Package Reference
 
    package/landtransportsg
    package/landtransportsg.active_mobility
+   package/landtransportsg.geospatial
    package/landtransportsg.public_transport
    package/landtransportsg.traffic

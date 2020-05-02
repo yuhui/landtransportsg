@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.2
+---
+
+- Compatibility with DataMall API v5.1:
+  - Updates the Traffic Images duration validity
+  - Includes the Geospatial Whole Island dataset
+- Improved testing of PublicTransport client.
+
 1.1.1
 -----
 

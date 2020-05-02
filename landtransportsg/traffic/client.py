@@ -102,7 +102,7 @@ class Client(__Client):
 
         return road_works
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
+    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     def traffic_images(self):
         """Get links to images of live traffic conditions along expressways
         and Woodlands & Tuas Checkpoints.

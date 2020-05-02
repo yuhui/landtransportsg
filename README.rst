@@ -54,7 +54,8 @@ Usage overview
 Interacting with `LTA DataMall`_'s API is done through one of three clients,
 where each client corresponds with a set of endpoints.
 
-The three clients are: ``ActiveMobility``, ``PublicTransport`` and ``Traffic``.
+The four clients are: ``ActiveMobility``, ``Geospatial``, ``PublicTransport``
+and ``Traffic``.
 
 Each client contains several public functions, one function per endpoint. A
 function's name is the same as its corresponding endpoint's ending path.
