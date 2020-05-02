@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.2.1
+-----
+
+- Not an actual new version. (Original 1.2.0 version was deleted from PyPi wrongly, necessitating a new version.
+
 1.2
 ---
 
