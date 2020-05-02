@@ -282,11 +282,14 @@ class Client(__Client):
 
         passenger_volume = self.send_request(endpoint, Date=dt)
 
+        if not isinstance(passenger_volume, list):
+            raise APIError("Download link not returned.")
+
         if len(passenger_volume) is 0:
             raise APIError("Download link not returned.")
 
         passenger_volume_link = passenger_volume[0].get('Link')
-        if passenger_volume_link is None:
+        if not isinstance(passenger_volume_link, str):
             raise APIError("Download link not returned.")
 
         return passenger_volume_link
