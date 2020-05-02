@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2020 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,3 +28,38 @@ class APIResponseValueStr(object):
             ],
         }
 
+class APIResponseValueStrBadValue(object):
+    status_code = 200
+
+    @staticmethod
+    def json():
+        return {
+            'odata.metadata': 'http://datamall2.mytransport.sg/ltaodataservice/$metadata#ValueStr',
+            'value': {
+                'Link': 'https://ltafarecard.s3.ap-southeast-1.amazonaws.com/YYYYMM/something.zip',
+            },
+        }
+
+class APIResponseValueStrMissingLink(object):
+    status_code = 200
+
+    @staticmethod
+    def json():
+        return {
+            'odata.metadata': 'http://datamall2.mytransport.sg/ltaodataservice/$metadata#ValueStr',
+            'value': [],
+        }
+
+class APIResponseValueStrBadLink(object):
+    status_code = 200
+
+    @staticmethod
+    def json():
+        return {
+            'odata.metadata': 'http://datamall2.mytransport.sg/ltaodataservice/$metadata#ValueStr',
+            'value': [
+                {
+                    'Link': 12345,
+                },
+            ],
+        }

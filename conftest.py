@@ -16,7 +16,7 @@ import pytest
 from requests import Session
 
 from tests.mocks.api_response_value_list import APIResponseValueList
-from tests.mocks.api_response_value_str import APIResponseValueStr
+from tests.mocks.api_response_value_str import *
 
 @pytest.fixture
 def mock_requests_value_list_response(monkeypatch):
@@ -33,5 +33,32 @@ def mock_requests_value_str_response(monkeypatch):
 
     def mock_requests_get(*args, **kwargs):
         return APIResponseValueStr()
+
+    monkeypatch.setattr(Session, 'get', mock_requests_get)
+
+@pytest.fixture
+def mock_requests_value_str_bad_value_response(monkeypatch):
+    """Requests.get() mocked to return sample API response with bad 'value'."""
+
+    def mock_requests_get(*args, **kwargs):
+        return APIResponseValueStrBadValue()
+
+    monkeypatch.setattr(Session, 'get', mock_requests_get)
+
+@pytest.fixture
+def mock_requests_value_str_missing_link_response(monkeypatch):
+    """Requests.get() mocked to return sample API response with missing 'Link'."""
+
+    def mock_requests_get(*args, **kwargs):
+        return APIResponseValueStrMissingLink()
+
+    monkeypatch.setattr(Session, 'get', mock_requests_get)
+
+@pytest.fixture
+def mock_requests_value_str_bad_link_response(monkeypatch):
+    """Requests.get() mocked to return sample API response with bad 'Link'."""
+
+    def mock_requests_get(*args, **kwargs):
+        return APIResponseValueStrBadLink()
 
     monkeypatch.setattr(Session, 'get', mock_requests_get)

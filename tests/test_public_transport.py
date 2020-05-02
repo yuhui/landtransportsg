@@ -20,6 +20,7 @@ from requests import Session
 from requests.exceptions import HTTPError
 
 from landtransportsg import PublicTransport
+from landtransportsg.exceptions import APIError
 
 from . import TEST_ACCOUNT_KEY
 from .mocks.api_response_bus_arrival import APIResponseBusArrival
@@ -133,6 +134,72 @@ def test_class_passenger_volume_function(
     result = getattr(client, function)(dt)
 
     assert isinstance(result, str)
+
+@pytest.mark.parametrize(
+    ('function', 'dt'),
+    [
+        ('passenger_volume_by_bus_stops', None),
+        ('passenger_volume_by_origin_destination_bus_stops', None),
+        ('passenger_volume_by_origin_destination_train_stations', None),
+        ('passenger_volume_by_train_stations', None),
+        ('passenger_volume_by_bus_stops', GOOD_DATE),
+        ('passenger_volume_by_origin_destination_bus_stops', GOOD_DATE),
+        ('passenger_volume_by_origin_destination_train_stations', GOOD_DATE),
+        ('passenger_volume_by_train_stations', GOOD_DATE),
+    ],
+)
+def test_class_passenger_volume_function_with_bad_value(
+    client,
+    mock_requests_value_str_bad_value_response,
+    function,
+    dt,
+):
+    with pytest.raises(APIError):
+        _ = getattr(client, function)(dt)
+
+@pytest.mark.parametrize(
+    ('function', 'dt'),
+    [
+        ('passenger_volume_by_bus_stops', None),
+        ('passenger_volume_by_origin_destination_bus_stops', None),
+        ('passenger_volume_by_origin_destination_train_stations', None),
+        ('passenger_volume_by_train_stations', None),
+        ('passenger_volume_by_bus_stops', GOOD_DATE),
+        ('passenger_volume_by_origin_destination_bus_stops', GOOD_DATE),
+        ('passenger_volume_by_origin_destination_train_stations', GOOD_DATE),
+        ('passenger_volume_by_train_stations', GOOD_DATE),
+    ],
+)
+def test_class_passenger_volume_function_with_missing_link(
+    client,
+    mock_requests_value_str_missing_link_response,
+    function,
+    dt,
+):
+    with pytest.raises(APIError):
+        _ = getattr(client, function)(dt)
+
+@pytest.mark.parametrize(
+    ('function', 'dt'),
+    [
+        ('passenger_volume_by_bus_stops', None),
+        ('passenger_volume_by_origin_destination_bus_stops', None),
+        ('passenger_volume_by_origin_destination_train_stations', None),
+        ('passenger_volume_by_train_stations', None),
+        ('passenger_volume_by_bus_stops', GOOD_DATE),
+        ('passenger_volume_by_origin_destination_bus_stops', GOOD_DATE),
+        ('passenger_volume_by_origin_destination_train_stations', GOOD_DATE),
+        ('passenger_volume_by_train_stations', GOOD_DATE),
+    ],
+)
+def test_class_passenger_volume_function_with_bad_link(
+    client,
+    mock_requests_value_str_bad_link_response,
+    function,
+    dt,
+):
+    with pytest.raises(APIError):
+        _ = getattr(client, function)(dt)
 
 @pytest.mark.parametrize(
     ('function', 'dt'),
