@@ -97,6 +97,46 @@ def test_bus_arrival_with_bad_inputs(client, bus_stop_code, service_number):
     with pytest.raises(ValueError):
         _ = client.bus_arrival(bus_stop_code, service_number)
 
+@pytest.mark.parametrize(
+    'station_code',
+    [
+        'NS1', # 2 alphabets, 1 digit
+        'DT35', # 2 alphabets, 2 digits
+    ],
+)
+def test_facilities_maintenance(
+    client,
+    mock_requests_value_str_response,
+    station_code,
+):
+    facilities_maintenance_link = client.facilities_maintenance(station_code)
+
+    assert isinstance(facilities_maintenance_link, str)
+
+@pytest.mark.parametrize(
+    'station_code',
+    [
+        None, # unspecified station_code
+        True, # not a string
+        12, # not a string
+        '12', # no alphabets
+        'C12', # 1 alphabet
+        'CCL12', # more than 2 alphabets
+        'EW', # no digits
+        'EW456', # more than 2 digits
+    ],
+)
+def test_facilities_maintenance_with_bad_station_codes(client, station_code):
+    with pytest.raises(ValueError):
+        _ = client.facilities_maintenance(station_code)
+
+def test_facilities_maintenance_with_invalid_station_codes(client):
+    """This test calls the actual API endpoint so as to receive the network
+    error.
+    """
+    with pytest.raises(HTTPError):
+        _ = client.facilities_maintenance('XY23')
+
 def test_train_service_alerts(
     client,
     mock_requests_train_service_alerts_response,
