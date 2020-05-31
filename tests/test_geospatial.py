@@ -23,24 +23,12 @@ from landtransportsg import Geospatial
 from landtransportsg.exceptions import APIError
 
 from . import TEST_ACCOUNT_KEY
-from .mocks.api_response_geospatial_whole_island \
-    import APIResponseGeospatialWholeIsland
-
 # constants for testing valid geospatial_layer_id
 GOOD_GEOSPATIAL_LAYER_ID = 'ArrowMarking'
 
 # constants for testing bad geospatial_layer_id
 BAD_GEOSPATIAL_LAYER_ID = 'ArrowMarkings'
 
-@pytest.fixture
-def mock_requests_geospatial_whole_island_response(monkeypatch):
-    """Requests.Session().get() mocked to return sample GeospatialWholeIsland
-    API response.
-    """
-    def mock_requests_get(*args, **kwargs):
-        return APIResponseGeospatialWholeIsland()
-
-    monkeypatch.setattr(Session, 'get', mock_requests_get)
 
 @pytest.fixture
 def client():
@@ -48,16 +36,13 @@ def client():
 
 def test_geospatial_whole_island(
     client,
-    mock_requests_geospatial_whole_island_response,
+    mock_requests_value_str_response,
 ):
     geospatial_whole_island = client.geospatial_whole_island(
         GOOD_GEOSPATIAL_LAYER_ID,
     )
 
     assert isinstance(geospatial_whole_island, str)
-
-    geospatial_layer_zip_filename = '/{}.zip'.format(GOOD_GEOSPATIAL_LAYER_ID)
-    assert geospatial_layer_zip_filename in geospatial_whole_island
 
 @pytest.mark.parametrize(
     'geospatial_layer_id',
@@ -70,24 +55,3 @@ def test_geospatial_whole_island(
 def test_geospatial_whole_island_with_bad_inputs(client, geospatial_layer_id):
     with pytest.raises(ValueError):
         _ = client.geospatial_whole_island(geospatial_layer_id)
-
-def test_geospatial_whole_island_with_bad_value(
-    client,
-    mock_requests_value_str_bad_value_response,
-):
-    with pytest.raises(APIError):
-        _ = client.geospatial_whole_island(GOOD_GEOSPATIAL_LAYER_ID)
-
-def test_geospatial_whole_island_with_missing_link(
-    client,
-    mock_requests_value_str_missing_link_response,
-):
-    with pytest.raises(APIError):
-        _ = client.geospatial_whole_island(GOOD_GEOSPATIAL_LAYER_ID)
-
-def test_geospatial_whole_island_with_bad_link(
-    client,
-    mock_requests_value_str_bad_link_response,
-):
-    with pytest.raises(APIError):
-        _ = client.geospatial_whole_island(GOOD_GEOSPATIAL_LAYER_ID)

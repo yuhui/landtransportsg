@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2020 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -138,72 +138,6 @@ def test_class_passenger_volume_function(
 @pytest.mark.parametrize(
     ('function', 'dt'),
     [
-        ('passenger_volume_by_bus_stops', None),
-        ('passenger_volume_by_origin_destination_bus_stops', None),
-        ('passenger_volume_by_origin_destination_train_stations', None),
-        ('passenger_volume_by_train_stations', None),
-        ('passenger_volume_by_bus_stops', GOOD_DATE),
-        ('passenger_volume_by_origin_destination_bus_stops', GOOD_DATE),
-        ('passenger_volume_by_origin_destination_train_stations', GOOD_DATE),
-        ('passenger_volume_by_train_stations', GOOD_DATE),
-    ],
-)
-def test_class_passenger_volume_function_with_bad_value(
-    client,
-    mock_requests_value_str_bad_value_response,
-    function,
-    dt,
-):
-    with pytest.raises(APIError):
-        _ = getattr(client, function)(dt)
-
-@pytest.mark.parametrize(
-    ('function', 'dt'),
-    [
-        ('passenger_volume_by_bus_stops', None),
-        ('passenger_volume_by_origin_destination_bus_stops', None),
-        ('passenger_volume_by_origin_destination_train_stations', None),
-        ('passenger_volume_by_train_stations', None),
-        ('passenger_volume_by_bus_stops', GOOD_DATE),
-        ('passenger_volume_by_origin_destination_bus_stops', GOOD_DATE),
-        ('passenger_volume_by_origin_destination_train_stations', GOOD_DATE),
-        ('passenger_volume_by_train_stations', GOOD_DATE),
-    ],
-)
-def test_class_passenger_volume_function_with_missing_link(
-    client,
-    mock_requests_value_str_missing_link_response,
-    function,
-    dt,
-):
-    with pytest.raises(APIError):
-        _ = getattr(client, function)(dt)
-
-@pytest.mark.parametrize(
-    ('function', 'dt'),
-    [
-        ('passenger_volume_by_bus_stops', None),
-        ('passenger_volume_by_origin_destination_bus_stops', None),
-        ('passenger_volume_by_origin_destination_train_stations', None),
-        ('passenger_volume_by_train_stations', None),
-        ('passenger_volume_by_bus_stops', GOOD_DATE),
-        ('passenger_volume_by_origin_destination_bus_stops', GOOD_DATE),
-        ('passenger_volume_by_origin_destination_train_stations', GOOD_DATE),
-        ('passenger_volume_by_train_stations', GOOD_DATE),
-    ],
-)
-def test_class_passenger_volume_function_with_bad_link(
-    client,
-    mock_requests_value_str_bad_link_response,
-    function,
-    dt,
-):
-    with pytest.raises(APIError):
-        _ = getattr(client, function)(dt)
-
-@pytest.mark.parametrize(
-    ('function', 'dt'),
-    [
         ('passenger_volume_by_bus_stops', BAD_DATE_STR),
         ('passenger_volume_by_origin_destination_bus_stops', BAD_DATE_STR),
         (
@@ -246,7 +180,3 @@ def test_class_function(
     result = getattr(client, function)()
 
     assert isinstance(result, list)
-    assert len(result) >= 0
-
-    for v in result:
-        assert isinstance(v, dict)

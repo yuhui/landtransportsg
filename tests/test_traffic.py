@@ -44,12 +44,11 @@ def test_class_function(client, mock_requests_value_list_response, function):
     result = getattr(client, function)()
 
     assert isinstance(result, list)
-    assert len(result) >= 0
-
-    for v in result:
-        assert isinstance(v, dict)
 
 def test_class_function_with_more_than_five_hundred_records(client):
+    """This test calls the actual API endpoint so as to be able to receive more
+    than 500 entries.
+    """
     result = client.erp_rates()
 
     assert isinstance(result, list)

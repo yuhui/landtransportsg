@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2020 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -86,6 +86,10 @@ def test_send_request_with_list_response(
 ):
     response_content = client.send_request(url, **kwargs)
     assert isinstance(response_content, list)
+    assert len(response_content) >= 0
+
+    for v in response_content:
+        assert isinstance(v, dict)
 
 @pytest.mark.parametrize(
     ('url', 'kwargs'),
@@ -141,3 +145,33 @@ def test_send_request_with_fault_response(
         send_fault_request()
 
     assert 'Rate limit quota violation' in str(excinfo.value)
+
+def test_send_download_request_with_bad_value(
+    client,
+    mock_requests_value_str_bad_value_response,
+):
+    with pytest.raises(APIError):
+        _ = client.send_download_request(
+            'http://datamall2.mytransport.sg/ltaodataservice/GeospatialWholeIsland',
+            ID='ArrowMarking',
+        )
+
+def test_send_download_request_with_missing_link(
+    client,
+    mock_requests_value_str_missing_link_response,
+):
+    with pytest.raises(APIError):
+        _ = client.send_download_request(
+            'http://datamall2.mytransport.sg/ltaodataservice/GeospatialWholeIsland',
+            ID='ArrowMarking',
+        )
+
+def test_send_download_request_with_bad_link(
+    client,
+    mock_requests_value_str_bad_link_response,
+):
+    with pytest.raises(APIError):
+        _ = client.send_download_request(
+            'http://datamall2.mytransport.sg/ltaodataservice/GeospatialWholeIsland',
+            ID='ArrowMarking',
+        )
