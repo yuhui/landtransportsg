@@ -24,8 +24,7 @@ GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT = '{}/GeospatialWholeIsland'.format(
     BASE_API_ENDPOINT,
 )
 
-#: testing autodata
-GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = [
+GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = (
     'ArrowMarking',
     'Bollard',
     'BusStopLocation',
@@ -63,4 +62,4 @@ GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = [
     'TrainStationExit',
     'VehicularBridge_Flyover_Underpass',
     'WordMarking',
-]
+)

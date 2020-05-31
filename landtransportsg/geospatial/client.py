@@ -35,13 +35,21 @@ class Client(__Client):
         """Get the SHP files of the requested geospatial layer.
 
         Arguments:
-            id (str):
+            geospatial_layer_id (str):
                 Name of geospatial layer.
                 Refer to the GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS constant for the
                 list of valid names.
 
         Returns:
             (str) Link for downloading the requested SHP file.
+
+        Raises:
+            ValueError
+                Raised if geospatial_layer_id is not specified.
+            ValueError
+                Raised if geospatial_layer_id is not a string.
+            ValueError:
+                Raised if geospatial_layer_id is not a valid ID.
         """
         if geospatial_layer_id is None:
             raise ValueError(
@@ -62,7 +70,7 @@ class Client(__Client):
 
         geospatial_whole_island_link = self.send_download_request(
             GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,
-            id = geospatial_layer_id,
+            ID=geospatial_layer_id,
         )
 
         return geospatial_whole_island_link

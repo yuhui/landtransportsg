@@ -23,12 +23,6 @@ from landtransportsg import Geospatial
 from landtransportsg.exceptions import APIError
 
 from . import TEST_ACCOUNT_KEY
-# constants for testing valid geospatial_layer_id
-GOOD_GEOSPATIAL_LAYER_ID = 'ArrowMarking'
-
-# constants for testing bad geospatial_layer_id
-BAD_GEOSPATIAL_LAYER_ID = 'ArrowMarkings'
-
 
 @pytest.fixture
 def client():
@@ -39,7 +33,7 @@ def test_geospatial_whole_island(
     mock_requests_value_str_response,
 ):
     geospatial_whole_island = client.geospatial_whole_island(
-        GOOD_GEOSPATIAL_LAYER_ID,
+        'ArrowMarking',
     )
 
     assert isinstance(geospatial_whole_island, str)
@@ -47,9 +41,9 @@ def test_geospatial_whole_island(
 @pytest.mark.parametrize(
     'geospatial_layer_id',
     [
-        None,
-        12345,
-        BAD_GEOSPATIAL_LAYER_ID,
+        None, # unspecified ID
+        12345, # non-string ID
+        'ArrowMarkings', # invalid ID
     ],
 )
 def test_geospatial_whole_island_with_bad_inputs(client, geospatial_layer_id):
