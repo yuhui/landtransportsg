@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name = 'landtransportsg'
-version = '1.3'
+version = '1.3.0'
 author = 'Yuhui'
 author_email = 'yuhuibc@gmail.com'
 
