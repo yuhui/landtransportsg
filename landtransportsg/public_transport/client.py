@@ -280,16 +280,6 @@ class Client(__Client):
 
         self.validate_kwargs(Date=dt)
 
-        passenger_volume = self.send_request(endpoint, Date=dt)
-
-        if not isinstance(passenger_volume, list):
-            raise APIError("Download link not returned.")
-
-        if len(passenger_volume) is 0:
-            raise APIError("Download link not returned.")
-
-        passenger_volume_link = passenger_volume[0].get('Link')
-        if not isinstance(passenger_volume_link, str):
-            raise APIError("Download link not returned.")
+        passenger_volume_link = self.send_download_request(endpoint, Date=dt)
 
         return passenger_volume_link

@@ -60,19 +60,9 @@ class Client(__Client):
                 ),
             )
 
-        geospatial_whole_island = self.send_request(
+        geospatial_whole_island_link = self.send_download_request(
             GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,
             id = geospatial_layer_id,
         )
-
-        if not isinstance(geospatial_whole_island, list):
-            raise APIError("Download link not returned.")
-
-        if len(geospatial_whole_island) is 0:
-            raise APIError("Download link not returned.")
-
-        geospatial_whole_island_link = geospatial_whole_island[0].get('Link')
-        if not isinstance(geospatial_whole_island_link, str):
-            raise APIError("Download link not returned.")
 
         return geospatial_whole_island_link

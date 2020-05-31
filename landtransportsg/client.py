@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2020 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -60,6 +60,45 @@ class __Client(object):
             if v is not None:
                 if k is 'Date' and not isinstance(v, date):
                     raise ValueError('"Date" value is not a date object.')
+
+    def send_download_request(self, url, **kwargs):
+        """Send a request to an endpoint that expects a response with a
+        download link.
+
+        Arguments:
+            url (str):
+                The endpoint URL to send the request to.
+            kwargs (dict):
+                (optional) Attribute-value arguments to be passed as parameters
+                to the endpoint URL.
+                If an attribute is date-related, then its value is expected to
+                be of `date` instance and will be standardised to the format
+                required by the endpoint.
+
+        Returns:
+            (str) Link for downloading the requested file.
+
+        Raises:
+            APIError:
+                Raised if the API responds with an unexpected response.
+        """
+        download = self.send_request(url, **kwargs)
+
+        if not isinstance(download, list):
+            raise APIError(
+                "Download link not returned unexpectedly.",
+            )
+
+        if len(download) is 0:
+            raise APIError("No download link returned.")
+
+        download_link = download[0].get('Link')
+        if not isinstance(download_link, str):
+            raise APIError(
+                "Download link not returned, got a non-string unexpectedly.",
+            )
+
+        return download_link
 
     def send_request(self, url, **kwargs):
         """Send a request to an endpoint.
