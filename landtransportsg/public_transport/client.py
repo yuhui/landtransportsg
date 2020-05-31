@@ -14,6 +14,7 @@
 
 """Client for interacting with the Public Transport API endpoints."""
 
+import re
 from cachetools import cached, TTLCache
 
 import landtransportsg.timezone as timezone
@@ -113,6 +114,45 @@ class Client(__Client):
         bus_stops = self.send_request(BUS_STOPS_API_ENDPOINT)
 
         return bus_stops
+
+    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
+    def facilities_maintenance(self, station_code):
+        """Get the pre-signed links to JSON file containing facilities
+        maintenance schedules of the particular station.
+
+        Arguments:
+            station_code (str):
+                Station Code of train station.
+                Refer to the STATION_CODES_REGEX_PATTERN constant for the
+                expected regex pattern that this code has to match.
+
+        Returns:
+            (str) Link for downloading the requested JSON file.
+
+        Raises:
+            ValueError
+                Raised if station_code is not specified.
+            ValueError
+                Raised if station_code is not a string.
+            ValueError:
+                Raised if station_code does not match the expected regex
+                pattern.
+        """
+        if station_code is None:
+            raise ValueError('Missing station_code.')
+
+        if not isinstance(station_code, str):
+            raise ValueError('station_code is not a string.')
+
+        if not re.search(STATION_CODES_REGEX_PATTERN, station_code):
+            raise ValueError('station_code is invalid.')
+
+        facilities_maintenance_link = self.send_download_request(
+            FACILITIES_MAINTENANCE_API_ENDPOINT,
+            StationCode=station_code,
+        )
+
+        return facilities_maintenance_link
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
     def passenger_volume_by_bus_stops(self, dt=None):

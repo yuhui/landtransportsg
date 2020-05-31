@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.3
+---
+
+- Compatibility with DataMall API v5.2:
+  - Includes the Facilities Maintenance dataset
+- Refactored handling responses that return a downloadable link.
+- Updated tests to use mocked responses as much as possible.
+
 1.2.1
 -----
 

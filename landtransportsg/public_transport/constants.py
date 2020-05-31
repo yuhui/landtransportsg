@@ -18,6 +18,7 @@ from ..constants import (
     BASE_API_ENDPOINT,
     CACHE_MAXSIZE,
     CACHE_ONE_MINUTE,
+    CACHE_FIVE_MINUTES,
     CACHE_ONE_HOUR,
     CACHE_ONE_DAY,
     CACHE_ONE_MONTH,
@@ -27,6 +28,9 @@ BUS_ARRIVAL_API_ENDPOINT = '{}/BusArrivalv2'.format(BASE_API_ENDPOINT)
 BUS_SERVICES_API_ENDPOINT = '{}/BusServices'.format(BASE_API_ENDPOINT)
 BUS_ROUTES_API_ENDPOINT = '{}/BusRoutes'.format(BASE_API_ENDPOINT)
 BUS_STOPS_API_ENDPOINT = '{}/BusStops'.format(BASE_API_ENDPOINT)
+FACILITIES_MAINTENANCE_API_ENDPOINT = '{}/FacilitiesMaintenance'.format(
+    BASE_API_ENDPOINT,
+)
 PASSENGER_VOLUME_BY_BUS_STOPS_API_ENDPOINT = '{}/PV/Bus'.format(
     BASE_API_ENDPOINT,
 )
@@ -46,3 +50,9 @@ TAXI_STANDS_API_ENDPOINT = '{}/TaxiStands'.format(
 TRAIN_SERVICE_ALERTS_API_ENDPOINT = '{}/TrainServiceAlerts'.format(
     BASE_API_ENDPOINT,
 )
+
+"""
+All MRT station codes start with 2 uppercase letters, then 1-2 digits.
+E.g. NS1, DT35.
+"""
+STATION_CODES_REGEX_PATTERN = r"^[A-Z]{2}[0-9]{1,2}$"
