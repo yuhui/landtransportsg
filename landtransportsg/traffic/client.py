@@ -14,6 +14,7 @@
 
 """Client for interacting with the Traffic API endpoints."""
 
+from warnings import warn
 
 from cachetools import cached, TTLCache
 from typeguard import typechecked
@@ -76,13 +77,26 @@ class Client(Lta):
         return carpark_availability
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
-    def erp_rates(self):
-        """Get ERP rates of all vehicle types across all timings for each zone.
+    @typechecked
+    def erp_rates(self) -> list[None]:
+        """Get ERP rates of all vehicle types across all timings for each \
+        zone.
 
-        Returns:
-            (list) ERP rates per vehicle type by zones.
+        This endpoint was removed from DataMall v6.1 on 30 September 2024. \
+        This method will be removed in this package's next major release.
+
+        :warns DeprecationWarning: Inform the developer that this method has
+            been deprecated.
+
+        :return: ERP rates per vehicle type by zones. Empty list.
+        :rtype: list[None]
         """
-        erp_rates = self.send_request(ERP_RATES_API_ENDPOINT)
+        warn(
+            'ERP rates was removed from LTA DataMall v6.1 on 30 September 2024.',
+            DeprecationWarning
+        )
+
+        erp_rates: list[None] = []
 
         return erp_rates
 
