@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime
 
 from .active_mobility import Client as ActiveMobility
 from .geospatial import Client as Geospatial
@@ -20,6 +21,7 @@ from .traffic import Client as Traffic
 
 NAME = 'landtransportsg'
 VERSION = '2.0.0' # Production
+VERSION = f'{VERSION}.{datetime.now().strftime("%Y%m%d%H%M")}' # Development
 AUTHOR = 'Yuhui'
 AUTHOR_EMAIL = 'yuhuibc@gmail.com'
 
@@ -29,3 +31,4 @@ __all__ = [
     'PublicTransport',
     'Traffic',
 ]
+__version__ = VERSION
