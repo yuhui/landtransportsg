@@ -32,7 +32,8 @@ def datetime_as_sgt(dt: datetime) -> datetime:
             Raised if `dt` is not of datetime class.
     """
 
-    return dt.astimezone(pytimezone('Asia/Singapore'))
+    dt_sg: datetime = dt.astimezone(pytimezone('Asia/Singapore'))
+    return dt_sg
 
 @typechecked
 def datetime_from_string(val: str) -> datetime | date:
@@ -50,16 +51,19 @@ def datetime_from_string(val: str) -> datetime | date:
 
     try:
         dt = datetime.strptime(val, dt_format)
-    except:
+    except ValueError:
         # next, try parsing without timezone
         dt_format = f'{dt_format} %H:%M:%S'
         try:
             dt = datetime.strptime(val, dt_format)
-        except:
+        except ValueError:
             # last, try parsing with timezone
             dt_format = f'{dt_format}%z'
-            dt = datetime.strptime(val, dt_format)
-    # if still getting an error, then this isn't a datetime string
+            try:
+                dt = datetime.strptime(val, dt_format)
+            except ValueError as e:
+                # still getting an error, so this isn't a datetime string
+                raise ValueError('val is not a datetime string') from e
 
     dt = datetime_as_sgt(dt)
 
@@ -104,6 +108,7 @@ def date_is_within_last_three_months(
     if not isinstance(cutoff_day, int):
         raise ValueError('cutoff_day is not an integer.')
     # this will raise a ValueError if cutoff_day is not a valid calendar day.
+    # raise a ValueError if cutoff_day is not a valid calendar day
     try:
         _ = date(2019, 1, cutoff_day)
     except ValueError as e:
@@ -116,8 +121,8 @@ def date_is_within_last_three_months(
     today_month = today.month
     today_day = today.day
 
-    three_months_ago_year = today_year
     # assume that today is on or after the cutoff day
+    three_months_ago_year = today_year
     three_months_ago_month = today_month - 3
     if today_day < cutoff_day:
         # today is before the cutoff day, get one more earlier month
@@ -127,6 +132,14 @@ def date_is_within_last_three_months(
         three_months_ago_month += 12
         three_months_ago_year -= 1
 
+    three_months_ago_day = 1 # first day of the month
+
+    three_months_ago_date = date(
+        three_months_ago_year,
+        three_months_ago_month,
+        three_months_ago_day,
+    )
+
     one_month_ago_year = three_months_ago_year
     one_month_ago_month = three_months_ago_month + 2
     if one_month_ago_month > 12:
@@ -134,25 +147,26 @@ def date_is_within_last_three_months(
         one_month_ago_month -= 12
         one_month_ago_year += 1
 
-    three_months_ago_day = 1 # first day of the month
-    three_months_ago_date = date(
-        three_months_ago_year,
-        three_months_ago_month,
-        three_months_ago_day,
-    )
     one_month_ago_day = 31 # last day of the month
     if one_month_ago_month == 2:
         one_month_ago_day = 29 if one_month_ago_year % 4 == 0 else 28
     elif one_month_ago_month in [4, 6, 9, 11]:
         one_month_ago_day = 30
+
     one_month_ago_date = date(
         one_month_ago_year,
         one_month_ago_month,
         one_month_ago_day,
     )
 
-    result = check_date >= three_months_ago_date and \
-        check_date <= one_month_ago_date
+    check_date_more_than_three_months_ago = check_date \
+        >= three_months_ago_date
+    check_date_less_than_one_month_ago = check_date \
+        <= one_month_ago_date
+
+    result = check_date_more_than_three_months_ago and \
+        check_date_less_than_one_month_ago
+
     return result
 
 __all__ = [
