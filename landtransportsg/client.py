@@ -14,10 +14,11 @@
 
 """Mixin for Clients that interact with LTA DataMall's APIs."""
 
+import time
+from datetime import date
+
 import backoff
 import requests
-import time
-from datetime import date, datetime
 from requests import Session
 
 from . import timezone

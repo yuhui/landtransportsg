@@ -16,7 +16,6 @@
 
 from cachetools import cached, TTLCache
 
-from ..exceptions import APIError
 from ..client import Lta
 from ..constants import CACHE_MAXSIZE, CACHE_FIVE_MINUTES
 

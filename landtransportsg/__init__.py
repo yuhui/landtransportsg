@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name = 'landtransportsg'
-version = '1.3.0'
-author = 'Yuhui'
-author_email = 'yuhuibc@gmail.com'
 
 from .active_mobility import Client as ActiveMobility
 from .geospatial import Client as Geospatial
 from .public_transport import Client as PublicTransport
 from .traffic import Client as Traffic
+
+NAME = 'landtransportsg'
+VERSION = '2.0.0' # Production
+AUTHOR = 'Yuhui'
+AUTHOR_EMAIL = 'yuhuibc@gmail.com'
 
 __all__ = [
     'ActiveMobility',

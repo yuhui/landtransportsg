@@ -15,10 +15,11 @@
 """Client for interacting with the Public Transport API endpoints."""
 
 import re
-from cachetools import cached, TTLCache
+from datetime import date
+from typing import Optional
 
-import landtransportsg.timezone as timezone
-from ..exceptions import APIError
+from cachetools import cached, TTLCache
+from typeguard import typechecked
 
 from ..client import Lta
 from ..constants import (

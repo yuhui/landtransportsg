@@ -15,7 +15,6 @@
 """Client for interacting with the Active Mobility API endpoints."""
 
 from cachetools import cached, TTLCache
-from datetime import date, datetime
 
 from ..client import Lta
 from ..constants import CACHE_MAXSIZE, CACHE_ONE_DAY

@@ -14,8 +14,8 @@
 
 """Client for interacting with the Traffic API endpoints."""
 
-from cachetools import cached, TTLCache
 
+from cachetools import cached, TTLCache
 
 from ..client import Lta
 from ..constants import (

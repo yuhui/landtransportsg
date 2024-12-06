@@ -14,7 +14,8 @@
 
 """Standardise all datetime-related timezones to SGT (Singapore Time)."""
 
-from datetime import date, datetime, timedelta, tzinfo
+from datetime import date, datetime, timedelta
+
 from pytz import timezone as pytimezone
 
 # constants for testing dates as date objects
