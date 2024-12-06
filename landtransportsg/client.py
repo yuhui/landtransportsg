@@ -126,14 +126,9 @@ class Lta:
             else:
                 params[attribute] = value
 
-        response_json = self.__send_request(url, params=params)
+        response = self.__send_request(url, params=params)
 
-        response_content = self.__sanitise_timestamps(response_json)
-        if 'value' in response_content:
-            # the real data is in key 'value', so return that instead
-            response_content = response_content['value']
-
-        return response_content
+        return response
 
     # private
 
@@ -180,8 +175,14 @@ class Lta:
             APIError:
                 Raised if the API responds with an error.
         """
-        response = self.session.get(url, params=params, headers=headers)
 
+        response = self.session.get(
+            url,
+            params=params,
+            headers=headers,
+        )
+
+        response_json = {}
         try:
             response_json = response.json()
         except ValueError:
@@ -199,15 +200,20 @@ class Lta:
                 faultstring,
                 errors=faultdetail,
             )
-        elif response.status_code != requests.codes['ok']:
+
+        if response.status_code != requests.codes['ok']:
             response.raise_for_status()
 
         # it is possible to paginate "forever" by skipping by 500 records
         # so check if there are any records in the current results first
-        response_json_value = response_json.get('value')
-        if isinstance(response_json_value, list) and \
-            len(response_json_value) == 500:
+        response_value = response_json.get('value') \
+            if 'value' in response_json else response_json
+        if isinstance(response_value, list) and len(response_value) == 500:
             # get the next page of results
+            if params is None:
+                params = {
+                    '$skip': 0
+                }
             current_skip = params.pop('$skip', 0)
             skip = current_skip + 500
             params['$skip'] = skip
@@ -216,14 +222,17 @@ class Lta:
             if skip % 1000 == 0:
                 time.sleep(1)
 
-            next_response_json = self.__send_request(
+            next_response_value = self.__send_request(
                 url,
                 params,
                 headers,
             )
-            response_json['value'] += next_response_json['value']
+            # next_response_value should be a list too
+            response_value += next_response_value
 
-        return response_json
+        response_value = self.__sanitise_data(response_value)
+
+        return response_value
 
 __all__ = [
     'Lta',
