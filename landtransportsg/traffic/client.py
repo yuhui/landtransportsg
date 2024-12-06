@@ -59,9 +59,6 @@ class Client(Lta):
         https://www.mytransport.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
-    def __init(self, account_key):
-        super(Client, self).__init__(account_key)
-
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
     @typechecked
     def carpark_availability(self) -> list[CarParkAvailabilityDict | dict]:
