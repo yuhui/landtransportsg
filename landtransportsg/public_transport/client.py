@@ -310,6 +310,110 @@ class Client(Lta):
 
         return passenger_volume_link
 
+    @typechecked
+    def train_lines(self) -> tuple[str, ...]:
+        """Return the tuple of valid train lines.
+
+        :return: Tuple of valid train lines.
+        :rtype: tuple[str, ...]
+        """
+        train_lines: tuple[str, ...]
+
+        train_lines = TRAIN_LINES
+
+        return train_lines
+
+    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_TEN_MINUTES))
+    @typechecked
+    def platform_crowd_density_real_time(
+        self,
+        train_line: str
+    ) -> list[PlatformCrowdDensityRealTimeDict]:
+        """Get real-time platform crowdedness level for the MRT/LRT stations \
+        of a particular train network line. Refer to the TRAIN_LINES \
+        constant for the list of valid train network lines.
+
+        :param train_line: Code of train network line.
+        :type train_line: str
+
+        :raises ValueError: train_line is not specified.
+        :raises ValueError: train_line is not a valid train network line.
+
+        :return: Platform crowdedness level of the specified train network \
+            line.
+        :rtype: list[PlatformCrowdDensityRealTimeDict]
+        """
+        if train_line is None:
+            raise ValueError(
+                f'Missing argument "train_line". Allowed train lines: {
+                    ', '.join(TRAIN_LINES),
+                }',
+            )
+
+        if train_line not in TRAIN_LINES:
+            raise ValueError(
+                f'Invalid argument "train_line". Allowed train lines: {
+                    ', '.join(TRAIN_LINES),
+                }',
+            )
+
+        platform_crowd_density_real_time: list[
+            PlatformCrowdDensityRealTimeDict
+        ]
+
+        platform_crowd_density_real_time = self.send_request(
+            PLATFORM_CROWD_DENSITY_REAL_TIME_API_ENDPOINT,
+            TrainLine=train_line,
+        )
+
+        return platform_crowd_density_real_time
+
+    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
+    @typechecked
+    def platform_crowd_density_forecast(
+        self,
+        train_line: str
+    ) -> list[PlatformCrowdDensityForecastDict]:
+        """Get forecasted platform crowdedness level for the MRT/LRT \
+        stations of a particular train network line at 30 minutes interval. \
+        Refer to the TRAIN_LINES constant for the list of valid train \
+        network lines.
+
+        :param train_line: Code of train network line.
+        :type train_line: str
+
+        :raises ValueError: train_line is not specified.
+        :raises ValueError: train_line is not a valid train network line.
+
+        :return: Forecasted platform crowdedness level of the specified \
+            train network line.
+        :rtype: list[PlatformCrowdDensityForecastDict]
+        """
+        if train_line is None:
+            raise ValueError(
+                f'Missing argument "train_line". Allowed train lines: {
+                    ', '.join(TRAIN_LINES),
+                }',
+            )
+
+        if train_line not in TRAIN_LINES:
+            raise ValueError(
+                f'Invalid argument "train_line". Allowed train lines: {
+                    ', '.join(TRAIN_LINES),
+                }',
+            )
+
+        platform_crowd_density_forecast: list[
+            PlatformCrowdDensityForecastDict
+        ]
+
+        platform_crowd_density_forecast = self.send_request(
+            PLATFORM_CROWD_DENSITY_FORECASE_API_ENDPOINT,
+            TrainLine=train_line,
+        )
+
+        return platform_crowd_density_forecast
+
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
     @typechecked
     def taxi_availability(self) -> list[TaxiAvailabilityDict | dict]:
