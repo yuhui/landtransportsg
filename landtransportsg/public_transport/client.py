@@ -31,6 +31,7 @@ from ..constants import (
     CACHE_ONE_DAY,
     CACHE_ONE_MONTH,
 )
+from ..types import Url
 
 from .constants import (
     BUS_ARRIVAL_API_ENDPOINT,
@@ -51,6 +52,18 @@ from .constants import (
     STATION_CODES_REGEX_PATTERN,
     TRAIN_LINES,
 )
+from .types import (
+    BusArrivalDict,
+    BusServicesDict,
+    BusRoutesDict,
+    BusStopsDict,
+    PlatformCrowdDensityRealTimeDict,
+    PlatformCrowdDensityForecastDict,
+    TaxiAvailabilityDict,
+    TaxiStandsDict,
+    TrainServiceAlertsDict,
+)
+
 class Client(Lta):
     """Interact with the public transport-related endpoints.
 
@@ -62,7 +75,12 @@ class Client(Lta):
         super(Client, self).__init__(account_key)
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
-    def bus_arrival(self, bus_stop_code, service_number=None):
+    @typechecked
+    def bus_arrival(
+        self,
+        bus_stop_code: str,
+        service_number: Optional[str]=None,
+    ) -> BusArrivalDict | dict:
         """Get real-time Bus Arrival information of Bus Services at a queried
         Bus Stop, including Est. Arrival Time, Est. Current Location, Est.
         Current Load.
@@ -86,8 +104,6 @@ class Client(Lta):
             ValueError
                 Raised if bus_stop_code is not a number-like string.
         """
-        if not isinstance(bus_stop_code, str):
-            raise ValueError('bus_stop_code is not a string.')
         if len(bus_stop_code) != 5:
             raise ValueError('bus_stop_code is not a 5-character string.')
         try:
@@ -95,8 +111,7 @@ class Client(Lta):
         except:
             raise ValueError('bus_stop_code is not a valid number.')
 
-        if service_number is not None and not isinstance(service_number, str):
-            raise ValueError('service_number is not a string.')
+        bus_arrival: BusArrivalDict | dict
 
         bus_arrival = self.send_request(
             BUS_ARRIVAL_API_ENDPOINT,
@@ -107,7 +122,8 @@ class Client(Lta):
         return bus_arrival
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
-    def bus_services(self):
+    @typechecked
+    def bus_services(self) -> list[BusServicesDict | dict]:
         """Get detailed service information for all buses currently in
         operation, including: first stop, last stop, peak / offpeak frequency
         of dispatch.
@@ -115,12 +131,15 @@ class Client(Lta):
         Returns:
             (list) Information about bus services currently in operation.
         """
+        bus_services: list[BusServicesDict | dict]
+
         bus_services = self.send_request(BUS_SERVICES_API_ENDPOINT)
 
         return bus_services
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
-    def bus_routes(self):
+    @typechecked
+    def bus_routes(self) -> list[BusRoutesDict | dict]:
         """Get detailed route information for all services currently in
         operation, including: all bus stops along each route, first/last bus
         timings for each stop.
@@ -128,24 +147,30 @@ class Client(Lta):
         Returns:
             (list) Information about bus routes currently in operation.
         """
+        bus_routes: list[BusRoutesDict | dict]
+
         bus_routes = self.send_request(BUS_ROUTES_API_ENDPOINT)
 
         return bus_routes
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
-    def bus_stops(self):
+    @typechecked
+    def bus_stops(self) -> list[BusStopsDict | dict]:
         """Get detailed information for all bus stops currently being serviced
         by buses, including: Bus Stop Code, location coordinate.
 
         Returns:
             (list) Location coordinaties of bus stops with active services.
         """
+        bus_stops: list[BusStopsDict | dict]
+
         bus_stops = self.send_request(BUS_STOPS_API_ENDPOINT)
 
         return bus_stops
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
-    def facilities_maintenance(self, station_code):
+    @typechecked
+    def facilities_maintenance(self, station_code: str) -> Url:
         """Get the pre-signed links to JSON file containing facilities
         maintenance schedules of the particular station.
 
@@ -170,11 +195,10 @@ class Client(Lta):
         if station_code is None:
             raise ValueError('Missing station_code.')
 
-        if not isinstance(station_code, str):
-            raise ValueError('station_code is not a string.')
-
         if not re.search(STATION_CODES_REGEX_PATTERN, station_code):
             raise ValueError('station_code is invalid.')
+
+        facilities_maintenance_link: Url
 
         facilities_maintenance_link = self.send_download_request(
             FACILITIES_MAINTENANCE_API_ENDPOINT,
@@ -184,7 +208,11 @@ class Client(Lta):
         return facilities_maintenance_link
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
-    def passenger_volume_by_bus_stops(self, dt=None):
+    @typechecked
+    def passenger_volume_by_bus_stops(
+        self,
+        dt: Optional[date]=None
+    ) -> Url:
         """Get tap in and tap out passenger volume by weekdays and weekends
         for individual bus stop.
 
@@ -199,6 +227,8 @@ class Client(Lta):
         Returns:
             (str) Download link of file containing passenger volume data.
         """
+        passenger_volume_link: Url
+
         passenger_volume_link = self.__get_passenger_volume_link(
             PASSENGER_VOLUME_BY_BUS_STOPS_API_ENDPOINT,
             dt,
@@ -207,7 +237,11 @@ class Client(Lta):
         return passenger_volume_link
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
-    def passenger_volume_by_origin_destination_bus_stops(self, dt=None):
+    @typechecked
+    def passenger_volume_by_origin_destination_bus_stops(
+        self,
+        dt: Optional[date]=None,
+    ) -> Url:
         """Get number of trips by weekdays and weekends from origin to
         destination bus stops.
 
@@ -222,6 +256,8 @@ class Client(Lta):
         Returns:
             (str) Download link of file containing passenger volume data.
         """
+        passenger_volume_link: Url
+
         passenger_volume_link = self.__get_passenger_volume_link(
             PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_BUS_STOPS_API_ENDPOINT,
             dt,
@@ -230,7 +266,11 @@ class Client(Lta):
         return passenger_volume_link
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
-    def passenger_volume_by_origin_destination_train_stations(self, dt=None):
+    @typechecked
+    def passenger_volume_by_origin_destination_train_stations(
+        self,
+        dt: Optional[date]=None,
+    ) -> Url:
         """Get number of trips by weekdays and weekends from origin to
         destination train stations.
 
@@ -246,6 +286,8 @@ class Client(Lta):
         Returns:
             (str) Download link of file containing passenger volume data.
         """
+        passenger_volume_link: Url
+
         passenger_volume_link = self.__get_passenger_volume_link(
             PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_TRAIN_STATIONS_API_ENDPOINT,
             dt,
@@ -254,7 +296,11 @@ class Client(Lta):
         return passenger_volume_link
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
-    def passenger_volume_by_train_stations(self, dt=None):
+    @typechecked
+    def passenger_volume_by_train_stations(
+        self,
+        dt: Optional[date]=None,
+    ) -> Url:
         """Get tap in and tap out passenger volume by weekdays and weekends
         for individual train station.
 
@@ -269,6 +315,8 @@ class Client(Lta):
         Returns:
             (str) Download link of file containing passenger volume data.
         """
+        passenger_volume_link: Url
+
         passenger_volume_link = self.__get_passenger_volume_link(
             PASSENGER_VOLUME_BY_TRAIN_STATIONS_API_ENDPOINT,
             dt,
@@ -277,13 +325,16 @@ class Client(Lta):
         return passenger_volume_link
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
-    def taxi_availability(self):
+    @typechecked
+    def taxi_availability(self) -> list[TaxiAvailabilityDict | dict]:
         """Get location coordinates of all Taxis that are currently available
         for hire. Does not include "Hired" or "Busy" Taxis.
 
         Returns:
             (list) Location coordinaties of available taxis.
         """
+        taxi_availabilities: list[TaxiAvailabilityDict | dict]
+
         taxi_availabilities = self.send_request(
             TAXI_AVAILABILITY_API_ENDPOINT,
         )
@@ -291,13 +342,15 @@ class Client(Lta):
         return taxi_availabilities
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
-    def taxi_stands(self):
+    def taxi_stands(self) -> list[TaxiStandsDict | dict]:
         """Get detailed information of Taxi stands, such as location and whether
         is it barrier free.
 
         Returns:
             (list) Detailed information of taxi stands .
         """
+        taxi_stands: list[TaxiStandsDict | dict]
+
         taxi_stands = self.send_request(
             TAXI_STANDS_API_ENDPOINT,
         )
@@ -305,13 +358,15 @@ class Client(Lta):
         return taxi_stands
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_HOUR))
-    def train_service_alerts(self):
+    def train_service_alerts(self) -> list[TrainServiceAlertsDict]:
         """Get detailed information on train service unavailability during
         scheduled operating hours, such as affected line and stations etc.
 
         Returns:
             (list) Information about train service unavailability.
         """
+        train_service_alerts: list[TrainServiceAlertsDict]
+
         train_service_alerts = self.send_request(
             TRAIN_SERVICE_ALERTS_API_ENDPOINT,
         )
@@ -320,7 +375,11 @@ class Client(Lta):
 
     # private
 
-    def __get_passenger_volume_link(self, endpoint, dt=None):
+    def __get_passenger_volume_link(
+        self,
+        endpoint,
+        dt: Optional[date]=None
+    ) -> Url:
         """Get download link of the passenger volume data file for the
         specific endpoint.
 
@@ -346,6 +405,7 @@ class Client(Lta):
         if dt is not None and \
             not timezone.date_is_within_last_three_months(dt):
             raise ValueError('dt is not within the last 3 months.')
+        passenger_volume_link: Url
 
         self.validate_kwargs(Date=dt)
 

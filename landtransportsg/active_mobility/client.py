@@ -15,11 +15,13 @@
 """Client for interacting with the Active Mobility API endpoints."""
 
 from cachetools import cached, TTLCache
+from typeguard import typechecked
 
 from ..client import Lta
 from ..constants import CACHE_MAXSIZE, CACHE_ONE_DAY
 
 from .constants import BICYCLE_PARKING_API_ENDPOINT
+from .types import BicycleParkingDict
 
 class Client(Lta):
     """Interact with the active mobility-related endpoints.
@@ -32,7 +34,13 @@ class Client(Lta):
         super(Client, self).__init__(account_key)
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
-    def bicycle_parking(self, latitude, longitude, distance=0.5):
+    @typechecked
+    def bicycle_parking(
+        self,
+        latitude: float,
+        longitude: float,
+        distance: float=0.5,
+    ) -> list[BicycleParkingDict | dict]:
         """Get bicycle parking locations within a radius.
 
         Arguments:
@@ -53,12 +61,6 @@ class Client(Lta):
             ValueError:
                 If latitude, longitude or distance are not floats.
         """
-        if not isinstance(latitude, float):
-            raise ValueError("latitude is not a float.")
-        if not isinstance(longitude, float):
-            raise ValueError("longitude is not a float.")
-        if not isinstance(distance, float):
-            raise ValueError("distance is not a float.")
 
         bicycle_parking_locations = self.send_request(
             BICYCLE_PARKING_API_ENDPOINT,

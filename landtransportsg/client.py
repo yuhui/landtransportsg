@@ -16,13 +16,16 @@
 
 import time
 from datetime import date
+from typing import Any, Optional
 
 import backoff
 import requests
 from requests import Session
+from typeguard import typechecked
 
 from . import timezone
 from .exceptions import APIError
+from .types import Url
 
 class Lta:
     """Client mixin for other API Clients.
@@ -34,17 +37,20 @@ class Lta:
 
     """
 
-    def __init__(self, account_key):
+    @typechecked
+    def __init__(self, account_key: str) -> None:
         self.session = Session()
         self.session.headers.update({
             'AccountKey': account_key,
             'accept': 'application/json',
         })
 
-    def __repr__(self):
+    @typechecked
+    def __repr__(self) -> str:
         return f'{self.__class__}'
 
-    def validate_kwargs(self, **kwargs):
+    @typechecked
+    def validate_kwargs(self, **kwargs: Any) -> None:
         """Verify that the kwargs are specified properly.
 
         Arguments:
@@ -62,7 +68,8 @@ class Lta:
                 if k == 'Date' and not isinstance(v, date):
                     raise ValueError('"Date" value is not a date object.')
 
-    def send_download_request(self, url, **kwargs):
+    @typechecked
+    def send_download_request(self, url: Url, **kwargs: Any) -> Url:
         """Send a request to an endpoint that expects a response with a
         download link.
 
@@ -83,6 +90,8 @@ class Lta:
             APIError:
                 Raised if the API responds with an unexpected response.
         """
+        download_link: Url
+
         download = self.send_request(url, **kwargs)
 
         if not isinstance(download, list):
@@ -101,7 +110,8 @@ class Lta:
 
         return download_link
 
-    def send_request(self, url, **kwargs):
+    @typechecked
+    def send_request(self, url: Url, **kwargs: Any) -> Any:
         """Send a request to an endpoint.
 
         Arguments:
@@ -117,6 +127,8 @@ class Lta:
         Returns:
             (list or object) Response JSON content of the request.
         """
+        response: Any
+
         params = {}
         for attribute, value in kwargs.items():
             if value is None:
@@ -132,10 +144,13 @@ class Lta:
 
     # private
 
-    def __sanitise_timestamps(self, dictionary):
+    @typechecked
+    def __sanitise_data(self, value: Any) -> Any:
         """Convert timestamp strings to datetime objects and
         return the dictionary.
         """
+        sanitised_value: Any
+
         sanitised_value = value
         if isinstance(value, list):
             sanitised_value = list(map(self.__sanitise_data, value))
@@ -152,7 +167,13 @@ class Lta:
         return sanitised_value
 
     @backoff.on_exception(backoff.expo, APIError, max_tries=2)
-    def __send_request(self, url, params=None, headers={}):
+    @typechecked
+    def __send_request(
+        self,
+        url: Url,
+        params: Optional[dict[str, Any]]=None,
+        headers: Optional[dict[str, Any]]=None,
+    ) -> Any:
         """Send a request to an endpoint, using backoff with a maximum of 2
         tries.
 
@@ -175,6 +196,7 @@ class Lta:
             APIError:
                 Raised if the API responds with an error.
         """
+        response_value: Any
 
         response = self.session.get(
             url,

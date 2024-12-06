@@ -15,9 +15,11 @@
 """Client for interacting with the Geospatial API endpoints."""
 
 from cachetools import cached, TTLCache
+from typeguard import typechecked
 
 from ..client import Lta
 from ..constants import CACHE_MAXSIZE, CACHE_FIVE_MINUTES
+from ..types import Url
 
 from .constants import (
     GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,
@@ -36,7 +38,8 @@ class Client(Lta):
         super(Client, self).__init__(account_key)
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
-    def geospatial_whole_island(self, geospatial_layer_id):
+    @typechecked
+    def geospatial_whole_island(self, geospatial_layer_id: str) -> Url:
         """Get the SHP files of the requested geospatial layer.
 
         Arguments:
@@ -63,15 +66,14 @@ class Client(Lta):
                 }',
             )
 
-        if not isinstance(geospatial_layer_id, str):
-            raise ValueError('geospatial_layer_id is not a string.')
-
         if geospatial_layer_id not in GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS:
             raise ValueError(
                 f'Invalid argument "geospatial_layer_id". Allowed IDs: {
                     ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS),
                 }',
             )
+
+        geospatial_whole_island_link: Url
 
         geospatial_whole_island_link = self.send_download_request(
             GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,

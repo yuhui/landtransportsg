@@ -13,6 +13,9 @@
 # limitations under the License.
 
 from .client import Client
+from ..types import Url
+
 __all__ = [
     'Client',
+    'Url',
 ]

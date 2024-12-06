@@ -13,6 +13,19 @@
 # limitations under the License.
 
 from .client import Client
+from .types import *
+from ..types import Url
+
 __all__ = [
     'Client',
+    'CarParkAvailabilityDict',
+    'EstimatedTravelTimesDict',
+    'FaultyTrafficLightsDict',
+    'RoadOpeningsDict',
+    'RoadWorksDict',
+    'TrafficImagesDict',
+    'TrafficIncidentsDict',
+    'TrafficSpeedBandsDict',
+    'VMSDict',
+    'Url',
 ]

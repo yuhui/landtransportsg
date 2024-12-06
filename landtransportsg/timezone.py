@@ -17,24 +17,25 @@
 from datetime import date, datetime, timedelta
 
 from pytz import timezone as pytimezone
+from typeguard import typechecked
 
 # constants for testing dates as date objects
 TWO_MONTHS_AGO_DATE = (date.today() + timedelta(-40))
 FOUR_MONTHS_AGO_DATE = (date.today() + timedelta(-100))
 
-def datetime_as_sgt(dt):
+@typechecked
+def datetime_as_sgt(dt: datetime) -> datetime:
     """Set a datetime with the SGT timezone and return the datetime.
 
     Raises:
         ValueError:
             Raised if `dt` is not of datetime class.
     """
-    if not isinstance(dt, datetime):
-        raise ValueError('dt is not a datetime object.')
 
     return dt.astimezone(pytimezone('Asia/Singapore'))
 
-def datetime_from_string(val):
+@typechecked
+def datetime_from_string(val: str) -> datetime | date:
     """Convert a YYYY-MM-DDTHH:MM:SS string into a datetime
     and return the datetime.
 
@@ -42,8 +43,11 @@ def datetime_from_string(val):
         ValueError:
             Raised if `val` is not in a valid datetime format.
     """
+    dt: datetime | date
+
     # first, try parsing without time
     dt_format = '%Y-%m-%d'
+
     try:
         dt = datetime.strptime(val, dt_format)
     except:
@@ -65,10 +69,11 @@ def datetime_from_string(val):
 
     return dt
 
+@typechecked
 def date_is_within_last_three_months(
-    check_date,
-    cutoff_day=15,
-):
+    check_date: date,
+    cutoff_day: int=15,
+) -> bool:
     """Return whether the specified date is within the last 3 months of today.
 
     Arguments:
@@ -103,6 +108,8 @@ def date_is_within_last_three_months(
         _ = date(2019, 1, cutoff_day)
     except ValueError as e:
         raise e
+
+    result: bool
 
     today = date.today()
     today_year = today.year
