@@ -95,18 +95,12 @@ class Lta:
         download = self.send_request(url, **kwargs)
 
         if not isinstance(download, list):
-            raise APIError(
-                "Download link not returned unexpectedly.",
-            )
+            raise APIError('Download link not returned unexpectedly.')
 
         if len(download) == 0:
-            raise APIError("No download link returned.")
+            raise APIError('No download link returned.')
 
         download_link = download[0].get('Link')
-        if not isinstance(download_link, str):
-            raise APIError(
-                "Download link not returned, got a non-string unexpectedly.",
-            )
 
         return download_link
 

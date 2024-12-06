@@ -34,7 +34,8 @@ class APIError(Exception):
         errors: Optional[list[str]]=None
     ) -> None:
         super().__init__(message)
-        self.errors = errors
+        if errors:
+            self.errors = errors
 
 __all__ = [
     'APIError',

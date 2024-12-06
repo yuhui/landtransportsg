@@ -190,10 +190,10 @@ class Client(Lta):
                 pattern.
         """
         if station_code is None:
-            raise ValueError('Missing station_code.')
+            raise ValueError('Missing argument "station_code".')
 
         if not re.search(STATION_CODES_REGEX_PATTERN, station_code):
-            raise ValueError('station_code is invalid.')
+            raise ValueError('Argument "station_code" is invalid.')
 
         facilities_maintenance_link: Url
 
