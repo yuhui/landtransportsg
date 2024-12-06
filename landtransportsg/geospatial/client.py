@@ -79,3 +79,7 @@ class Client(Lta):
         )
 
         return geospatial_whole_island_link
+
+__all__ = [
+    'Client',
+]

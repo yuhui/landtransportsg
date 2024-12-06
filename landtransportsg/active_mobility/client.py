@@ -68,3 +68,7 @@ class Client(Lta):
         )
 
         return bicycle_parking_locations
+
+__all__ = [
+    'Client',
+]

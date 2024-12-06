@@ -352,3 +352,7 @@ class Client(Lta):
         passenger_volume_link = self.send_download_request(endpoint, Date=dt)
 
         return passenger_volume_link
+
+__all__ = [
+    'Client',
+]

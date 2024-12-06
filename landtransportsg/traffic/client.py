@@ -171,3 +171,7 @@ class Client(Lta):
         vms = self.send_request(VMS_API_ENDPOINT)
 
         return vms
+
+__all__ = [
+    'Client',
+]
