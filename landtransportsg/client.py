@@ -59,7 +59,7 @@ class Lta:
         """
         for k, v in kwargs.items():
             if v is not None:
-                if k is 'Date' and not isinstance(v, date):
+                if k == 'Date' and not isinstance(v, date):
                     raise ValueError('"Date" value is not a date object.')
 
     def send_download_request(self, url, **kwargs):
@@ -90,7 +90,7 @@ class Lta:
                 "Download link not returned unexpectedly.",
             )
 
-        if len(download) is 0:
+        if len(download) == 0:
             raise APIError("No download link returned.")
 
         download_link = download[0].get('Link')
@@ -213,7 +213,7 @@ class Lta:
             params['$skip'] = skip
 
             # wait a while so as not to flood the endpoint
-            if skip % 1000 is 0:
+            if skip % 1000 == 0:
                 time.sleep(1)
 
             next_response_json = self.__send_request(

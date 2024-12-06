@@ -59,7 +59,7 @@ def datetime_from_string(val):
 
     dt = datetime_as_sgt(dt)
 
-    if dt_format is '%Y-%m-%d':
+    if dt_format == '%Y-%m-%d':
         # the original string was just the date, so return a date object only
         dt = dt.date()
 
