@@ -141,22 +141,20 @@ class Lta:
         """Convert timestamp strings to datetime objects and
         return the dictionary.
         """
-        for key in dictionary:
-            val = dictionary[key]
-            if isinstance(val, str):
-                try:
-                    dictionary[key] = timezone.datetime_from_string(val)
-                except Exception:
-                    pass
-            elif isinstance(val, dict):
-                dictionary[key] = self.__sanitise_timestamps(val)
-            elif isinstance(val, list):
-                dictionary[key] = [
-                    self.__sanitise_timestamps(v) \
-                        if isinstance(v, dict) else v for v in val
-                ]
+        sanitised_value = value
+        if isinstance(value, list):
+            sanitised_value = list(map(self.__sanitise_data, value))
+        elif isinstance(value, dict):
+            sanitised_value = {
+                k: self.__sanitise_data(v) for k, v in value.items()
+            }
+        elif isinstance(value, str):
+            try:
+                sanitised_value = timezone.datetime_from_string(value)
+            except Exception: # pylint: disable=broad-exception-caught
+                pass
 
-        return dictionary
+        return sanitised_value
 
     @backoff.on_exception(backoff.expo, APIError, max_tries=2)
     def __send_request(self, url, params=None, headers={}):
