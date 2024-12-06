@@ -163,6 +163,24 @@ class Client(Lta):
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
+    def traffic_flow(self) -> Url:
+        """Get hourly average traffic flow, taken from a representative month \
+        of every quarter during 0700-0900 hours.
+
+        :return: Link to download the hourly average traffic flow. The link \
+            will expire after 5 minutes.
+        :rtype: Url
+        """
+        traffic_flow_link: Url
+
+        traffic_flow_link = self.send_download_request(
+            TRAFFIC_FLOW_API_ENDPOINT,
+        )
+
+        return traffic_flow_link
+
+    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
+    @typechecked
     def traffic_images(self) -> list[TrafficImagesDict | dict]:
         """Get links to images of live traffic conditions along expressways \
         and Woodlands & Tuas Checkpoints.
