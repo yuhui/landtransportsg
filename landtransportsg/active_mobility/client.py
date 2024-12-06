@@ -18,9 +18,9 @@ from cachetools import cached, TTLCache
 from datetime import date, datetime
 
 from .constants import *
-from ..client import __Client
+from ..client import Lta
 
-class Client(__Client):
+class Client(Lta):
     """Interact with the active mobility-related endpoints.
 
     References:

@@ -17,10 +17,10 @@
 from cachetools import cached, TTLCache
 
 from .constants import *
-from ..client import __Client
 from ..exceptions import APIError
+from ..client import Lta
 
-class Client(__Client):
+class Client(Lta):
     """Interact with the geospatial-related endpoints.
 
     References:

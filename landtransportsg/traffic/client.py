@@ -17,9 +17,9 @@
 from cachetools import cached, TTLCache
 
 from .constants import *
-from ..client import __Client
 
-class Client(__Client):
+from ..client import Lta
+class Client(Lta):
     """Interact with the traffic-related endpoints.
 
     References:

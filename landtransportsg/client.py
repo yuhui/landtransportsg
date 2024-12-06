@@ -23,7 +23,7 @@ from requests import Session
 from . import timezone
 from .exceptions import APIError
 
-class __Client(object):
+class Lta:
     """Client mixin for other API Clients.
 
     Attributes:

@@ -19,10 +19,10 @@ from cachetools import cached, TTLCache
 
 import landtransportsg.timezone as timezone
 from .constants import *
-from ..client import __Client
 from ..exceptions import APIError
 
-class Client(__Client):
+from ..client import Lta
+class Client(Lta):
     """Interact with the public transport-related endpoints.
 
     References:
