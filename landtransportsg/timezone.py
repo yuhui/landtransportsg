@@ -27,22 +27,27 @@ FOUR_MONTHS_AGO_DATE = (date.today() + timedelta(-100))
 def datetime_as_sgt(dt: datetime) -> datetime:
     """Set a datetime with the SGT timezone and return the datetime.
 
-    Raises:
-        ValueError:
-            Raised if `dt` is not of datetime class.
-    """
+    :param dt: Datetime to convert to SGT timezone.
+    :type dt: datetime
 
+    :return: The datetime in SGT timezone.
+    :rtype: datetime
+    """
     dt_sg: datetime = dt.astimezone(pytimezone('Asia/Singapore'))
     return dt_sg
 
 @typechecked
 def datetime_from_string(val: str) -> datetime | date:
-    """Convert a YYYY-MM-DDTHH:MM:SS string into a datetime
-    and return the datetime.
+    """Convert a YYYY-MM-DDTHH:MM:SS string into a datetime and return the \
+    datetime.
 
-    Raises:
-        ValueError:
-            Raised if `val` is not in a valid datetime format.
+    :param val: String to convert to a datetime.
+    :type val: str
+
+    :raises ValueError: `val` is not a recognised datetime string.
+
+    :return: The value as a datetime or date, if there is no time.
+    :rtype: datetime | date
     """
     dt: datetime | date
 
@@ -80,34 +85,23 @@ def date_is_within_last_three_months(
 ) -> bool:
     """Return whether the specified date is within the last 3 months of today.
 
-    Arguments:
-        check_date (date):
-            Date to check if it is within the last 3 months of today.
-        cutoff_day (int):
-            (optional) The day of the month when a "new month" begins.
-            Example: if `cutoff_day` is `15`, then:
-                - if today is between 1st and 14th September,
-                then last 3 months is between May-July.
-                - if today is between 15th and 30th September,
-                then last 3 months is between June-August.
-            Default: 15, i.e. the new month starts on the 15th day.
-
-    Returns:
-        (boolean) True if the specified date is within the last 3 months of
+    :param check_date: Date to check if it is within the last 3 months of \
         today.
+    :type check_date: date
 
-    Raises:
-        ValueError:
-            Raised if the check date is not a date object.
-            Raised if the cutoff day is not an integer.
-            Raised if the cutoff day is not a valid calendar day.
+    :param cutoff_day: The day of the month when a "new month" begins. \
+        Example: if `cutoff_day` is `15`, then if today is between 1st and \
+        14th September, then last 3 months is between May-July, else if today \
+        is between 15th and 30th September, then last 3 months is between \
+        June-August. Defaults to 15, i.e. the new month starts on the 15th day.
+    :type cutoff_day: int
+
+    :raises ValueError: `cutoff day` is not a valid calendar day.
+
+    :returns: `True` if the specified date is within the last 3 months of
+        today.
+    :rtype: bool
     """
-    if not isinstance(check_date, date):
-        raise ValueError('check_date is not a date object.')
-
-    if not isinstance(cutoff_day, int):
-        raise ValueError('cutoff_day is not an integer.')
-    # this will raise a ValueError if cutoff_day is not a valid calendar day.
     # raise a ValueError if cutoff_day is not a valid calendar day
     try:
         _ = date(2019, 1, cutoff_day)

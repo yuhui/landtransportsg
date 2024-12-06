@@ -30,8 +30,8 @@ from .constants import (
 class Client(Lta):
     """Interact with the geospatial-related endpoints.
 
-    References:
-        https://www.mytransport.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
+    References: \
+        https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
     @typechecked
@@ -52,22 +52,16 @@ class Client(Lta):
     def geospatial_whole_island(self, geospatial_layer_id: str) -> Url:
         """Get the SHP files of the requested geospatial layer.
 
-        Arguments:
-            geospatial_layer_id (str):
-                Name of geospatial layer.
-                Refer to the GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS constant for the
-                list of valid names.
+        :param geospatial_layer_id: Name of geospatial layer. Refer to the \
+            GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS constant for the list of valid \
+            IDs.
+        :type geospatial_layer_id: str
 
-        Returns:
-            (str) Link for downloading the requested SHP file.
+        :raises ValueError: geospatial_layer_id is not specified.
+        :raises ValueError: geospatial_layer_id is not a valid ID.
 
-        Raises:
-            ValueError
-                Raised if geospatial_layer_id is not specified.
-            ValueError
-                Raised if geospatial_layer_id is not a string.
-            ValueError:
-                Raised if geospatial_layer_id is not a valid ID.
+        :return: Link for downloading the requested SHP file.
+        :rtype: Url
         """
         if geospatial_layer_id is None:
             raise ValueError(

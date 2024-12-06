@@ -68,8 +68,8 @@ from .types import (
 class Client(Lta):
     """Interact with the public transport-related endpoints.
 
-    References:
-        https://www.mytransport.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
+    References: \
+        https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
@@ -79,28 +79,22 @@ class Client(Lta):
         bus_stop_code: str,
         service_number: Optional[str]=None,
     ) -> BusArrivalDict | dict:
-        """Get real-time Bus Arrival information of Bus Services at a queried
-        Bus Stop, including Est. Arrival Time, Est. Current Location, Est.
+        """Get real-time Bus Arrival information of Bus Services at a queried \
+        Bus Stop, including Est. Arrival Time, Est. Current Location, Est. \
         Current Load.
 
-        Arguments:
-            bus_stop_code (str):
-                5-digit bus stop reference code.
-            service_number (str):
-                (optional) Bus service number.
-                If omitted, then all bus services at the bus stop code are
-                returned.
+        :param bus_stop_code: 5-digit bus stop reference code.
+        :type bus_stop_code: str
 
-        Returns:
-            (list) Information about bus arrival at the specified bus stop.
+        :param service_number: Bus service number. If omitted, then all bus \
+            services at the bus stop code are returned. Defaults to None.
+        :type service_number: str
 
-        Raises:
-            ValueError
-                Raised if bus_stop_code or service_number are not strings.
-            ValueError
-                Raised if bus_stop_code is not exactly 5 characters long.
-            ValueError
-                Raised if bus_stop_code is not a number-like string.
+        :raises ValueError: bus_stop_code is not exactly 5 characters long.
+        :raises ValueError: bus_stop_code is not a number-like string.
+
+        :return: Information about bus arrival at the specified bus stop.
+        :rtype: BusArrivalDict
         """
         try:
             _ = int(bus_stop_code)
@@ -127,12 +121,12 @@ class Client(Lta):
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def bus_services(self) -> list[BusServicesDict | dict]:
-        """Get detailed service information for all buses currently in
-        operation, including: first stop, last stop, peak / offpeak frequency
+        """Get detailed service information for all buses currently in \
+        operation, including: first stop, last stop, peak / offpeak frequency \
         of dispatch.
 
-        Returns:
-            (list) Information about bus services currently in operation.
+        :return: Information about bus services currently in operation.
+        :rtype: list[BusServicesDict]
         """
         bus_services: list[BusServicesDict | dict]
 
@@ -143,12 +137,12 @@ class Client(Lta):
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def bus_routes(self) -> list[BusRoutesDict | dict]:
-        """Get detailed route information for all services currently in
-        operation, including: all bus stops along each route, first/last bus
+        """Get detailed route information for all services currently in \
+        operation, including: all bus stops along each route, first/last bus \
         timings for each stop.
 
-        Returns:
-            (list) Information about bus routes currently in operation.
+        :return: Information about bus routes currently in operation.
+        :rtype: list[BusRoutesDict]
         """
         bus_routes: list[BusRoutesDict | dict]
 
@@ -159,11 +153,11 @@ class Client(Lta):
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def bus_stops(self) -> list[BusStopsDict | dict]:
-        """Get detailed information for all bus stops currently being serviced
-        by buses, including: Bus Stop Code, location coordinate.
+        """Get detailed information for all bus stops currently being \
+        serviced by buses, including: Bus Stop Code, location coordinate.
 
-        Returns:
-            (list) Location coordinaties of bus stops with active services.
+        :return: Location coordinaties of bus stops with active services.
+        :rtype: list[BusStopsDict]
         """
         bus_stops: list[BusStopsDict | dict]
 
@@ -174,26 +168,20 @@ class Client(Lta):
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
     def facilities_maintenance(self, station_code: str) -> Url:
-        """Get the pre-signed links to JSON file containing facilities
+        """Get the pre-signed links to JSON file containing facilities \
         maintenance schedules of the particular station.
 
-        Arguments:
-            station_code (str):
-                Station Code of train station.
-                Refer to the STATION_CODES_REGEX_PATTERN constant for the
-                expected regex pattern that this code has to match.
+        :param station_code: Station Code of train station. Refer to the \
+            STATION_CODES_REGEX_PATTERN constant for the expected regex \
+            pattern that this code has to match.
+        :type station_code: str
 
-        Returns:
-            (str) Link for downloading the requested JSON file.
-
-        Raises:
-            ValueError
-                Raised if station_code is not specified.
-            ValueError
-                Raised if station_code is not a string.
-            ValueError:
-                Raised if station_code does not match the expected regex
+        :raises ValueError: station_code is not specified.
+        :raises ValueError: station_code does not match the expected regex \
                 pattern.
+
+        :return: Link for downloading the requested JSON file.
+        :rtype: Url
         """
         if station_code is None:
             raise ValueError('Missing argument "station_code".')
@@ -216,19 +204,18 @@ class Client(Lta):
         self,
         dt: Optional[date]=None
     ) -> Url:
-        """Get tap in and tap out passenger volume by weekdays and weekends
+        """Get tap in and tap out passenger volume by weekdays and weekends \
         for individual bus stop.
 
-        Arguments:
-            dt (date):
-                (optional) Date of a specific month to get passenger volume.
-                This must be a valid date object, e.g. `date(2019, 7, 2)`.
-                But only the year and month will be used since that is what
-                the endpoint accepts.
-                Must be within the last 3 months of the current month.
+        :param dt: Date of a specific month to get passenger volume. This \
+            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
+            the year and month will be used since that is what the endpoint \
+            accepts. Must be within the last 3 months of the current month. \
+            Defaults to None.
+        :type dt: date
 
-        Returns:
-            (str) Download link of file containing passenger volume data.
+        :return: Download link of file containing passenger volume data.
+        :rtype: Url
         """
         passenger_volume_link: Url
 
@@ -245,19 +232,18 @@ class Client(Lta):
         self,
         dt: Optional[date]=None,
     ) -> Url:
-        """Get number of trips by weekdays and weekends from origin to
+        """Get number of trips by weekdays and weekends from origin to \
         destination bus stops.
 
-        Arguments:
-            dt (date):
-                (optional) Date of a specific month to get passenger volume.
-                This must be a valid date object, e.g. `date(2019, 7, 2)`.
-                But only the year and month will be used since that is what
-                the endpoint accepts.
-                Must be within the last 3 months of the current month.
+        :param dt: Date of a specific month to get passenger volume. This \
+            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
+            the year and month will be used since that is what the endpoint \
+            accepts. Must be within the last 3 months of the current month. \
+            Defaults to None.
+        :type dt: date
 
-        Returns:
-            (str) Download link of file containing passenger volume data.
+        :return: Download link of file containing passenger volume data.
+        :rtype: Url
         """
         passenger_volume_link: Url
 
@@ -274,20 +260,18 @@ class Client(Lta):
         self,
         dt: Optional[date]=None,
     ) -> Url:
-        """Get number of trips by weekdays and weekends from origin to
+        """Get number of trips by weekdays and weekends from origin to \
         destination train stations.
 
-        Arguments:
-            dt (date):
-                (optional) Date of a specific month to get passenger volume.
-                This must be a valid date object, e.g. `date(2019, 7, 2)`.
-                But only the year and month will be used since that is what
-                the endpoint accepts.
-                Must be within the last 3 months of the current month.
-                Default: None, i.e. today.
+        :param dt: Date of a specific month to get passenger volume. This \
+            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
+            the year and month will be used since that is what the endpoint \
+            accepts. Must be within the last 3 months of the current month. \
+            Defaults to None.
+        :type dt: date
 
-        Returns:
-            (str) Download link of file containing passenger volume data.
+        :return: Download link of file containing passenger volume data.
+        :rtype: Url
         """
         passenger_volume_link: Url
 
@@ -304,19 +288,18 @@ class Client(Lta):
         self,
         dt: Optional[date]=None,
     ) -> Url:
-        """Get tap in and tap out passenger volume by weekdays and weekends
+        """Get tap in and tap out passenger volume by weekdays and weekends \
         for individual train station.
 
-        Arguments:
-            dt (date):
-                (optional) Date of a specific month to get passenger volume.
-                This must be a valid date object, e.g. `date(2019, 7, 2)`.
-                But only the year and month will be used since that is what
-                the endpoint accepts.
-                Must be within the last 3 months of the current month.
+        :param dt: Date of a specific month to get passenger volume. This \
+            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
+            the year and month will be used since that is what the endpoint \
+            accepts. Must be within the last 3 months of the current month. \
+            Defaults to None.
+        :type dt: date
 
-        Returns:
-            (str) Download link of file containing passenger volume data.
+        :return: Download link of file containing passenger volume data.
+        :rtype: Url
         """
         passenger_volume_link: Url
 
@@ -330,11 +313,11 @@ class Client(Lta):
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
     @typechecked
     def taxi_availability(self) -> list[TaxiAvailabilityDict | dict]:
-        """Get location coordinates of all Taxis that are currently available
+        """Get location coordinates of all Taxis that are currently available \
         for hire. Does not include "Hired" or "Busy" Taxis.
 
-        Returns:
-            (list) Location coordinaties of available taxis.
+        :return: Location coordinaties of available taxis.
+        :rtype: list[TaxiAvailabilityDict]
         """
         taxi_availabilities: list[TaxiAvailabilityDict | dict]
 
@@ -346,11 +329,11 @@ class Client(Lta):
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
     def taxi_stands(self) -> list[TaxiStandsDict | dict]:
-        """Get detailed information of Taxi stands, such as location and whether
-        is it barrier free.
+        """Get detailed information of Taxi stands, such as location and \
+        whether is it barrier free.
 
-        Returns:
-            (list) Detailed information of taxi stands .
+        :return: Detailed information of taxi stands.
+        :rtype: list[TaxiStandsDict]
         """
         taxi_stands: list[TaxiStandsDict | dict]
 
@@ -362,11 +345,11 @@ class Client(Lta):
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_HOUR))
     def train_service_alerts(self) -> list[TrainServiceAlertsDict]:
-        """Get detailed information on train service unavailability during
+        """Get detailed information on train service unavailability during \
         scheduled operating hours, such as affected line and stations etc.
 
-        Returns:
-            (list) Information about train service unavailability.
+        :return: Information about train service unavailability.
+        :rtype: list[TrainServiceAlertsDict]
         """
         train_service_alerts: list[TrainServiceAlertsDict]
 
@@ -383,27 +366,23 @@ class Client(Lta):
         endpoint,
         dt: Optional[date]=None
     ) -> Url:
-        """Get download link of the passenger volume data file for the
+        """Get download link of the passenger volume data file for the \
         specific endpoint.
 
-        Arguments:
-            endpoint(str):
-                API endpoint URL to call.
-            dt (date):
-                (optional) Date of a specific month to get passenger volume.
-                This must be a valid date object, e.g. `date(2019, 7, 2)`.
-                But only the year and month will be used since that is what
-                the endpoint accepts.
-                Must be within the last 3 months of the current month.
+        :param endpoint: API endpoint URL to call.
+        :type endpoint: str
 
-        Returns:
-            (str) Download link of file containing passenger volume data.
+        :param dt: Date of a specific month to get passenger volume. This \
+            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
+            the year and month will be used since that is what the endpoint \
+            accepts. Must be within the last 3 months of the current month. \
+            Defaults to None.
+        :type dt: date
 
-        Raises:
-            ValueError:
-                Raised if the specified date is more than 3 months ago.
-            APIError:
-                Raised if no download link is returned.
+        :raises ValueError: the specified date is more than 3 months ago.
+
+        :return: Download link of file containing passenger volume data.
+        :rtype: Url
         """
         if dt is not None and not date_is_within_last_three_months(dt):
             raise ValueError('Argument "dt" is not within the last 3 months.')

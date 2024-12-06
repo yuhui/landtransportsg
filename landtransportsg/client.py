@@ -30,15 +30,18 @@ from .types import Url
 class Lta:
     """Client mixin for other API Clients.
 
-    Attributes:
-        account_key (str):
-            The LTA DataMall-assigned API key.
-            Request for one from https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html.
-
+    An account key is required to use the LTA DataMall API. Request for one \
+    from \
+    https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html.
     """
 
     @typechecked
     def __init__(self, account_key: str) -> None:
+        """Constructor method
+
+        :param account_key: The LTA DataMall-assigned API key.
+        :type account_key: str
+        """
         self.session = Session()
         self.session.headers.update({
             'AccountKey': account_key,
@@ -47,21 +50,20 @@ class Lta:
 
     @typechecked
     def __repr__(self) -> str:
+        """String representation"""
         return f'{self.__class__}'
 
     @typechecked
     def validate_kwargs(self, **kwargs: Any) -> None:
         """Verify that the kwargs are specified properly.
 
-        Arguments:
-            kwargs (dict):
-                (optional) Attribute-value arguments to validate.
-                If an attribute is date-related, then its value is expected to
-                be of `date` instance.
+        :param kwargs: Attribute-value arguments to validate. If an attribute \
+            is date-related, then its value is expected to be of `date` \
+            instance.
+        :type kwargs: Any
 
-        Raises:
-            ValueError:
-                Raised if Date is specified but isn't a date object.
+        :raises ValueError: Raised if Date is specified but isn't a date \
+            object.
         """
         for k, v in kwargs.items():
             if v is not None:
@@ -70,25 +72,22 @@ class Lta:
 
     @typechecked
     def send_download_request(self, url: Url, **kwargs: Any) -> Url:
-        """Send a request to an endpoint that expects a response with a
+        """Send a request to an endpoint that expects a response with a \
         download link.
 
-        Arguments:
-            url (str):
-                The endpoint URL to send the request to.
-            kwargs (dict):
-                (optional) Attribute-value arguments to be passed as parameters
-                to the endpoint URL.
-                If an attribute is date-related, then its value is expected to
-                be of `date` instance and will be standardised to the format
-                required by the endpoint.
+        :param url: The endpoint URL to send the request to.
+        :type url: Url
 
-        Returns:
-            (str) Link for downloading the requested file.
+        :param kwargs: Attribute-value arguments to be passed as parameters \
+            to the endpoint URL. If an attribute is date-related, then its \
+            value is expected to be of `date` instance and will be \
+            standardised to the format required by the endpoint. Optional.
+        :type kwargs: Any
 
-        Raises:
-            APIError:
-                Raised if the API responds with an unexpected response.
+        :raises APIError: List of download links is empty.
+
+        :return: Link for downloading the requested file.
+        :rtype: Url
         """
         download_link: Url
 
@@ -106,20 +105,20 @@ class Lta:
 
     @typechecked
     def send_request(self, url: Url, **kwargs: Any) -> Any:
-        """Send a request to an endpoint.
+        """Send a request to an endpoint and get its response's list of \
+        results.
 
-        Arguments:
-            url (str):
-                The endpoint URL to send the request to.
-            kwargs (dict):
-                (optional) Attribute-value arguments to be passed as parameters
-                to the endpoint URL.
-                If an attribute is date-related, then its value is expected to
-                be of `date` instance and will be standardised to the format
-                required by the endpoint.
+        :param url: The endpoint URL to send the request to.
+        :type url: Url
 
-        Returns:
-            (list or object) Response JSON content of the request.
+        :param kwargs: Attribute-value arguments to be passed as parameters \
+            to the endpoint URL. If an attribute is date-related, then its \
+            value is expected to be of `date` instance and will be \
+            standardised to the format required by the endpoint. Optional.
+        :type kwargs: Any
+
+        :return: Results from the response.
+        :rtype: Any
         """
         response: Any
 
@@ -140,8 +139,15 @@ class Lta:
 
     @typechecked
     def __sanitise_data(self, value: Any) -> Any:
-        """Convert timestamp strings to datetime objects and
-        return the dictionary.
+        """Convert a value to a native object (e.g. timestamp string to \
+        datetime) and return the value. If value is a list or dict, then \
+        iterate through its items.
+
+        :param value: Value to sanitise.
+        :type value: Any
+
+        :return:  The sanitised value.
+        :rtype: Any
         """
         sanitised_value: Any
 
@@ -168,27 +174,27 @@ class Lta:
         params: Optional[dict[str, Any]]=None,
         headers: Optional[dict[str, Any]]=None,
     ) -> Any:
-        """Send a request to an endpoint, using backoff with a maximum of 2
-        tries.
+        """Send a request to an endpoint and get the response's list of \
+        results, using backoff with a maximum of 2 tries. If pagination is \
+        required, then get responses from all pages in one final list.
 
-        Arguments:
-            url (str):
-                The endpoint URL to send the request to.
-            params (dict):
-                (optional) Parameters to send with the URL.
-            headers (dict:
-                (optional) HTTP headers to send with the request.
-                `AccountKey` and `accept` are set automatically, so these
-                headers don't need to be specified here.
+        `AccountKey` and `accept` headers are set automatically, so they \
+        don't need to be specified here.
 
-        Returns:
-            (Response) response of the request.
+        :param url: The endpoint URL to send the request to.
+        :type url: str
 
-        Raises:
-            HTTPError:
-                Raised if there is a network error.
-            APIError:
-                Raised if the API responds with an error.
+        :param params: Parameters to send with the URL. Defaults to None.
+        :type params: dict[str, Any]
+
+        :param headers: HTTP headers to send with the request. Defaults to \
+            None.
+        :type headers: dict[str, Any]
+
+        :raises APIError: The endpoint responds with an error.
+
+        :return: Results from the response's 'value' key.
+        :rtype: Any
         """
         response_value: Any
 

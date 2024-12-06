@@ -26,8 +26,8 @@ from .types import BicycleParkingDict
 class Client(Lta):
     """Interact with the active mobility-related endpoints.
 
-    References:
-        https://www.mytransport.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
+    References: \
+        https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
@@ -40,23 +40,21 @@ class Client(Lta):
     ) -> list[BicycleParkingDict | dict]:
         """Get bicycle parking locations within a radius.
 
-        Arguments:
-            latitude (float):
-                Latitude map coordinates of a location.
-            longitude (float):
-                Longitude map coordinates of a location.
-            distance (float):
-                (optional) Radius in kilometres from the latitude-longitude
-                location to retrieve bicycle parking locations.
-                Default: 0.5.
+        :param latitude: Latitude map coordinates of a location.
+        :type latitude: float
 
-        Returns:
-            (list) Available bicycle parking locations at the specified
+        :param longitude: Longitude map coordinates of a location.
+        :type longitude: float
+
+        :param distance: Radius in kilometres from the latitude-longitude \
+            location to retrieve bicycle parking locations. Defaults to 0.5.
+        :type distance: float
+
+        :raises ValueError: distance is a negative float.
+
+        :return: Available bicycle parking locations at the specified \
             location.
-
-        Raises:
-            ValueError:
-                If latitude, longitude or distance are not floats.
+        :rtype: list[BicycleParkingDict]
         """
         if isinstance(distance, float) and distance < 0:
             raise ValueError('Argument "distance" cannot be less than zero.')
