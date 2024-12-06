@@ -58,6 +58,8 @@ class Client(Lta):
             ValueError:
                 If latitude, longitude or distance are not floats.
         """
+        if isinstance(distance, float) and distance < 0:
+            raise ValueError('Argument "distance" cannot be less than zero.')
 
         bicycle_parking_locations = self.send_request(
             BICYCLE_PARKING_API_ENDPOINT,
