@@ -17,8 +17,10 @@
 from cachetools import cached, TTLCache
 from datetime import date, datetime
 
-from .constants import *
 from ..client import Lta
+from ..constants import CACHE_MAXSIZE, CACHE_ONE_DAY
+
+from .constants import BICYCLE_PARKING_API_ENDPOINT
 
 class Client(Lta):
     """Interact with the active mobility-related endpoints.

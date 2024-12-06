@@ -14,10 +14,10 @@
 
 """Constants for all Active Mobility-related APIs."""
 
-from ..constants import (
-    BASE_API_ENDPOINT,
-    CACHE_MAXSIZE,
-    CACHE_ONE_DAY,
-)
+from ..constants import BASE_API_ENDPOINT
 
-BICYCLE_PARKING_API_ENDPOINT = '{}/BicycleParkingv2'.format(BASE_API_ENDPOINT)
+BICYCLE_PARKING_API_ENDPOINT = f'{BASE_API_ENDPOINT}/BicycleParkingv2'
+
+__all__ = [
+    'BICYCLE_PARKING_API_ENDPOINT',
+]

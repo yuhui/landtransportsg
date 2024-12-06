@@ -16,9 +16,28 @@
 
 from cachetools import cached, TTLCache
 
-from .constants import *
 
 from ..client import Lta
+from ..constants import (
+    CACHE_MAXSIZE,
+    CACHE_ONE_MINUTE,
+    CACHE_TWO_MINUTES,
+    CACHE_FIVE_MINUTES,
+    CACHE_ONE_DAY,
+)
+
+from .constants import (
+    CARPARK_AVAILABILITY_API_ENDPOINT,
+    ESTIMATED_TRAVEL_TIMES_API_ENDPOINT,
+    FAULTY_TRAFFIC_LIGHTS_API_ENDPOINT,
+    ROAD_OPENINGS_API_ENDPOINT,
+    ROAD_WORKS_API_ENDPOINT,
+    TRAFFIC_FLOW_API_ENDPOINT,
+    TRAFFIC_IMAGES_API_ENDPOINT,
+    TRAFFIC_INCIDENTS_API_ENDPOINT,
+    TRAFFIC_SPEED_BANDS_API_ENDPOINT,
+    VMS_API_ENDPOINT,
+)
 class Client(Lta):
     """Interact with the traffic-related endpoints.
 

@@ -14,15 +14,11 @@
 
 """Constants for all Geospatial-related APIs."""
 
-from ..constants import (
-    BASE_API_ENDPOINT,
-    CACHE_MAXSIZE,
-    CACHE_FIVE_MINUTES,
-)
+from ..constants import BASE_API_ENDPOINT
 
-GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT = '{}/GeospatialWholeIsland'.format(
-    BASE_API_ENDPOINT,
-)
+GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT = f'{
+    BASE_API_ENDPOINT
+}/GeospatialWholeIsland'
 
 GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = (
     'ArrowMarking',
@@ -32,9 +28,7 @@ GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = (
     'ConvexMirror',
     'CoveredLinkWay',
     'CyclingPath',
-    'CyclingPathConstruction',
     'DetectorLoop',
-    'EmergencyGate',
     'ERPGantry',
     'Footpath',
     'GuardRail',
@@ -47,7 +41,6 @@ GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = (
     'RailConstruction',
     'Railing',
     'RetainingWall',
-    'RoadConstruction',
     'RoadCrossing',
     'RoadHump',
     'RoadSectionLine',
@@ -63,3 +56,8 @@ GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = (
     'VehicularBridge_Flyover_Underpass',
     'WordMarking',
 )
+
+__all__ = [
+    'GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT',
+    'GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS',
+]
