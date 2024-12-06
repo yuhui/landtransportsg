@@ -31,6 +31,7 @@ from ..constants import (
     CACHE_ONE_DAY,
     CACHE_ONE_MONTH,
 )
+from ..timezone import date_is_within_last_three_months
 from ..types import Url
 
 from .constants import (
@@ -399,9 +400,9 @@ class Client(Lta):
             APIError:
                 Raised if no download link is returned.
         """
-        if dt is not None and \
-            not timezone.date_is_within_last_three_months(dt):
-            raise ValueError('dt is not within the last 3 months.')
+        if dt is not None and not date_is_within_last_three_months(dt):
+            raise ValueError('Argument "dt" is not within the last 3 months.')
+
         passenger_volume_link: Url
 
         self.validate_kwargs(Date=dt)
