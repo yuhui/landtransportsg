@@ -48,12 +48,12 @@ def datetime_from_string(val):
         dt = datetime.strptime(val, dt_format)
     except:
         # next, try parsing without timezone
-        dt_format = '{} %H:%M:%S'.format(dt_format)
+        dt_format = f'{dt_format} %H:%M:%S'
         try:
             dt = datetime.strptime(val, dt_format)
         except:
             # last, try parsing with timezone
-            dt_format = '{}%z'.format(dt_format)
+            dt_format = f'{dt_format}%z'
             dt = datetime.strptime(val, dt_format)
     # if still getting an error, then this isn't a datetime string
 

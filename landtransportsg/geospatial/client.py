@@ -58,9 +58,9 @@ class Client(Lta):
         """
         if geospatial_layer_id is None:
             raise ValueError(
-                'Missing geospatial_layer_id. Allowed IDs: {}'.format(
+                f'Missing argument "geospatial_layer_id". Allowed IDs: {
                     ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS),
-                ),
+                }',
             )
 
         if not isinstance(geospatial_layer_id, str):
@@ -68,9 +68,9 @@ class Client(Lta):
 
         if geospatial_layer_id not in GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS:
             raise ValueError(
-                'geospatial_layer_id is invalid. Allowed IDs: {}'.format(
+                f'Invalid argument "geospatial_layer_id". Allowed IDs: {
                     ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS),
-                ),
+                }',
             )
 
         geospatial_whole_island_link = self.send_download_request(

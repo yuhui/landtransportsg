@@ -42,7 +42,7 @@ class Lta:
         })
 
     def __repr__(self):
-        return '{}'.format(self.__class__)
+        return f'{self.__class__}'
 
     def validate_kwargs(self, **kwargs):
         """Verify that the kwargs are specified properly.
@@ -192,7 +192,7 @@ class Lta:
             fault = response_json['fault']
             faultstring = fault['faultstring']
             faultdetail = [
-                '{}: {}'.format(k, v) for k, v in fault['detail'].items()
+                f'{k}: {v}' for k, v in fault['detail'].items()
             ]
 
             raise APIError(
