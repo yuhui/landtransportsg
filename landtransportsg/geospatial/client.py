@@ -34,6 +34,18 @@ class Client(Lta):
         https://www.mytransport.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
+    @typechecked
+    def geospatial_layer_ids(self) -> tuple[str, ...]:
+        """Return the tuple of valid geospatial layer IDs.
+
+        :return: Tuple of valid geospatial layer IDs.
+        :rtype: tuple[str, ...]
+        """
+        geospatial_whole_island_ids: tuple[str, ...]
+
+        geospatial_whole_island_ids = GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS
+
+        return geospatial_whole_island_ids
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
