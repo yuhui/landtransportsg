@@ -102,12 +102,17 @@ class Client(Lta):
             ValueError
                 Raised if bus_stop_code is not a number-like string.
         """
-        if len(bus_stop_code) != 5:
-            raise ValueError('bus_stop_code is not a 5-character string.')
         try:
             _ = int(bus_stop_code)
-        except:
-            raise ValueError('bus_stop_code is not a valid number.')
+        except Exception as e:
+            raise ValueError(
+                'Argument "bus_stop_code" is not a valid number.'
+            ) from e
+
+        if len(bus_stop_code) != 5:
+            raise ValueError(
+                'Argument "bus_stop_code" must be 5-digits long.'
+            )
 
         bus_arrival: BusArrivalDict | dict
 
