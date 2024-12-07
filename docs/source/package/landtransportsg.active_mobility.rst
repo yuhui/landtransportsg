@@ -1,7 +1,7 @@
 landtransportsg.active_mobility
 ===============================
 
-.. automodule:: landtransportsg.active_mobility.client
+.. automodule:: landtransportsg.active_mobility
 
 Example usage:
 
@@ -17,4 +17,11 @@ Methods
 
 .. autoclass:: Client
    :members:
+   :show-inheritance:
+
+Types
+-----
+.. autoclass:: BicycleParkingDict
+   :members:
+   :member-order: bysource
    :show-inheritance:
