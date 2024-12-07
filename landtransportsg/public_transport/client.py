@@ -171,9 +171,7 @@ class Client(Lta):
         """Get the pre-signed links to JSON file containing facilities \
         maintenance schedules of the particular station.
 
-        :param station_code: Station Code of train station. Refer to the \
-            STATION_CODES_REGEX_PATTERN constant for the expected regex \
-            pattern that this code has to match.
+        :param station_code: Station Code of train station. Example: "NS1".
         :type station_code: str
 
         :raises ValueError: station_code is not specified.
@@ -330,8 +328,8 @@ class Client(Lta):
         train_line: str
     ) -> list[PlatformCrowdDensityRealTimeDict]:
         """Get real-time platform crowdedness level for the MRT/LRT stations \
-        of a particular train network line. Refer to the TRAIN_LINES \
-        constant for the list of valid train network lines.
+        of a particular train network line. Refer to the train_lines() \
+        method for the list of valid train network lines.
 
         :param train_line: Code of train network line.
         :type train_line: str
@@ -345,16 +343,12 @@ class Client(Lta):
         """
         if train_line is None:
             raise ValueError(
-                f'Missing argument "train_line". Allowed train lines: {
-                    ', '.join(TRAIN_LINES),
-                }',
+                'Missing argument "train_line". Use train_lines() to get a list of valid train line codes'
             )
 
         if train_line not in TRAIN_LINES:
             raise ValueError(
-                f'Invalid argument "train_line". Allowed train lines: {
-                    ', '.join(TRAIN_LINES),
-                }',
+                'Invalid argument "train_line". Use train_lines() to get a list of valid train line codes'
             )
 
         platform_crowd_density_real_time: list[
@@ -376,7 +370,7 @@ class Client(Lta):
     ) -> list[PlatformCrowdDensityForecastDict]:
         """Get forecasted platform crowdedness level for the MRT/LRT \
         stations of a particular train network line at 30 minutes interval. \
-        Refer to the TRAIN_LINES constant for the list of valid train \
+        Refer to the train_lines() method for the list of valid train \
         network lines.
 
         :param train_line: Code of train network line.
@@ -391,16 +385,12 @@ class Client(Lta):
         """
         if train_line is None:
             raise ValueError(
-                f'Missing argument "train_line". Allowed train lines: {
-                    ', '.join(TRAIN_LINES),
-                }',
+                'Missing argument "train_line". Use train_lines() to get a list of valid train line codes'
             )
 
         if train_line not in TRAIN_LINES:
             raise ValueError(
-                f'Invalid argument "train_line". Allowed train lines: {
-                    ', '.join(TRAIN_LINES),
-                }',
+                'Invalid argument "train_line". Use train_lines() to get a list of valid train line codes'
             )
 
         platform_crowd_density_forecast: list[
