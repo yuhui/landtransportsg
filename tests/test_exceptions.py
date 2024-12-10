@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2019-2024 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# pylint: disable=invalid-name,missing-function-docstring,redefined-outer-name,unused-argument
+
 """Test that the Exceptions are working properly."""
 
 import pytest
@@ -20,4 +22,4 @@ from landtransportsg.exceptions import APIError
 
 def test_raising_APIError():
     with pytest.raises(APIError):
-        raise APIError('pytest', {'error': 'pytest'})
+        raise APIError('pytest', [ 'pytest error' ])

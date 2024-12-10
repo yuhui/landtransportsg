@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2019-2024 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# pylint: disable=invalid-name,missing-function-docstring,redefined-outer-name,unused-argument,redefined-outer-name,unused-argument
+
 """Test that the Active Mobility class is working properly."""
 
 import pytest
+from typeguard import TypeCheckError
 
 from landtransportsg import ActiveMobility
 
@@ -57,5 +60,5 @@ def test_bicycle_parking(client, mock_requests_value_list_response, args):
     ],
 )
 def test_bicycle_parking_with_bad_latitude_longitude(client, args):
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeCheckError):
         _ = client.bicycle_parking(*args)

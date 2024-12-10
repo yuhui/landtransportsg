@@ -1,4 +1,4 @@
-# Copyright 2020 Yuhui
+# Copyright 2020-2024 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# pylint: disable=invalid-name,missing-function-docstring,redefined-outer-name,unused-argument
+
 """Test that the Geospatial class is working properly."""
 
 import pytest
-from datetime import date, timedelta
-from requests import Session
-from requests.exceptions import HTTPError
+from typeguard import TypeCheckError
 
 from landtransportsg import Geospatial
-from landtransportsg.exceptions import APIError
 
 from . import TEST_ACCOUNT_KEY
 
 @pytest.fixture
 def client():
     return Geospatial(TEST_ACCOUNT_KEY)
+
+def test_geospatial_layer_ids(client):
+    geospatial_layer_ids = client.geospatial_layer_ids()
+
+    assert isinstance(geospatial_layer_ids, tuple)
+    assert len(geospatial_layer_ids) == 34
 
 def test_geospatial_whole_island(
     client,
@@ -43,9 +48,19 @@ def test_geospatial_whole_island(
     [
         None, # unspecified ID
         12345, # non-string ID
-        'ArrowMarkings', # invalid ID
     ],
 )
 def test_geospatial_whole_island_with_bad_inputs(client, geospatial_layer_id):
+    with pytest.raises(TypeCheckError):
+        _ = client.geospatial_whole_island(geospatial_layer_id)
+
+
+@pytest.mark.parametrize(
+    'geospatial_layer_id',
+    [
+        'ArrowMarkings', # invalid ID
+    ],
+)
+def test_geospatial_whole_island_with_invalid_inputs(client, geospatial_layer_id):
     with pytest.raises(ValueError):
         _ = client.geospatial_whole_island(geospatial_layer_id)

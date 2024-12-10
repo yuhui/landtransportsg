@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2019-2024 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# pylint: disable=invalid-name,missing-function-docstring,redefined-outer-name,unused-argument
+
 """Test that the Traffic class is working properly."""
 
+from warnings import catch_warnings, simplefilter
+
 import pytest
-from requests.exceptions import HTTPError
 
 from landtransportsg import Traffic
 
@@ -28,7 +31,7 @@ def client():
 @pytest.mark.parametrize(
     'function',
     [
-        'carpark_availability',
+        # 'carpark_availability', # this is tested in test_class_function_with_more_than_five_hundred_records()
         # 'erp_rates', # this is tested in test_class_function_with_more_than_five_hundred_records()
         'estimated_travel_times',
         'faulty_traffic_lights',
@@ -49,10 +52,24 @@ def test_class_function_with_more_than_five_hundred_records(client):
     """This test calls the actual API endpoint so as to be able to receive more
     than 500 entries.
     """
-    result = client.erp_rates()
+    result = client.carpark_availability()
 
     assert isinstance(result, list)
     assert len(result) > 500
 
     for v in result:
         assert isinstance(v, dict)
+
+def test_erp_rates(client):
+    with catch_warnings(record=True) as w:
+        # Cause all warnings to always be triggered.
+        simplefilter('always')
+
+        erp_rates = client.erp_rates()
+
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert 'ERP rates was removed from LTA DataMall' in str(w[-1].message)
+
+        assert isinstance(erp_rates, list)
+        assert len(erp_rates) == 0

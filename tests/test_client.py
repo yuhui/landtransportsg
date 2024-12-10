@@ -1,4 +1,4 @@
-# Copyright 2020 Yuhui
+# Copyright 2020-2024 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# pylint: disable=invalid-name,missing-function-docstring,redefined-outer-name,unused-argument
+
 """Test that the Client class is working properly."""
 
-import pytest
-import requests
-from requests import Session
-from datetime import date, datetime, timedelta
-from requests import HTTPError
+from datetime import date, timedelta
 
-from landtransportsg.client import __Client
+import pytest
+from requests import Session
+from requests import HTTPError
+from typeguard import TypeCheckError
+
+from landtransportsg.client import Lta
 from landtransportsg.exceptions import APIError
 
 from . import TEST_ACCOUNT_KEY
@@ -43,7 +46,7 @@ def mock_requests_fault_response(monkeypatch):
 
 @pytest.fixture(scope='module')
 def client():
-    return __Client(TEST_ACCOUNT_KEY)
+    return Lta(TEST_ACCOUNT_KEY)
 
 def test_repr(client):
     assert repr(client) == str(client.__class__)
@@ -58,8 +61,8 @@ def test_repr(client):
 def test_validate_kwargs_with_good_datetime_date(client, dt):
     try:
         _ = client.validate_kwargs(Date=dt)
-    except Exception as e:
-        pytest.fail('Unexpected error occurred: {}'.format(e))
+    except Exception as e: # pylint: disable=broad-exception-caught
+        pytest.fail(f'Unexpected error occurred: {e}')
 
 def test_validate_kwargs_with_bad_datetime_date(client):
     with pytest.raises(ValueError):
@@ -69,7 +72,7 @@ def test_validate_kwargs_with_bad_datetime_date(client):
     ('url', 'kwargs'),
     [
         (
-            'http://datamall2.mytransport.sg/ltaodataservice/BicycleParkingv2?Lat=1.364897&Long=103.766094',
+            'http://datamall2.mytransport.sg/ltaodataservice/BicycleParkingv2?Lat=1.364897&Long=103.766094', # pylint: disable:line-too-long
             {},
         ),
         (
@@ -170,7 +173,7 @@ def test_send_download_request_with_bad_link(
     client,
     mock_requests_value_str_bad_link_response,
 ):
-    with pytest.raises(APIError):
+    with pytest.raises(TypeCheckError):
         _ = client.send_download_request(
             'http://datamall2.mytransport.sg/ltaodataservice/GeospatialWholeIsland',
             ID='ArrowMarking',
