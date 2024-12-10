@@ -1,15 +1,19 @@
 landtransportsg
 ===============
 
-|pyversions| |pypi| |status| |license| |readthedocs|
+|pyversions| |pypi| |status| |codecov| |downloads| |license| |readthedocs|
 
 .. |pyversions| image:: https://img.shields.io/pypi/pyversions/landtransportsg
-   :alt: Python 3
+   :alt: Python 3.10
 .. |pypi| image:: https://img.shields.io/pypi/v/landtransportsg
    :alt: PyPi
    :target: https://pypi.org/project/landtransportsg
 .. |status| image:: https://img.shields.io/pypi/status/landtransportsg
    :alt: PyPi status
+.. |codecov| image:: https://codecov.io/github/yuhui/landtransportsg/graph/badge.svg?token=nBlQ5KI6Ly
+   :target: https://codecov.io/github/yuhui/landtransportsg
+   :alt: CodeCov coverage
+.. |downloads| image:: https://img.shields.io/pypi/dm/landtransportsg
 .. |license| image:: https://img.shields.io/github/license/yuhui/landtransportsg
    :alt: GNU General Public License v3.0
    :target: https://www.gnu.org/licenses/gpl-3.0.html
@@ -20,7 +24,7 @@ landtransportsg
 This is an unofficial Python package for interacting with APIs available at
 `LTA DataMall`_.
 
-.. _LTA DataMall: https://www.mytransport.sg/content/mytransport/home/dataMall.html
+.. _LTA DataMall: https://datamall.lta.gov.sg/content/datamall/en.html
 
 Installing the package
 ----------------------
@@ -36,12 +40,12 @@ Pre-requisite:
 
 - API key from LTA. `Request for API access`_.
 
-.. _Request for API access: https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html
+.. _Request for API access: https://datamall.lta.gov.sg/content/datamall/en/request-for-api.html
 
 The main steps are:
 
-1. Import a class.
-2. Instantiate an object from the class.
+1. Import a client class.
+2. Instantiate an object from the client class.
 3. Call a function on that object.
 
 For more information, `refer to the documentation`_.
@@ -51,11 +55,15 @@ For more information, `refer to the documentation`_.
 Usage overview
 ^^^^^^^^^^^^^^
 
-Interacting with `LTA DataMall`_'s API is done through one of three clients,
+Interacting with `LTA DataMall`_'s API is done through one of four clients,
 where each client corresponds with a set of endpoints.
 
-The four clients are: ``ActiveMobility``, ``Geospatial``, ``PublicTransport``
-and ``Traffic``.
+The four clients are:
+
+- ``ActiveMobility``
+- ``Geospatial``
+- ``PublicTransport``
+- ``Traffic``
 
 Each client contains several public functions, one function per endpoint. A
 function's name is the same as its corresponding endpoint's ending path.
@@ -78,3 +86,15 @@ Reference
 `LTA DataMall's Developer Guide`_
 
 .. _LTA DataMall's Developer Guide: https://www.mytransport.sg/content/mytransport/home/dataMall/dynamic-data.html
+
+Other Packages Built by Me
+--------------------------
+
+If you like this package, you may be interested in these packages that I have
+built to work with other Government of Singapore APIs:
+
+- `datagovsg`_: for interacting with APIs available at Data.gov.sg.
+- `singstat`_: for interacting with APIs available at SingStat.gov.sg.
+
+.. _datagovsg: https://pypi.org/project/datagovsg/
+.. _singstat: https://pypi.org/project/singstat/
