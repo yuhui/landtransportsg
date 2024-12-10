@@ -16,9 +16,7 @@
 
 from ..constants import BASE_API_ENDPOINT
 
-GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT = f'{
-    BASE_API_ENDPOINT
-}/GeospatialWholeIsland'
+GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT = f'{BASE_API_ENDPOINT}/GeospatialWholeIsland'
 
 GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = (
     'ArrowMarking',
