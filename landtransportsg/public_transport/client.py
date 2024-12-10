@@ -326,7 +326,7 @@ class Client(Lta):
     def platform_crowd_density_real_time(
         self,
         train_line: str
-    ) -> list[PlatformCrowdDensityRealTimeDict]:
+    ) -> list[PlatformCrowdDensityRealTimeDict | dict]:
         """Get real-time platform crowdedness level for the MRT/LRT stations \
         of a particular train network line. Refer to the train_lines() \
         method for the list of valid train network lines.
@@ -352,7 +352,7 @@ class Client(Lta):
             )
 
         platform_crowd_density_real_time: list[
-            PlatformCrowdDensityRealTimeDict
+            PlatformCrowdDensityRealTimeDict | dict
         ]
 
         platform_crowd_density_real_time = self.send_request(
@@ -367,7 +367,7 @@ class Client(Lta):
     def platform_crowd_density_forecast(
         self,
         train_line: str
-    ) -> list[PlatformCrowdDensityForecastDict]:
+    ) -> list[PlatformCrowdDensityForecastDict | dict]:
         """Get forecasted platform crowdedness level for the MRT/LRT \
         stations of a particular train network line at 30 minutes interval. \
         Refer to the train_lines() method for the list of valid train \
@@ -394,7 +394,7 @@ class Client(Lta):
             )
 
         platform_crowd_density_forecast: list[
-            PlatformCrowdDensityForecastDict
+            PlatformCrowdDensityForecastDict | dict
         ]
 
         platform_crowd_density_forecast = self.send_request(
