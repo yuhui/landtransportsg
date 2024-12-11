@@ -122,14 +122,16 @@ class Lta:
         """
         response: Any
 
-        params = {}
+        attrs = {}
         for attribute, value in kwargs.items():
             if value is None:
                 pass
             elif isinstance(value, date):
-                params[attribute] = value.strftime('%Y%m')
+                attrs[attribute] = value.strftime('%Y%m')
             else:
-                params[attribute] = value
+                attrs[attribute] = value
+
+        params = attrs if len(attrs) > 0 else None
 
         response = self.__send_request(url, params=params)
 
