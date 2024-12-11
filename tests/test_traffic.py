@@ -73,3 +73,11 @@ def test_erp_rates(client):
 
         assert isinstance(erp_rates, list)
         assert len(erp_rates) == 0
+
+def test_traffic_flow(
+    client,
+    mock_requests_value_str_response,
+):
+    traffic_flow = client.traffic_flow()
+
+    assert isinstance(traffic_flow, str)

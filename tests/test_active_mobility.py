@@ -30,6 +30,7 @@ GOOD_DISTANCE = 1.2
 BAD_LATITUDE = 'foo'
 BAD_LONGITUDE = 'bar'
 BAD_DISTANCE = 'stamp'
+NEGATIVE_DISTANCE = -1.2
 
 @pytest.fixture(scope='module')
 def client():
@@ -59,6 +60,16 @@ def test_bicycle_parking(client, mock_requests_value_list_response, args):
         ([GOOD_LATITUDE, GOOD_LONGITUDE, BAD_DISTANCE]),
     ],
 )
-def test_bicycle_parking_with_bad_latitude_longitude(client, args):
+def test_bicycle_parking_with_bad_inputs(client, args):
     with pytest.raises(TypeCheckError):
+        _ = client.bicycle_parking(*args)
+
+@pytest.mark.parametrize(
+    'args',
+    [
+        ([GOOD_LATITUDE, GOOD_LONGITUDE, NEGATIVE_DISTANCE]),
+    ],
+)
+def test_bicycle_parking_with_invalid_inputs(client, args):
+    with pytest.raises(ValueError):
         _ = client.bicycle_parking(*args)

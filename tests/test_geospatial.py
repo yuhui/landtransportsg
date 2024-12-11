@@ -54,7 +54,6 @@ def test_geospatial_whole_island_with_bad_inputs(client, geospatial_layer_id):
     with pytest.raises(TypeCheckError):
         _ = client.geospatial_whole_island(geospatial_layer_id)
 
-
 @pytest.mark.parametrize(
     'geospatial_layer_id',
     [
