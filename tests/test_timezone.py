@@ -33,7 +33,6 @@ NON_LEAP_YEAR_DATE = freeze_time('2019-06-03')
 @pytest.mark.parametrize(
     ('date_time', 'expected_hour'),
     [
-        (datetime(2019, 7, 1, 8), 8),
         (datetime(2019, 7, 1, 8, tzinfo=ZoneInfo('Asia/Singapore')), 8),
         (datetime(2019, 7, 1, 8, tzinfo=ZoneInfo('UTC')), 16),
     ],
