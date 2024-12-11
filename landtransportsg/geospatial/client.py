@@ -63,13 +63,8 @@ class Client(Lta):
         :return: Link for downloading the requested SHP file.
         :rtype: Url
         """
-        allowed_ids_string = ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS)
-        if geospatial_layer_id is None:
-            raise ValueError(
-                f'Missing argument "geospatial_layer_id". Allowed IDs: {allowed_ids_string}',
-            )
-
         if geospatial_layer_id not in GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS:
+            allowed_ids_string = ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS)
             raise ValueError(
                 f'Invalid argument "geospatial_layer_id". Allowed IDs: {allowed_ids_string}',
             )

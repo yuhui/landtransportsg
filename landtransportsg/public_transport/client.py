@@ -181,9 +181,6 @@ class Client(Lta):
         :return: Link for downloading the requested JSON file.
         :rtype: Url
         """
-        if station_code is None:
-            raise ValueError('Missing argument "station_code".')
-
         if not re.search(STATION_CODES_REGEX_PATTERN, station_code):
             raise ValueError('Argument "station_code" is invalid.')
 
@@ -341,11 +338,6 @@ class Client(Lta):
             line.
         :rtype: list[PlatformCrowdDensityRealTimeDict]
         """
-        if train_line is None:
-            raise ValueError(
-                'Missing argument "train_line". Use train_lines() to get a list of valid train line codes'
-            )
-
         if train_line not in TRAIN_LINES:
             raise ValueError(
                 'Invalid argument "train_line". Use train_lines() to get a list of valid train line codes'
@@ -383,11 +375,6 @@ class Client(Lta):
             train network line.
         :rtype: list[PlatformCrowdDensityForecastDict]
         """
-        if train_line is None:
-            raise ValueError(
-                'Missing argument "train_line". Use train_lines() to get a list of valid train line codes'
-            )
-
         if train_line not in TRAIN_LINES:
             raise ValueError(
                 'Invalid argument "train_line". Use train_lines() to get a list of valid train line codes'
