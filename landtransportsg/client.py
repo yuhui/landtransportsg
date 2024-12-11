@@ -184,7 +184,7 @@ class Lta:
         don't need to be specified here.
 
         :param url: The endpoint URL to send the request to.
-        :type url: str
+        :type url: Url
 
         :param params: Parameters to send with the URL. Defaults to None.
         :type params: dict[str, Any]
