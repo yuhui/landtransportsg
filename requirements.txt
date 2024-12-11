@@ -1,6 +1,5 @@
 backoff
 cachetools
-pytz
 requests
 typeguard
 types-cachetools

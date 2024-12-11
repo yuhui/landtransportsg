@@ -17,10 +17,10 @@
 """Test that the timezone functions are working properly."""
 
 from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 import pytest
 from freezegun import freeze_time
-from pytz import timezone as pytimezone
 from typeguard import TypeCheckError
 
 from landtransportsg import timezone
@@ -34,8 +34,8 @@ NON_LEAP_YEAR_DATE = freeze_time('2019-06-03')
     ('date_time', 'expected_hour'),
     [
         (datetime(2019, 7, 1, 8), 8),
-        (datetime(2019, 7, 1, 8, tzinfo=pytimezone('Asia/Singapore')), 8),
-        (datetime(2019, 7, 1, 8, tzinfo=pytimezone('UTC')), 16),
+        (datetime(2019, 7, 1, 8, tzinfo=ZoneInfo('Asia/Singapore')), 8),
+        (datetime(2019, 7, 1, 8, tzinfo=ZoneInfo('UTC')), 16),
     ],
 )
 def test_datetime_as_sgt(date_time, expected_hour):
