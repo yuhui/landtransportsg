@@ -21,7 +21,7 @@ from .traffic import Client as Traffic
 
 NAME = 'landtransportsg'
 VERSION = '2.0.0' # Production
-VERSION = f'{VERSION}.{datetime.now().strftime("%Y%m%d%H%M")}' # Development
+# VERSION = f'{VERSION}.{datetime.now().strftime("%Y%m%d%H%M")}' # Development
 AUTHOR = 'Yuhui'
 AUTHOR_EMAIL = 'yuhuibc@gmail.com'
 
