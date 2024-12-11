@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2019-2024 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# pylint: disable=invalid-name,missing-function-docstring,redefined-outer-name,unused-argument,redefined-outer-name,unused-argument
+
 """Test that the Active Mobility class is working properly."""
 
 import pytest
+from typeguard import TypeCheckError
 
 from landtransportsg import ActiveMobility
 
@@ -27,6 +30,7 @@ GOOD_DISTANCE = 1.2
 BAD_LATITUDE = 'foo'
 BAD_LONGITUDE = 'bar'
 BAD_DISTANCE = 'stamp'
+NEGATIVE_DISTANCE = -1.2
 
 @pytest.fixture(scope='module')
 def client():
@@ -56,6 +60,16 @@ def test_bicycle_parking(client, mock_requests_value_list_response, args):
         ([GOOD_LATITUDE, GOOD_LONGITUDE, BAD_DISTANCE]),
     ],
 )
-def test_bicycle_parking_with_bad_latitude_longitude(client, args):
+def test_bicycle_parking_with_bad_inputs(client, args):
+    with pytest.raises(TypeCheckError):
+        _ = client.bicycle_parking(*args)
+
+@pytest.mark.parametrize(
+    'args',
+    [
+        ([GOOD_LATITUDE, GOOD_LONGITUDE, NEGATIVE_DISTANCE]),
+    ],
+)
+def test_bicycle_parking_with_invalid_inputs(client, args):
     with pytest.raises(ValueError):
         _ = client.bicycle_parking(*args)

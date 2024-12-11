@@ -1,4 +1,7 @@
-backoff >=1.8,<2.0
-cachetools >=3,<4.0
-pytz >=2019,<2020
-requests >=2,<3.0
+backoff
+cachetools
+requests
+typeguard
+types-cachetools
+types-pytz
+types-requests

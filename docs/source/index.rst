@@ -3,10 +3,10 @@
    contain the root `toctree` directive.
 
 
-landtransportsg: interact with LTA DataMall's API
+landtransportsg: Interact with LTA DataMall's API
 =================================================
 
-Release v\ |version|.
+Release v\ |release|.
 
 |pyversions| |pypi| |status| |license| |readthedocs|
 
@@ -27,7 +27,7 @@ Release v\ |version|.
 This is an unofficial Python package for interacting with APIs available at
 `LTA DataMall`_.
 
-.. _LTA DataMall: https://www.mytransport.sg/content/mytransport/home/dataMall.html
+.. _LTA DataMall: https://datamall.lta.gov.sg/content/datamall/en.html
 
 Installing the package
 ----------------------
@@ -43,7 +43,7 @@ Pre-requisite:
 
 - API key. `Request for API access`_.
 
-.. _Request for API access: https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html
+.. _Request for API access: https://datamall.lta.gov.sg/content/datamall/en/request-for-api.html
 
 The main steps are:
 
@@ -57,18 +57,12 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    package_overview
    package_reference
    external_references
-
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   other_packages
 
 License
 -------

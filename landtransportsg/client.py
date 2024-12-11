@@ -1,4 +1,4 @@
-# Copyright 2020 Yuhui
+# Copyright 2020-2024 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,175 +14,199 @@
 
 """Mixin for Clients that interact with LTA DataMall's APIs."""
 
+import time
+from datetime import date
+from typing import Any, Optional
+
 import backoff
 import requests
-import time
-from datetime import date, datetime
 from requests import Session
+from typeguard import typechecked
 
 from . import timezone
 from .exceptions import APIError
+from .types import Url
 
-class __Client(object):
+class Lta:
     """Client mixin for other API Clients.
 
-    Attributes:
-        account_key (str):
-            The LTA DataMall-assigned API key.
-            Request for one from https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html.
-
+    An account key is required to use the LTA DataMall API. Request for one \
+    from \
+    https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html.
     """
 
-    def __init__(self, account_key):
+    @typechecked
+    def __init__(self, account_key: str) -> None:
+        """Constructor method
+
+        :param account_key: The LTA DataMall-assigned API key.
+        :type account_key: str
+        """
         self.session = Session()
         self.session.headers.update({
             'AccountKey': account_key,
             'accept': 'application/json',
         })
 
-    def __repr__(self):
-        return '{}'.format(self.__class__)
+    @typechecked
+    def __repr__(self) -> str:
+        """String representation"""
+        return f'{self.__class__}'
 
-    def validate_kwargs(self, **kwargs):
+    @typechecked
+    def validate_kwargs(self, **kwargs: Any) -> None:
         """Verify that the kwargs are specified properly.
 
-        Arguments:
-            kwargs (dict):
-                (optional) Attribute-value arguments to validate.
-                If an attribute is date-related, then its value is expected to
-                be of `date` instance.
+        :param kwargs: Attribute-value arguments to validate. If an attribute \
+            is date-related, then its value is expected to be of `date` \
+            instance.
+        :type kwargs: Any
 
-        Raises:
-            ValueError:
-                Raised if Date is specified but isn't a date object.
+        :raises ValueError: Raised if Date is specified but isn't a date \
+            object.
         """
         for k, v in kwargs.items():
             if v is not None:
-                if k is 'Date' and not isinstance(v, date):
+                if k == 'Date' and not isinstance(v, date):
                     raise ValueError('"Date" value is not a date object.')
 
-    def send_download_request(self, url, **kwargs):
-        """Send a request to an endpoint that expects a response with a
+    @typechecked
+    def send_download_request(self, url: Url, **kwargs: Any) -> Url:
+        """Send a request to an endpoint that expects a response with a \
         download link.
 
-        Arguments:
-            url (str):
-                The endpoint URL to send the request to.
-            kwargs (dict):
-                (optional) Attribute-value arguments to be passed as parameters
-                to the endpoint URL.
-                If an attribute is date-related, then its value is expected to
-                be of `date` instance and will be standardised to the format
-                required by the endpoint.
+        :param url: The endpoint URL to send the request to.
+        :type url: Url
 
-        Returns:
-            (str) Link for downloading the requested file.
+        :param kwargs: Attribute-value arguments to be passed as parameters \
+            to the endpoint URL. If an attribute is date-related, then its \
+            value is expected to be of `date` instance and will be \
+            standardised to the format required by the endpoint. Optional.
+        :type kwargs: Any
 
-        Raises:
-            APIError:
-                Raised if the API responds with an unexpected response.
+        :raises APIError: List of download links is empty.
+
+        :return: Link for downloading the requested file.
+        :rtype: Url
         """
+        download_link: Url
+
         download = self.send_request(url, **kwargs)
 
         if not isinstance(download, list):
-            raise APIError(
-                "Download link not returned unexpectedly.",
-            )
+            raise APIError('Download link not returned unexpectedly.')
 
-        if len(download) is 0:
-            raise APIError("No download link returned.")
+        if len(download) == 0:
+            raise APIError('No download link returned.')
 
         download_link = download[0].get('Link')
-        if not isinstance(download_link, str):
-            raise APIError(
-                "Download link not returned, got a non-string unexpectedly.",
-            )
 
         return download_link
 
-    def send_request(self, url, **kwargs):
-        """Send a request to an endpoint.
+    @typechecked
+    def send_request(self, url: Url, **kwargs: Any) -> Any:
+        """Send a request to an endpoint and get its response's list of \
+        results.
 
-        Arguments:
-            url (str):
-                The endpoint URL to send the request to.
-            kwargs (dict):
-                (optional) Attribute-value arguments to be passed as parameters
-                to the endpoint URL.
-                If an attribute is date-related, then its value is expected to
-                be of `date` instance and will be standardised to the format
-                required by the endpoint.
+        :param url: The endpoint URL to send the request to.
+        :type url: Url
 
-        Returns:
-            (list or object) Response JSON content of the request.
+        :param kwargs: Attribute-value arguments to be passed as parameters \
+            to the endpoint URL. If an attribute is date-related, then its \
+            value is expected to be of `date` instance and will be \
+            standardised to the format required by the endpoint. Optional.
+        :type kwargs: Any
+
+        :return: Results from the response.
+        :rtype: Any
         """
-        params = {}
+        response: Any
+
+        attrs = {}
         for attribute, value in kwargs.items():
             if value is None:
                 pass
             elif isinstance(value, date):
-                params[attribute] = value.strftime('%Y%m')
+                attrs[attribute] = value.strftime('%Y%m')
             else:
-                params[attribute] = value
+                attrs[attribute] = value
 
-        response_json = self.__send_request(url, params=params)
+        params = attrs if len(attrs) > 0 else None
 
-        response_content = self.__sanitise_timestamps(response_json)
-        if 'value' in response_content:
-            # the real data is in key 'value', so return that instead
-            response_content = response_content['value']
+        response = self.__send_request(url, params=params)
 
-        return response_content
+        return response
 
     # private
 
-    def __sanitise_timestamps(self, dictionary):
-        """Convert timestamp strings to datetime objects and
-        return the dictionary.
-        """
-        for key in dictionary:
-            val = dictionary[key]
-            if isinstance(val, str):
-                try:
-                    dictionary[key] = timezone.datetime_from_string(val)
-                except Exception:
-                    pass
-            elif isinstance(val, dict):
-                dictionary[key] = self.__sanitise_timestamps(val)
-            elif isinstance(val, list):
-                dictionary[key] = [
-                    self.__sanitise_timestamps(v) \
-                        if isinstance(v, dict) else v for v in val
-                ]
+    @typechecked
+    def __sanitise_data(self, value: Any) -> Any:
+        """Convert a value to a native object (e.g. timestamp string to \
+        datetime) and return the value. If value is a list or dict, then \
+        iterate through its items.
 
-        return dictionary
+        :param value: Value to sanitise.
+        :type value: Any
+
+        :return:  The sanitised value.
+        :rtype: Any
+        """
+        sanitised_value: Any
+
+        sanitised_value = value
+        if isinstance(value, list):
+            sanitised_value = list(map(self.__sanitise_data, value))
+        elif isinstance(value, dict):
+            sanitised_value = {
+                k: self.__sanitise_data(v) for k, v in value.items()
+            }
+        elif isinstance(value, str):
+            try:
+                sanitised_value = timezone.datetime_from_string(value)
+            except Exception: # pylint: disable=broad-exception-caught
+                pass
+
+        return sanitised_value
 
     @backoff.on_exception(backoff.expo, APIError, max_tries=2)
-    def __send_request(self, url, params=None, headers={}):
-        """Send a request to an endpoint, using backoff with a maximum of 2
-        tries.
+    @typechecked
+    def __send_request(
+        self,
+        url: Url,
+        params: Optional[dict[str, Any]]=None,
+        headers: Optional[dict[str, Any]]=None,
+    ) -> Any:
+        """Send a request to an endpoint and get the response's list of \
+        results, using backoff with a maximum of 2 tries. If pagination is \
+        required, then get responses from all pages in one final list.
 
-        Arguments:
-            url (str):
-                The endpoint URL to send the request to.
-            params (dict):
-                (optional) Parameters to send with the URL.
-            headers (dict:
-                (optional) HTTP headers to send with the request.
-                `AccountKey` and `accept` are set automatically, so these
-                headers don't need to be specified here.
+        `AccountKey` and `accept` headers are set automatically, so they \
+        don't need to be specified here.
 
-        Returns:
-            (Response) response of the request.
+        :param url: The endpoint URL to send the request to.
+        :type url: str
 
-        Raises:
-            HTTPError:
-                Raised if there is a network error.
-            APIError:
-                Raised if the API responds with an error.
+        :param params: Parameters to send with the URL. Defaults to None.
+        :type params: dict[str, Any]
+
+        :param headers: HTTP headers to send with the request. Defaults to \
+            None.
+        :type headers: dict[str, Any]
+
+        :raises APIError: The endpoint responds with an error.
+
+        :return: Results from the response's 'value' key.
+        :rtype: Any
         """
-        response = self.session.get(url, params=params, headers=headers)
+        response_value: Any
 
+        response = self.session.get(
+            url,
+            params=params,
+            headers=headers,
+        )
+
+        response_json = {}
         try:
             response_json = response.json()
         except ValueError:
@@ -193,35 +217,47 @@ class __Client(object):
             fault = response_json['fault']
             faultstring = fault['faultstring']
             faultdetail = [
-                '{}: {}'.format(k, v) for k, v in fault['detail'].items()
+                f'{k}: {v}' for k, v in fault['detail'].items()
             ]
 
             raise APIError(
                 faultstring,
                 errors=faultdetail,
             )
-        elif response.status_code != requests.codes['ok']:
+
+        if response.status_code != requests.codes['ok']:
             response.raise_for_status()
 
         # it is possible to paginate "forever" by skipping by 500 records
         # so check if there are any records in the current results first
-        response_json_value = response_json.get('value')
-        if isinstance(response_json_value, list) and \
-            len(response_json_value) == 500:
+        response_value = response_json.get('value') \
+            if 'value' in response_json else response_json
+        if isinstance(response_value, list) and len(response_value) == 500:
             # get the next page of results
+            if params is None:
+                params = {
+                    '$skip': 0
+                }
             current_skip = params.pop('$skip', 0)
             skip = current_skip + 500
             params['$skip'] = skip
 
             # wait a while so as not to flood the endpoint
-            if skip % 1000 is 0:
+            if skip % 1000 == 0:
                 time.sleep(1)
 
-            next_response_json = self.__send_request(
+            next_response_value = self.__send_request(
                 url,
                 params,
                 headers,
             )
-            response_json['value'] += next_response_json['value']
+            # next_response_value should be a list too
+            response_value += next_response_value
 
-        return response_json
+        response_value = self.__sanitise_data(response_value)
+
+        return response_value
+
+__all__ = [
+    'Lta',
+]

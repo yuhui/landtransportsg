@@ -1,4 +1,4 @@
-# Copyright 2020 Yuhui
+# Copyright 2020-2024 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,4 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Geospatial module."""
+
 from .client import Client
+from ..types import Url
+
+__all__ = [
+    'Client',
+    'Url',
+]

@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2019-2024 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
 
 """Constants for all Active Mobility-related APIs."""
 
-from ..constants import (
-    BASE_API_ENDPOINT,
-    CACHE_MAXSIZE,
-    CACHE_ONE_DAY,
-)
+from ..constants import BASE_API_ENDPOINT
 
-BICYCLE_PARKING_API_ENDPOINT = '{}/BicycleParkingv2'.format(BASE_API_ENDPOINT)
+BICYCLE_PARKING_API_ENDPOINT = f'{BASE_API_ENDPOINT}/BicycleParkingv2'
+
+__all__ = [
+    'BICYCLE_PARKING_API_ENDPOINT',
+]

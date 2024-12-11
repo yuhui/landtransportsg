@@ -1,7 +1,7 @@
 landtransportsg.traffic
 =======================
 
-.. automodule:: landtransportsg.traffic.client
+.. automodule:: landtransportsg.traffic
 
 Example usage:
 
@@ -17,4 +17,57 @@ Methods
 
 .. autoclass:: Client
    :members:
+   :show-inheritance:
+
+Types
+-----
+
+.. autoclass:: CarParkAvailabilityDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: EstimatedTravelTimesDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: FaultyTrafficLightsDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: RoadOpeningsDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: RoadWorksDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: TrafficImagesDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: TrafficIncidentsDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: TrafficSpeedBandsDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: VMSDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
+.. autoclass:: Url
+   :members:
+   :member-order: bysource
    :show-inheritance:

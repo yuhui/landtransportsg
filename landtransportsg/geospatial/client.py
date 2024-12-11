@@ -1,4 +1,4 @@
-# Copyright 2020 Yuhui
+# Copyright 2020-2024 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,58 +15,61 @@
 """Client for interacting with the Geospatial API endpoints."""
 
 from cachetools import cached, TTLCache
+from typeguard import typechecked
 
-from .constants import *
-from ..client import __Client
-from ..exceptions import APIError
+from ..client import Lta
+from ..constants import CACHE_MAXSIZE, CACHE_FIVE_MINUTES
+from ..types import Url
 
-class Client(__Client):
+from .constants import (
+    GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,
+
+    GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS,
+)
+
+class Client(Lta):
     """Interact with the geospatial-related endpoints.
 
-    References:
-        https://www.mytransport.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
+    References: \
+        https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
-    def __init(self, account_key):
-        super(Client, self).__init__(account_key)
+    @typechecked
+    def geospatial_layer_ids(self) -> tuple[str, ...]:
+        """Return the tuple of valid geospatial layer IDs.
+
+        :return: Tuple of valid geospatial layer IDs.
+        :rtype: tuple[str, ...]
+        """
+        geospatial_whole_island_ids: tuple[str, ...]
+
+        geospatial_whole_island_ids = GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS
+
+        return geospatial_whole_island_ids
 
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
-    def geospatial_whole_island(self, geospatial_layer_id):
+    @typechecked
+    def geospatial_whole_island(self, geospatial_layer_id: str) -> Url:
         """Get the SHP files of the requested geospatial layer.
 
-        Arguments:
-            geospatial_layer_id (str):
-                Name of geospatial layer.
-                Refer to the GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS constant for the
-                list of valid names.
+        :param geospatial_layer_id: Name of geospatial layer. Refer to the \
+            GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS constant for the list of valid \
+            IDs.
+        :type geospatial_layer_id: str
 
-        Returns:
-            (str) Link for downloading the requested SHP file.
+        :raises ValueError: geospatial_layer_id is not specified.
+        :raises ValueError: geospatial_layer_id is not a valid ID.
 
-        Raises:
-            ValueError
-                Raised if geospatial_layer_id is not specified.
-            ValueError
-                Raised if geospatial_layer_id is not a string.
-            ValueError:
-                Raised if geospatial_layer_id is not a valid ID.
+        :return: Link for downloading the requested SHP file.
+        :rtype: Url
         """
-        if geospatial_layer_id is None:
-            raise ValueError(
-                'Missing geospatial_layer_id. Allowed IDs: {}'.format(
-                    ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS),
-                ),
-            )
-
-        if not isinstance(geospatial_layer_id, str):
-            raise ValueError('geospatial_layer_id is not a string.')
-
         if geospatial_layer_id not in GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS:
+            allowed_ids_string = ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS)
             raise ValueError(
-                'geospatial_layer_id is invalid. Allowed IDs: {}'.format(
-                    ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS),
-                ),
+                f'Invalid argument "geospatial_layer_id". Allowed IDs: {allowed_ids_string}',
             )
+
+        geospatial_whole_island_link: Url
 
         geospatial_whole_island_link = self.send_download_request(
             GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,
@@ -74,3 +77,7 @@ class Client(__Client):
         )
 
         return geospatial_whole_island_link
+
+__all__ = [
+    'Client',
+]

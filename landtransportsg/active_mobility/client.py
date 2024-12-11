@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2019-2024 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,49 +15,49 @@
 """Client for interacting with the Active Mobility API endpoints."""
 
 from cachetools import cached, TTLCache
-from datetime import date, datetime
+from typeguard import typechecked
 
-from .constants import *
-from ..client import __Client
+from ..client import Lta
+from ..constants import CACHE_MAXSIZE, CACHE_ONE_DAY
 
-class Client(__Client):
+from .constants import BICYCLE_PARKING_API_ENDPOINT
+from .types import BicycleParkingDict
+
+class Client(Lta):
     """Interact with the active mobility-related endpoints.
 
-    References:
-        https://www.mytransport.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
+    References: \
+        https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
-    def __init(self, account_key):
-        super(Client, self).__init__(account_key)
-
     @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
-    def bicycle_parking(self, latitude, longitude, distance=0.5):
+    @typechecked
+    def bicycle_parking(
+        self,
+        latitude: float,
+        longitude: float,
+        distance: float=0.5,
+    ) -> list[BicycleParkingDict | dict]:
         """Get bicycle parking locations within a radius.
 
-        Arguments:
-            latitude (float):
-                Latitude map coordinates of a location.
-            longitude (float):
-                Longitude map coordinates of a location.
-            distance (float):
-                (optional) Radius in kilometres from the latitude-longitude
-                location to retrieve bicycle parking locations.
-                Default: 0.5.
+        :param latitude: Latitude map coordinates of a location.
+        :type latitude: float
 
-        Returns:
-            (list) Available bicycle parking locations at the specified
+        :param longitude: Longitude map coordinates of a location.
+        :type longitude: float
+
+        :param distance: Radius in kilometres from the latitude-longitude \
+            location to retrieve bicycle parking locations. Defaults to 0.5.
+        :type distance: float
+
+        :raises ValueError: distance is a negative float.
+
+        :return: Available bicycle parking locations at the specified \
             location.
-
-        Raises:
-            ValueError:
-                If latitude, longitude or distance are not floats.
+        :rtype: list[BicycleParkingDict]
         """
-        if not isinstance(latitude, float):
-            raise ValueError("latitude is not a float.")
-        if not isinstance(longitude, float):
-            raise ValueError("longitude is not a float.")
-        if not isinstance(distance, float):
-            raise ValueError("distance is not a float.")
+        if isinstance(distance, float) and distance < 0:
+            raise ValueError('Argument "distance" cannot be less than zero.')
 
         bicycle_parking_locations = self.send_request(
             BICYCLE_PARKING_API_ENDPOINT,
@@ -67,3 +67,7 @@ class Client(__Client):
         )
 
         return bicycle_parking_locations
+
+__all__ = [
+    'Client',
+]

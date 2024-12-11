@@ -1,7 +1,7 @@
 Package Overview
 ================
 
-Interacting with `LTA DataMall`_'s API is done through one of three clients,
+Interacting with `LTA DataMall`_'s API is done through one of four clients,
 where each client corresponds with a set of endpoints.
 
 .. _LTA DataMall: https://www.mytransport.sg/content/mytransport/home/dataMall.html

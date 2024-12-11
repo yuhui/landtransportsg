@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2019-2024 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,15 +14,32 @@
 
 """Exceptions that could occur when interacting with any API endpoint."""
 
+from typing import Optional
+
+from typeguard import typechecked
+
+@typechecked
 class APIError(Exception):
     """Error when the API returns an error.
 
-    Attributes:
-        message (str):
-            The general error message to display when the error is raised.
-        errors (list of str):
-            (optional) Other messages that were part of the raised error.
+    :param message: The general error message to display when the error is \
+        raised.
+    :type message: str
+
+    :param errors: Other messages that were part of the raised error. \
+        Defaults to None.
+    :type errors: list[str]
     """
-    def __init__(self, message, errors=None):
+    def __init__(
+        self,
+        message: str,
+        errors: Optional[list[str]]=None
+    ) -> None:
+        """Constructor method"""
         super().__init__(message)
-        self.errors = errors
+        if errors:
+            self.errors = errors
+
+__all__ = [
+    'APIError',
+]

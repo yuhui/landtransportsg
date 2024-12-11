@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TEST_ACCOUNT_KEY = 'my-datamall-key'
+TEST_ACCOUNT_KEY = 'Xux1ptd+Tg+sGC1SmbilxA=='

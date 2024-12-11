@@ -1,7 +1,7 @@
 landtransportsg.geospatial
 ================================
 
-.. automodule:: landtransportsg.geospatial.client
+.. automodule:: landtransportsg.geospatial
 
 Example usage:
 
@@ -17,4 +17,11 @@ Methods
 
 .. autoclass:: Client
    :members:
+   :show-inheritance:
+
+Types
+-----
+.. autoclass:: Url
+   :members:
+   :member-order: bysource
    :show-inheritance:

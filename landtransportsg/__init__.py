@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2019-2024 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name = 'landtransportsg'
-version = '1.3.0'
-author = 'Yuhui'
-author_email = 'yuhuibc@gmail.com'
+from datetime import datetime
 
 from .active_mobility import Client as ActiveMobility
 from .geospatial import Client as Geospatial
 from .public_transport import Client as PublicTransport
 from .traffic import Client as Traffic
+
+NAME = 'landtransportsg'
+VERSION = '2.0.0' # Production
+VERSION = f'{VERSION}.{datetime.now().strftime("%Y%m%d%H%M")}' # Development
+AUTHOR = 'Yuhui'
+AUTHOR_EMAIL = 'yuhuibc@gmail.com'
 
 __all__ = [
     'ActiveMobility',
@@ -28,3 +31,4 @@ __all__ = [
     'PublicTransport',
     'Traffic',
 ]
+__version__ = VERSION
