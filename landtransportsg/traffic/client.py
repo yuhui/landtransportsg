@@ -83,7 +83,8 @@ class Client(Lta):
         zone.
 
         This endpoint was removed from DataMall v6.1 on 30 September 2024. \
-        This method will be removed in this package's next major release.
+        This method will be removed from this package's next major release or \
+        31 December 2025, whichever comes earlier.
 
         :warns DeprecationWarning: Inform the developer that this method has
             been deprecated.
