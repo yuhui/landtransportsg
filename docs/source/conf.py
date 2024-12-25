@@ -29,9 +29,9 @@
 import os
 import sys
 
-from landtransportsg import NAME, AUTHOR, VERSION
-
 sys.path.insert(0, os.path.abspath('../..'))
+
+from landtransportsg import NAME, AUTHOR, VERSION
 
 
 # -- Project information -----------------------------------------------------

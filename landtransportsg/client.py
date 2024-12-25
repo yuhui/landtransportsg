@@ -200,11 +200,7 @@ class Lta:
         """
         response_value: Any
 
-        response = self.session.get(
-            url,
-            params=params,
-            headers=headers,
-        )
+        response = self.session.get(url, params=params, headers=headers)
 
         response_json = {}
         try:
