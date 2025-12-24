@@ -17,7 +17,17 @@
 from ..constants import BASE_API_ENDPOINT
 
 BICYCLE_PARKING_API_ENDPOINT = f'{BASE_API_ENDPOINT}/BicycleParkingv2'
+BICYCLE_PARKING_ARGS_KEY_MAP = {
+    'latitude': 'Lat',
+    'longitude': 'Long',
+    'distance': 'Dist',
+}
+BICYCLE_PARKING_DEFAULT_ARGS = {
+    'distance': 0.5,
+}
 
 __all__ = [
     'BICYCLE_PARKING_API_ENDPOINT',
+    'BICYCLE_PARKING_ARGS_KEY_MAP',
+    'BICYCLE_PARKING_DEFAULT_ARGS',
 ]

@@ -16,7 +16,7 @@
 
 import re
 from datetime import date
-from typing import Optional
+from typing import Unpack
 
 from typeguard import typechecked
 
@@ -48,7 +48,16 @@ from .constants import (
     TRAIN_SERVICE_ALERTS_API_ENDPOINT,
 
     STATION_CODES_REGEX_PATTERN,
+    BUS_ARRIVAL_ARGS_KEY_MAP,
+    PASSENGER_VOLUME_ARGS_KEY_MAP,
+    STATION_CROWD_DENSITY_ARGS_KEY_MAP,
+
     TRAIN_LINES,
+)
+from .types_args import (
+    BusArrivalArgsDict,
+    PassengerVolumeArgsDict,
+    StationCrowdDensityArgsDict,
 )
 from .types import (
     BusArrivalDict,
@@ -72,19 +81,15 @@ class Client(LandTransportSg):
     @typechecked
     def bus_arrival(
         self,
-        bus_stop_code: str,
-        service_number: Optional[str]=None,
+        **kwargs: Unpack[BusArrivalArgsDict],
     ) -> BusArrivalDict | dict:
         """Get real-time Bus Arrival information of Bus Services at a queried \
         Bus Stop, including Est. Arrival Time, Est. Current Location, Est. \
         Current Load.
 
-        :param bus_stop_code: 5-digit bus stop reference code.
-        :type bus_stop_code: str
-
-        :param service_number: Bus service number. If omitted, then all bus \
-            services at the bus stop code are returned. Defaults to None.
-        :type service_number: str
+        :param kwargs: Key-value arguments to be passed as parameters to the \
+            endpoint URL.
+        :type kwargs: BusArrivalArgsDict
 
         :raises ValueError: bus_stop_code is not exactly 5 characters long.
         :raises ValueError: bus_stop_code is not a number-like string.
@@ -92,6 +97,14 @@ class Client(LandTransportSg):
         :return: Information about bus arrival at the specified bus stop.
         :rtype: BusArrivalDict
         """
+        params = self.build_params(
+            params_expected_type=BusArrivalArgsDict,
+            original_params=kwargs,
+            key_map=BUS_ARRIVAL_ARGS_KEY_MAP,
+        )
+
+        bus_stop_code = kwargs['bus_stop_code']
+
         try:
             _ = int(bus_stop_code)
         except Exception as e:
@@ -108,8 +121,7 @@ class Client(LandTransportSg):
 
         bus_arrival = self.send_request(
             BUS_ARRIVAL_API_ENDPOINT,
-            BusStopCode=bus_stop_code,
-            ServiceNo=service_number,
+            params=params,
             cache_duration=CACHE_ONE_MINUTE,
         )
 
@@ -199,26 +211,34 @@ class Client(LandTransportSg):
     @typechecked
     def passenger_volume_by_bus_stops(
         self,
-        dt: Optional[date]=None
+        **kwargs: Unpack[PassengerVolumeArgsDict],
     ) -> Url:
         """Get tap in and tap out passenger volume by weekdays and weekends \
         for individual bus stop.
 
-        :param dt: Date of a specific month to get passenger volume. This \
-            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
-            the year and month will be used since that is what the endpoint \
-            accepts. Must be within the last 3 months of the current month. \
-            Defaults to None.
-        :type dt: date
+        :param kwargs: Key-value arguments to be passed as parameters to the \
+            endpoint URL.
+        :type kwargs: PassengerVolumeArgsDict
 
         :return: Download link of file containing passenger volume data.
         :rtype: Url
         """
+        params = self.build_params(
+            params_expected_type=PassengerVolumeArgsDict,
+            original_params=kwargs,
+            key_map=PASSENGER_VOLUME_ARGS_KEY_MAP,
+        )
+
+        if 'dt' in kwargs:
+            dt = kwargs['dt']
+            if dt is not None and not date_is_within_last_three_months(dt):
+                raise ValueError('Argument "dt" is not within the last 3 months.')
+
         passenger_volume_link: Url
 
-        passenger_volume_link = self.__get_passenger_volume_link(
+        passenger_volume_link = self.send_download_request(
             PASSENGER_VOLUME_BY_BUS_STOPS_API_ENDPOINT,
-            dt,
+            params=params,
             cache_duration=CACHE_FIVE_MINUTES,
         )
 
@@ -227,26 +247,34 @@ class Client(LandTransportSg):
     @typechecked
     def passenger_volume_by_origin_destination_bus_stops(
         self,
-        dt: Optional[date]=None,
+        **kwargs: Unpack[PassengerVolumeArgsDict],
     ) -> Url:
         """Get number of trips by weekdays and weekends from origin to \
         destination bus stops.
 
-        :param dt: Date of a specific month to get passenger volume. This \
-            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
-            the year and month will be used since that is what the endpoint \
-            accepts. Must be within the last 3 months of the current month. \
-            Defaults to None.
-        :type dt: date
+        :param kwargs: Key-value arguments to be passed as parameters to the \
+            endpoint URL.
+        :type kwargs: PassengerVolumeArgsDict
 
         :return: Download link of file containing passenger volume data.
         :rtype: Url
         """
+        params = self.build_params(
+            params_expected_type=PassengerVolumeArgsDict,
+            original_params=kwargs,
+            key_map=PASSENGER_VOLUME_ARGS_KEY_MAP,
+        )
+
+        if 'dt' in kwargs:
+            dt = kwargs['dt']
+            if dt is not None and not date_is_within_last_three_months(dt):
+                raise ValueError('Argument "dt" is not within the last 3 months.')
+
         passenger_volume_link: Url
 
-        passenger_volume_link = self.__get_passenger_volume_link(
+        passenger_volume_link = self.send_download_request(
             PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_BUS_STOPS_API_ENDPOINT,
-            dt,
+            params=params,
             cache_duration=CACHE_ONE_DAY,
         )
 
@@ -255,26 +283,34 @@ class Client(LandTransportSg):
     @typechecked
     def passenger_volume_by_origin_destination_train_stations(
         self,
-        dt: Optional[date]=None,
+        **kwargs: Unpack[PassengerVolumeArgsDict],
     ) -> Url:
         """Get number of trips by weekdays and weekends from origin to \
         destination train stations.
 
-        :param dt: Date of a specific month to get passenger volume. This \
-            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
-            the year and month will be used since that is what the endpoint \
-            accepts. Must be within the last 3 months of the current month. \
-            Defaults to None.
-        :type dt: date
+        :param kwargs: Key-value arguments to be passed as parameters to the \
+            endpoint URL.
+        :type kwargs: PassengerVolumeArgsDict
 
         :return: Download link of file containing passenger volume data.
         :rtype: Url
         """
+        params = self.build_params(
+            params_expected_type=PassengerVolumeArgsDict,
+            original_params=kwargs,
+            key_map=PASSENGER_VOLUME_ARGS_KEY_MAP,
+        )
+
+        if 'dt' in kwargs:
+            dt = kwargs['dt']
+            if dt is not None and not date_is_within_last_three_months(dt):
+                raise ValueError('Argument "dt" is not within the last 3 months.')
+
         passenger_volume_link: Url
 
-        passenger_volume_link = self.__get_passenger_volume_link(
+        passenger_volume_link = self.send_download_request(
             PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_TRAIN_STATIONS_API_ENDPOINT,
-            dt,
+            params=params,
             cache_duration=CACHE_ONE_DAY,
         )
 
@@ -283,26 +319,34 @@ class Client(LandTransportSg):
     @typechecked
     def passenger_volume_by_train_stations(
         self,
-        dt: Optional[date]=None,
+        **kwargs: Unpack[PassengerVolumeArgsDict],
     ) -> Url:
         """Get tap in and tap out passenger volume by weekdays and weekends \
         for individual train station.
 
-        :param dt: Date of a specific month to get passenger volume. This \
-            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
-            the year and month will be used since that is what the endpoint \
-            accepts. Must be within the last 3 months of the current month. \
-            Defaults to None.
-        :type dt: date
+        :param kwargs: Key-value arguments to be passed as parameters to the \
+            endpoint URL.
+        :type kwargs: PassengerVolumeArgsDict
 
         :return: Download link of file containing passenger volume data.
         :rtype: Url
         """
+        params = self.build_params(
+            params_expected_type=PassengerVolumeArgsDict,
+            original_params=kwargs,
+            key_map=PASSENGER_VOLUME_ARGS_KEY_MAP,
+        )
+
+        if 'dt' in kwargs:
+            dt = kwargs['dt']
+            if dt is not None and not date_is_within_last_three_months(dt):
+                raise ValueError('Argument "dt" is not within the last 3 months.')
+
         passenger_volume_link: Url
 
-        passenger_volume_link = self.__get_passenger_volume_link(
+        passenger_volume_link = self.send_download_request(
             PASSENGER_VOLUME_BY_TRAIN_STATIONS_API_ENDPOINT,
-            dt,
+            params=params,
             cache_duration=CACHE_ONE_DAY,
         )
 
@@ -322,15 +366,17 @@ class Client(LandTransportSg):
         return train_lines
 
     @typechecked
+    def station_crowd_density_real_time(
         self,
-        train_line: str
+        **kwargs: Unpack[StationCrowdDensityArgsDict],
     ) -> list[StationCrowdDensityRealTimeDict]:
         """Get real-time MRT/LRT station crowdedness level of a particular \
         train network line. Refer to the train_lines() method for the list of \
         valid train network lines.
 
-        :param train_line: Code of train network line.
-        :type train_line: str
+        :param kwargs: Key-value arguments to be passed as parameters to the \
+            endpoint URL.
+        :type kwargs: StationCrowdDensityArgsDict
 
         :raises ValueError: train_line is not specified.
         :raises ValueError: train_line is not a valid train network line.
@@ -339,6 +385,14 @@ class Client(LandTransportSg):
             line.
         :rtype: list[StationCrowdDensityRealTimeDict]
         """
+        params = self.build_params(
+            params_expected_type=StationCrowdDensityArgsDict,
+            original_params=kwargs,
+            key_map=STATION_CROWD_DENSITY_ARGS_KEY_MAP,
+        )
+
+        train_line = kwargs['train_line']
+
         if train_line not in TRAIN_LINES:
             raise ValueError(
                 'Invalid argument "train_line". Use train_lines() to get a list of valid train line codes'
@@ -350,7 +404,8 @@ class Client(LandTransportSg):
 
         station_crowd_density_real_time = self.send_request(
             STATION_CROWD_DENSITY_REAL_TIME_API_ENDPOINT,
-            TrainLine=train_line
+            params=params,
+            cache_duration=CACHE_TEN_MINUTES,
         )
 
         return station_crowd_density_real_time
@@ -358,14 +413,15 @@ class Client(LandTransportSg):
     @typechecked
     def station_crowd_density_forecast(
         self,
-        train_line: str
+        **kwargs: Unpack[StationCrowdDensityArgsDict],
     ) -> list[StationCrowdDensityForecastDict]:
         """Get forecasted MRT/LRT statiion crowdedness level of a particular \
         train network line at 30 minutes interval. Refer to the train_lines() \
         method for the list of valid train network lines.
 
-        :param train_line: Code of train network line.
-        :type train_line: str
+        :param kwargs: Key-value arguments to be passed as parameters to the \
+            endpoint URL.
+        :type kwargs: StationCrowdDensityArgsDict
 
         :raises ValueError: train_line is not specified.
         :raises ValueError: train_line is not a valid train network line.
@@ -374,6 +430,14 @@ class Client(LandTransportSg):
             train network line.
         :rtype: list[StationCrowdDensityForecastDict]
         """
+        params = self.build_params(
+            params_expected_type=StationCrowdDensityArgsDict,
+            original_params=kwargs,
+            key_map=STATION_CROWD_DENSITY_ARGS_KEY_MAP,
+        )
+
+        train_line = kwargs['train_line']
+
         if train_line not in TRAIN_LINES:
             raise ValueError(
                 'Invalid argument "train_line". Use train_lines() to get a list of valid train line codes'
@@ -385,7 +449,8 @@ class Client(LandTransportSg):
 
         station_crowd_density_forecast = self.send_request(
             STATION_CROWD_DENSITY_FORECAST_API_ENDPOINT,
-            TrainLine=train_line,
+            params=params,
+            cache_duration=CACHE_ONE_DAY,
         )
 
         return station_crowd_density_forecast

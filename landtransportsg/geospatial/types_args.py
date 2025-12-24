@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui. All rights reserved.
+# Copyright 2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,23 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Public Transport module."""
+"""LandTransportSg DataMall custom types for Geospatial client methods' arguments."""
 
-from .client import Client
-from .types_args import *
-from .types import *
-from ..types import Url
+from typing import TypedDict
+
+class GeospatiaWholeIslandArgsDict(TypedDict):
+    """Type definition for geospatial_whole_island() input arguments"""
+
+    geospatial_layer_id: str
+    """Name of Geospatial Layer. Use ``geospatial_layer_ids()`` for the list \
+        of Geospatial layers.
+
+    :example: "ArrowMarking"
+    """
 
 __all__ = [
-    'Client',
-    'BusArrivalDict',
-    'BusServicesDict',
-    'BusRoutesDict',
-    'BusStopsDict',
-    'StationCrowdDensityRealTimeDict',
-    'StationCrowdDensityForecastDict',
-    'TaxiAvailabilityDict',
-    'TaxiStandsDict',
-    'TrainServiceAlertsDict',
-    'Url',
+    'GeospatiaWholeIslandArgsDict',
 ]

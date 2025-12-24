@@ -38,6 +38,17 @@ All MRT station codes start with 2 uppercase letters, then 1-2 digits. \
 E.g. NS1, DT35.
 """
 STATION_CODES_REGEX_PATTERN = r"^[A-Z]{2}[0-9]{1,2}$"
+BUS_ARRIVAL_ARGS_KEY_MAP = {
+    'bus_stop_code': 'BusStopCode',
+    'service_number': 'ServiceNo',
+}
+PASSENGER_VOLUME_ARGS_KEY_MAP = {
+    'dt': 'Date',
+}
+STATION_CROWD_DENSITY_ARGS_KEY_MAP = {
+    'train_line': 'TrainLine',
+}
+
 
 TRAIN_LINES = (
     'BPL',
@@ -70,5 +81,9 @@ __all__ = [
     'TRAIN_SERVICE_ALERTS_API_ENDPOINT',
 
     'STATION_CODES_REGEX_PATTERN',
+    'BUS_ARRIVAL_ARGS_KEY_MAP',
+    'PASSENGER_VOLUME_ARGS_KEY_MAP',
+    'STATION_CROWD_DENSITY_ARGS_KEY_MAP',
+
     'TRAIN_LINES',
 ]
