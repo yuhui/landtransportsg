@@ -33,16 +33,16 @@ TWO_MONTHS_AGO_DATE = (date.today() + timedelta(-40))
 FOUR_MONTHS_AGO_DATE = (date.today() + timedelta(-100))
 
 @typechecked
-def datetime_as_sgt(dt: datetime) -> datetime:
-    """Set a datetime with the SGT timezone and return the datetime.
+def update_datetime_to_sgt(dt: datetime) -> datetime:
+    """Update a datetime to use the SGT timezone and return the datetime.
 
-    :param dt: Datetime to convert to SGT timezone.
+    :param dt: Datetime to update to use SGT timezone.
     :type dt: datetime
 
     :return: The datetime in SGT timezone.
     :rtype: datetime
     """
-    dt_sg: datetime = dt.astimezone(ZoneInfo('Asia/Singapore'))
+    dt_sg: datetime = dt.replace(tzinfo=ZoneInfo('Asia/Singapore'))
     return dt_sg
 
 @typechecked
@@ -75,7 +75,7 @@ def datetime_from_string(val: str) -> datetime | date | time:
             if date_format == '%H%M' and len(val) != 4:
                 raise ValueError('val is not a 4-digit time')
 
-            dt_datetime = datetime.strptime(val, date_format)
+            dt_datetime = datetime.strptime(val, date_format).astimezone(ZoneInfo('Asia/Singapore'))
             dt_format = date_format
         except ValueError:
             continue
@@ -83,7 +83,7 @@ def datetime_from_string(val: str) -> datetime | date | time:
     if dt_datetime is None:
         raise ValueError('val is not a recognised datetime string')
 
-    dt_datetime_sgt = datetime_as_sgt(dt_datetime)
+    dt_datetime_sgt = update_datetime_to_sgt(dt_datetime)
     dt_date_sgt = dt_datetime_sgt.date()
     dt_time_sgt = dt_datetime_sgt.time()
 
