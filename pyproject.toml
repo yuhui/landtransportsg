@@ -39,7 +39,7 @@ keywords = [
 ]
 license = { file = "LICENSE.txt" }
 readme = "README.rst"
-requires-python = ">= 3.10"
+requires-python = ">= 3.13"
 
     [project.urls]
     Homepage = "https://github.com/yuhui/landtransportsg"
@@ -50,7 +50,7 @@ requires-python = ">= 3.10"
 
 [tool.setuptools.dynamic]
 dependencies = { file = [ "requirements.txt" ] }
-version = { attr = "landtransportsg.__version__" }
+version = { file = [ "version.py" ] }
 
 [tool.setuptools.package-data]
 landtransportsg = [ "py.typed" ]
