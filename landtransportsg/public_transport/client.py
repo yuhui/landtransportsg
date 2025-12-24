@@ -20,7 +20,6 @@ from typing import Optional
 
 from typeguard import typechecked
 
-from ..client import Lta
 from ..constants import (
     CACHE_ONE_MINUTE,
     CACHE_FIVE_MINUTES,
@@ -28,6 +27,7 @@ from ..constants import (
     CACHE_ONE_HOUR,
     CACHE_ONE_DAY,
 )
+from ..landtransportsg import LandTransportSg
 from ..timezone import date_is_within_last_three_months
 from ..types import Url
 
@@ -62,7 +62,7 @@ from .types import (
     TrainServiceAlertsDict,
 )
 
-class Client(Lta):
+class Client(LandTransportSg):
     """Interact with the public transport-related endpoints.
 
     References: \

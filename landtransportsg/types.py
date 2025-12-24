@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""LTA custom types."""
+"""LandTransportSg custom types."""
 
 from typing import TypeAlias
 

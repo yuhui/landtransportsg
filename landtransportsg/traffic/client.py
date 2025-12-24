@@ -18,13 +18,13 @@ from warnings import warn
 
 from typeguard import typechecked
 
-from ..client import Lta
 from ..constants import (
     CACHE_ONE_MINUTE,
     CACHE_TWO_MINUTES,
     CACHE_FIVE_MINUTES,
     CACHE_ONE_DAY,
 )
+from ..landtransportsg import LandTransportSg
 from ..types import Url
 
 from .constants import (
@@ -51,7 +51,7 @@ from .types import (
     VMSDict,
 )
 
-class Client(Lta):
+class Client(LandTransportSg):
     """Interact with the traffic-related endpoints.
 
     References: \

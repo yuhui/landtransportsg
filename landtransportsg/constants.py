@@ -14,7 +14,7 @@
 
 """Constants that can be used anywhere."""
 
-BASE_API_DOMAIN = 'http://datamall2.mytransport.sg'
+BASE_API_DOMAIN = 'https://datamall2.mytransport.sg'
 BASE_API_ENDPOINT = f'{BASE_API_DOMAIN}/ltaodataservice'
 
 CACHE_NAME = 'landtransportsg_cache'

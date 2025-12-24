@@ -16,8 +16,8 @@
 
 from typeguard import typechecked
 
-from ..client import Lta
 from ..constants import CACHE_FIVE_MINUTES
+from ..landtransportsg import LandTransportSg
 from ..types import Url
 
 from .constants import (
@@ -26,7 +26,7 @@ from .constants import (
     GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS,
 )
 
-class Client(Lta):
+class Client(LandTransportSg):
     """Interact with the geospatial-related endpoints.
 
     References: \

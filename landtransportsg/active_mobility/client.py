@@ -16,13 +16,13 @@
 
 from typeguard import typechecked
 
-from ..client import Lta
 from ..constants import CACHE_ONE_DAY
+from ..landtransportsg import LandTransportSg
 
 from .constants import BICYCLE_PARKING_API_ENDPOINT
 from .types import BicycleParkingDict
 
-class Client(Lta):
+class Client(LandTransportSg):
     """Interact with the active mobility-related endpoints.
 
     References: \
