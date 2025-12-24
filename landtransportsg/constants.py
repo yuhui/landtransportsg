@@ -14,6 +14,10 @@
 
 """Constants that can be used anywhere."""
 
+from .version import __version__
+
+NAME = 'landtransportsg'
+
 BASE_API_DOMAIN = 'https://datamall2.mytransport.sg'
 BASE_API_ENDPOINT = f'{BASE_API_DOMAIN}/ltaodataservice'
 
@@ -29,6 +33,8 @@ CACHE_TWELVE_HOURS = CACHE_ONE_HOUR * 12
 CACHE_ONE_DAY = CACHE_ONE_HOUR * 24
 
 __all__ = [
+    'NAME',
+
     'BASE_API_ENDPOINT',
 
     'CACHE_NAME',
