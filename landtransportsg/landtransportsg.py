@@ -198,8 +198,8 @@ class LandTransportSg:
             sanitised_value = {}
             for k, v in value.items():
                 current_key_path = '.'.join([key_path, k]) if key_path else k
-                if isinstance(value, str) and v == '':
-                    sanitised_value[k] = None
+                if isinstance(v, str) and v == '':
+                    sanitised_value[k] = self.sanitise_data(v)
                 elif current_key_path in ignore_keys:
                     sanitised_value[k] = v
                 else:
