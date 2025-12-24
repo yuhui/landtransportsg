@@ -31,7 +31,7 @@ Installing the package
 
 Install the package using ``pip``::
 
-    pip install landtransportsg
+    python -m pip install landtransportsg
 
 Using the package
 -----------------
