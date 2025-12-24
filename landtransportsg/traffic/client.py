@@ -87,7 +87,7 @@ class Client(LandTransportSg):
         This method will be removed from this package's next major release or \
         31 December 2025, whichever comes earlier.
 
-        :warns DeprecationWarning: Inform the developer that this method has
+        :warns DeprecationWarning: Inform the developer that this method has \
             been deprecated.
 
         :return: ERP rates per vehicle type by zones. Empty list.
