@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui
+# Copyright 2020-2025 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,25 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# pylint: disable=line-too-long,missing-class-docstring,missing-function-docstring
+# pylint: disable=missing-class-docstring,missing-function-docstring
 
-"""Mock response for the BusArrival endpoint."""
+"""Mock response to return link responses."""
 
-class APIResponseBusArrival(object):
+class APIResponseLink:
     status_code = 200
 
     @staticmethod
     def json():
         return {
-            'odata.metadata': 'http://datamall2.mytransport.sg/ltaodataservice/$metadata#BusArrivalv2/@Element',
-            'BusStopCode': '83139',
-            'Services': [
+            'odata.metadata': 'https://datamall2.mytransport.sg/ltaodataservice/$metadata#ValueStr',
+            'value': [
                 {
-                    'ServiceNo': '15',
-                    'Operator': 'GAS',
-                    'NextBus': {},
-                    'NextBus2': {},
-                    'NextBus3': {},
+                    'Link': 'https://ltafarecard.s3.ap-southeast-1.amazonaws.com/YYYYMM/something.zip',
                 },
             ],
         }
+
+__all__ = [
+    'APIResponseLink',
+]

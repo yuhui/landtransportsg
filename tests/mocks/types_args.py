@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# pylint: disable=line-too-long,missing-class-docstring,missing-function-docstring
+"""Mock custom input types."""
 
-"""Mock response for the TrainServiceAlerts endpoint."""
+from datetime import date, datetime
+from typing import NotRequired, TypedDict
 
-class APIResponseTrainServiceAlerts:
-    status_code = 200
+class MockArgsDict(TypedDict):
+    """Type definition for unit testing"""
+    foobar: str
+    date: date
+    datetime: datetime
+    meaning_of_universe: NotRequired[int]
 
-    @staticmethod
-    def json():
-        return {
-            'odata.metadata': 'http://datamall2.mytransport.sg/ltaodataservice/$metadata#TrainServicesAlerts',
-            'value': {
-                'Status': 1,
-                'AffectedSegments': [],
-                'Message': [],
-            },
-        }
+__all__ = [
+    'MockArgsDict',
+]

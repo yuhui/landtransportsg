@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui
+# Copyright 2019-2025 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,53 +14,18 @@
 
 # pylint: disable=invalid-name,missing-function-docstring,unused-argument,wildcard-import
 
+"""Mock response to return link response."""
+
 import pytest
-from requests import Session
+from requests_cache import CachedSession
 
-from tests.mocks.api_response_value_list import APIResponseValueList
-from tests.mocks.api_response_value_str import *
-
-@pytest.fixture
-def mock_requests_value_list_response(monkeypatch):
-    """Requests.get() mocked to return sample API response with value list."""
-
-    def mock_requests_get(*args, **kwargs):
-        return APIResponseValueList()
-
-    monkeypatch.setattr(Session, 'get', mock_requests_get)
+from tests.mocks.api_response_link import APIResponseLink
 
 @pytest.fixture
-def mock_requests_value_str_response(monkeypatch):
+def mock_requests_link_response(monkeypatch):
     """Requests.get() mocked to return sample API response with value string."""
 
     def mock_requests_get(*args, **kwargs):
-        return APIResponseValueStr()
+        return APIResponseLink()
 
-    monkeypatch.setattr(Session, 'get', mock_requests_get)
-
-@pytest.fixture
-def mock_requests_value_str_bad_value_response(monkeypatch):
-    """Requests.get() mocked to return sample API response with bad 'value'."""
-
-    def mock_requests_get(*args, **kwargs):
-        return APIResponseValueStrBadValue()
-
-    monkeypatch.setattr(Session, 'get', mock_requests_get)
-
-@pytest.fixture
-def mock_requests_value_str_missing_link_response(monkeypatch):
-    """Requests.get() mocked to return sample API response with missing 'Link'."""
-
-    def mock_requests_get(*args, **kwargs):
-        return APIResponseValueStrMissingLink()
-
-    monkeypatch.setattr(Session, 'get', mock_requests_get)
-
-@pytest.fixture
-def mock_requests_value_str_bad_link_response(monkeypatch):
-    """Requests.get() mocked to return sample API response with bad 'Link'."""
-
-    def mock_requests_get(*args, **kwargs):
-        return APIResponseValueStrBadLink()
-
-    monkeypatch.setattr(Session, 'get', mock_requests_get)
+    monkeypatch.setattr(CachedSession, 'get', mock_requests_get)

@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui
+# Copyright 2019-2025 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,19 +17,19 @@
 """Test that the Active Mobility class is working properly."""
 
 import pytest
-from typeguard import TypeCheckError
+from requests_cache import CachedSession
+from typeguard import check_type
 
 from landtransportsg import ActiveMobility
+from landtransportsg.active_mobility.types import BicycleParkingDict
 
 from . import TEST_ACCOUNT_KEY
+from .mocks.api_response_active_mobility import APIResponseBicycleParking
 
 GOOD_LATITUDE = 1.364897
 GOOD_LONGITUDE = 103.766094
 GOOD_DISTANCE = 1.2
 
-BAD_LATITUDE = 'foo'
-BAD_LONGITUDE = 'bar'
-BAD_DISTANCE = 'stamp'
 NEGATIVE_DISTANCE = -1.2
 
 @pytest.fixture(scope='module')
@@ -37,39 +37,59 @@ def client():
     return ActiveMobility(TEST_ACCOUNT_KEY)
 
 @pytest.mark.parametrize(
-    'args',
+    'kwargs',
     [
-        ([GOOD_LATITUDE, GOOD_LONGITUDE]),
-        ([GOOD_LATITUDE, GOOD_LONGITUDE, GOOD_DISTANCE]),
+        (
+            {
+                'latitude': GOOD_LATITUDE,
+                'longitude': GOOD_LONGITUDE,
+            }
+        ),
+        (
+            {
+                'latitude': GOOD_LATITUDE,
+                'longitude': GOOD_LONGITUDE,
+                'distance': GOOD_DISTANCE,
+            }
+        ),
+        (
+            {
+                'latitude': GOOD_LATITUDE,
+                'longitude': GOOD_LONGITUDE,
+                'distance': None,
+            }
+        ),
     ],
 )
-def test_bicycle_parking(client, mock_requests_value_list_response, args):
-    bicycle_parking_locations = client.bicycle_parking(*args)
+def test_bicycle_parking(
+    client,
+    monkeypatch,
+    kwargs,
+):
+    def mock_requests_get(*args, **kwargs):
+        return APIResponseBicycleParking()
 
-    assert isinstance(bicycle_parking_locations, list)
-    assert len(bicycle_parking_locations) >= 0
+    monkeypatch.setattr(CachedSession, 'get', mock_requests_get)
 
-    for v in bicycle_parking_locations:
-        assert isinstance(v, dict)
+    bicycle_parking_locations = client.bicycle_parking(**kwargs)
+
+    assert check_type(
+        bicycle_parking_locations,
+        list[BicycleParkingDict,
+    ]) == bicycle_parking_locations
 
 @pytest.mark.parametrize(
-    'args',
+    'kwargs',
     [
-        ([GOOD_LATITUDE, BAD_LONGITUDE]),
-        ([BAD_LATITUDE, GOOD_LONGITUDE]),
-        ([GOOD_LATITUDE, GOOD_LONGITUDE, BAD_DISTANCE]),
+        (
+            {
+                'latitude': GOOD_LATITUDE,
+                'longitude': GOOD_LONGITUDE,
+                'distance': NEGATIVE_DISTANCE,
+            }
+        ),
     ],
 )
-def test_bicycle_parking_with_bad_inputs(client, args):
-    with pytest.raises(TypeCheckError):
-        _ = client.bicycle_parking(*args)
-
-@pytest.mark.parametrize(
-    'args',
-    [
-        ([GOOD_LATITUDE, GOOD_LONGITUDE, NEGATIVE_DISTANCE]),
-    ],
-)
-def test_bicycle_parking_with_invalid_inputs(client, args):
+def test_bicycle_parking_with_invalid_inputs(client, kwargs):
     with pytest.raises(ValueError):
-        _ = client.bicycle_parking(*args)
+        _ = client.bicycle_parking(**kwargs)
