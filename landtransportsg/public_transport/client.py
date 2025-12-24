@@ -47,7 +47,6 @@ from .constants import (
     TAXI_STANDS_API_ENDPOINT,
     TRAIN_SERVICE_ALERTS_API_ENDPOINT,
 
-    STATION_CODES_REGEX_PATTERN,
     BUS_ARRIVAL_ARGS_KEY_MAP,
     PASSENGER_VOLUME_ARGS_KEY_MAP,
     STATION_CROWD_DENSITY_ARGS_KEY_MAP,
@@ -69,6 +68,7 @@ from .types import (
     BusServicesDict,
     BusRoutesDict,
     BusStopsDict,
+    FacilitiesMaintenanceDict,
     StationCrowdDensityRealTimeDict,
     StationCrowdDensityForecastDict,
     TaxiAvailabilityDict,
@@ -190,32 +190,21 @@ class Client(LandTransportSg):
         return bus_stops
 
     @typechecked
-    def facilities_maintenance(self, station_code: str) -> Url:
-        """Get the pre-signed links to JSON file containing facilities \
-        maintenance schedules of the particular station.
+    def facilities_maintenance(self) -> list[FacilitiesMaintenanceDict]:
+        """Returns adhoc lift maintenance in MRT stations.
 
-        :param station_code: Station Code of train station. Example: "NS1".
-        :type station_code: str
-
-        :raises ValueError: station_code is not specified.
-        :raises ValueError: station_code does not match the expected regex \
-                pattern.
-
-        :return: Link for downloading the requested JSON file.
-        :rtype: Url
+        :return: Station codes and namse with IDs of lifts being serviced.
+        :rtype: list[FacilitiesMaintenanceDict]
         """
-        if not re.search(STATION_CODES_REGEX_PATTERN, station_code):
-            raise ValueError('Argument "station_code" is invalid.')
+        facilities_maintenance: list[FacilitiesMaintenanceDict]
 
-        facilities_maintenance_link: Url
-
-        facilities_maintenance_link = self.send_download_request(
+        facilities_maintenance = self.send_request(
             FACILITIES_MAINTENANCE_API_ENDPOINT,
-            StationCode=station_code,
             cache_duration=CACHE_ONE_DAY,
+            sanitise_ignore_keys=BUS_STOPS_SANITISE_IGNORE_KEYS,
         )
 
-        return facilities_maintenance_link
+        return facilities_maintenance
 
     @typechecked
     def passenger_volume_by_bus_stops(
