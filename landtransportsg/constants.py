@@ -14,7 +14,7 @@
 
 """Constants that can be used anywhere."""
 
-from .version import __version__
+from .version import VERSION
 
 NAME = 'landtransportsg'
 
@@ -32,7 +32,7 @@ CACHE_ONE_HOUR = CACHE_ONE_MINUTE * 60
 CACHE_TWELVE_HOURS = CACHE_ONE_HOUR * 12
 CACHE_ONE_DAY = CACHE_ONE_HOUR * 24
 
-USER_AGENT = f'LTA.gov.sg Python package/{__version__} https://pypi.org/project/{NAME}'
+USER_AGENT = f'LTA.gov.sg Python package/{VERSION} https://pypi.org/project/{NAME}'
 
 __all__ = [
     'NAME',

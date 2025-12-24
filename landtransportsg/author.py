@@ -16,4 +16,8 @@
 
 AUTHOR = 'Yuhui'
 AUTHOR_EMAIL = 'yuhuibc@gmail.com'
-__author__ = AUTHOR
+
+__all__ = [
+    'AUTHOR',
+    'AUTHOR_EMAIL',
+]

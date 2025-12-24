@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Package init."""
+
 from datetime import datetime
 
 from .active_mobility import Client as ActiveMobility
@@ -20,8 +22,8 @@ from .geospatial import Client as Geospatial
 from .public_transport import Client as PublicTransport
 from .traffic import Client as Traffic
 
-from .author import __author__
-from .version import __version__
+from .author import AUTHOR
+from .version import VERSION
 
 __all__ = [
     'ActiveMobility',
@@ -30,3 +32,5 @@ __all__ = [
     'PublicTransport',
     'Traffic',
 ]
+__author__ = AUTHOR
+__version__ = VERSION

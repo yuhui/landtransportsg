@@ -32,8 +32,8 @@ import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
 from landtransportsg.constants import NAME
-from landtransportsg.author import __author__ as AUTHOR
-from landtransportsg.version import __version__ as VERSION
+from landtransportsg.author import AUTHOR
+from landtransportsg.version import VERSION
 
 
 # -- Project information -----------------------------------------------------

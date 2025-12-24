@@ -50,7 +50,7 @@ requires-python = ">= 3.13"
 
 [tool.setuptools.dynamic]
 dependencies = { file = [ "requirements.txt" ] }
-version = { file = [ "version.py" ] }
+version = { attr = "landtransportsg.__version__" }
 
 [tool.setuptools.package-data]
 landtransportsg = [ "py.typed" ]
