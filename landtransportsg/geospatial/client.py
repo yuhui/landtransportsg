@@ -14,11 +14,10 @@
 
 """Client for interacting with the Geospatial API endpoints."""
 
-from cachetools import cached, TTLCache
 from typeguard import typechecked
 
 from ..client import Lta
-from ..constants import CACHE_MAXSIZE, CACHE_FIVE_MINUTES
+from ..constants import CACHE_FIVE_MINUTES
 from ..types import Url
 
 from .constants import (
@@ -47,7 +46,6 @@ class Client(Lta):
 
         return geospatial_whole_island_ids
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
     def geospatial_whole_island(self, geospatial_layer_id: str) -> Url:
         """Get the SHP files of the requested geospatial layer.
@@ -74,6 +72,7 @@ class Client(Lta):
         geospatial_whole_island_link = self.send_download_request(
             GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,
             ID=geospatial_layer_id,
+            cache_duration=CACHE_FIVE_MINUTES,
         )
 
         return geospatial_whole_island_link

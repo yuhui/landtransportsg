@@ -14,11 +14,10 @@
 
 """Client for interacting with the Active Mobility API endpoints."""
 
-from cachetools import cached, TTLCache
 from typeguard import typechecked
 
 from ..client import Lta
-from ..constants import CACHE_MAXSIZE, CACHE_ONE_DAY
+from ..constants import CACHE_ONE_DAY
 
 from .constants import BICYCLE_PARKING_API_ENDPOINT
 from .types import BicycleParkingDict
@@ -30,7 +29,6 @@ class Client(Lta):
         https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def bicycle_parking(
         self,
@@ -64,6 +62,7 @@ class Client(Lta):
             Lat=latitude,
             Long=longitude,
             Dist=distance,
+            cache_duration=CACHE_ONE_DAY,
         )
 
         return bicycle_parking_locations

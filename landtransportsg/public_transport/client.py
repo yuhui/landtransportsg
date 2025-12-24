@@ -18,18 +18,15 @@ import re
 from datetime import date
 from typing import Optional
 
-from cachetools import cached, TTLCache
 from typeguard import typechecked
 
 from ..client import Lta
 from ..constants import (
-    CACHE_MAXSIZE,
     CACHE_ONE_MINUTE,
     CACHE_FIVE_MINUTES,
     CACHE_TEN_MINUTES,
     CACHE_ONE_HOUR,
     CACHE_ONE_DAY,
-    CACHE_ONE_MONTH,
 )
 from ..timezone import date_is_within_last_three_months
 from ..types import Url
@@ -72,7 +69,6 @@ class Client(Lta):
         https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
     @typechecked
     def bus_arrival(
         self,
@@ -114,11 +110,11 @@ class Client(Lta):
             BUS_ARRIVAL_API_ENDPOINT,
             BusStopCode=bus_stop_code,
             ServiceNo=service_number,
+            cache_duration=CACHE_ONE_MINUTE,
         )
 
         return bus_arrival
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def bus_services(self) -> list[BusServicesDict | dict]:
         """Get detailed service information for all buses currently in \
@@ -130,11 +126,13 @@ class Client(Lta):
         """
         bus_services: list[BusServicesDict | dict]
 
-        bus_services = self.send_request(BUS_SERVICES_API_ENDPOINT)
+        bus_services = self.send_request(
+            BUS_SERVICES_API_ENDPOINT,
+            cache_duration=CACHE_ONE_DAY,
+        )
 
         return bus_services
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def bus_routes(self) -> list[BusRoutesDict | dict]:
         """Get detailed route information for all services currently in \
@@ -146,11 +144,13 @@ class Client(Lta):
         """
         bus_routes: list[BusRoutesDict | dict]
 
-        bus_routes = self.send_request(BUS_ROUTES_API_ENDPOINT)
+        bus_routes = self.send_request(
+            BUS_ROUTES_API_ENDPOINT,
+            cache_duration=CACHE_ONE_DAY,
+        )
 
         return bus_routes
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def bus_stops(self) -> list[BusStopsDict | dict]:
         """Get detailed information for all bus stops currently being \
@@ -161,11 +161,13 @@ class Client(Lta):
         """
         bus_stops: list[BusStopsDict | dict]
 
-        bus_stops = self.send_request(BUS_STOPS_API_ENDPOINT)
+        bus_stops = self.send_request(
+            BUS_STOPS_API_ENDPOINT,
+            cache_duration=CACHE_ONE_DAY,
+        )
 
         return bus_stops
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
     def facilities_maintenance(self, station_code: str) -> Url:
         """Get the pre-signed links to JSON file containing facilities \
@@ -189,11 +191,11 @@ class Client(Lta):
         facilities_maintenance_link = self.send_download_request(
             FACILITIES_MAINTENANCE_API_ENDPOINT,
             StationCode=station_code,
+            cache_duration=CACHE_ONE_DAY,
         )
 
         return facilities_maintenance_link
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
     @typechecked
     def passenger_volume_by_bus_stops(
         self,
@@ -217,11 +219,11 @@ class Client(Lta):
         passenger_volume_link = self.__get_passenger_volume_link(
             PASSENGER_VOLUME_BY_BUS_STOPS_API_ENDPOINT,
             dt,
+            cache_duration=CACHE_FIVE_MINUTES,
         )
 
         return passenger_volume_link
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
     @typechecked
     def passenger_volume_by_origin_destination_bus_stops(
         self,
@@ -245,11 +247,11 @@ class Client(Lta):
         passenger_volume_link = self.__get_passenger_volume_link(
             PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_BUS_STOPS_API_ENDPOINT,
             dt,
+            cache_duration=CACHE_ONE_DAY,
         )
 
         return passenger_volume_link
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
     @typechecked
     def passenger_volume_by_origin_destination_train_stations(
         self,
@@ -273,11 +275,11 @@ class Client(Lta):
         passenger_volume_link = self.__get_passenger_volume_link(
             PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_TRAIN_STATIONS_API_ENDPOINT,
             dt,
+            cache_duration=CACHE_ONE_DAY,
         )
 
         return passenger_volume_link
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
     @typechecked
     def passenger_volume_by_train_stations(
         self,
@@ -301,6 +303,7 @@ class Client(Lta):
         passenger_volume_link = self.__get_passenger_volume_link(
             PASSENGER_VOLUME_BY_TRAIN_STATIONS_API_ENDPOINT,
             dt,
+            cache_duration=CACHE_ONE_DAY,
         )
 
         return passenger_volume_link
@@ -318,7 +321,6 @@ class Client(Lta):
 
         return train_lines
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_TEN_MINUTES))
     @typechecked
     def platform_crowd_density_real_time(
         self,
@@ -354,7 +356,6 @@ class Client(Lta):
 
         return platform_crowd_density_real_time
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def platform_crowd_density_forecast(
         self,
@@ -391,7 +392,6 @@ class Client(Lta):
 
         return platform_crowd_density_forecast
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
     @typechecked
     def taxi_availability(self) -> list[TaxiAvailabilityDict | dict]:
         """Get location coordinates of all Taxis that are currently available \
@@ -404,11 +404,11 @@ class Client(Lta):
 
         taxi_availabilities = self.send_request(
             TAXI_AVAILABILITY_API_ENDPOINT,
+            cache_duration=CACHE_ONE_MINUTE,
         )
 
         return taxi_availabilities
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MONTH))
     def taxi_stands(self) -> list[TaxiStandsDict | dict]:
         """Get detailed information of Taxi stands, such as location and \
         whether is it barrier free.
@@ -420,11 +420,11 @@ class Client(Lta):
 
         taxi_stands = self.send_request(
             TAXI_STANDS_API_ENDPOINT,
+            cache_duration=CACHE_ONE_DAY,
         )
 
         return taxi_stands
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_HOUR))
     def train_service_alerts(self) -> list[TrainServiceAlertsDict]:
         """Get detailed information on train service unavailability during \
         scheduled operating hours, such as affected line and stations etc.
@@ -436,6 +436,7 @@ class Client(Lta):
 
         train_service_alerts = self.send_request(
             TRAIN_SERVICE_ALERTS_API_ENDPOINT,
+            cache_duration=CACHE_ONE_HOUR,
         )
 
         return train_service_alerts

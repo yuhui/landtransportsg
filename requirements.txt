@@ -1,6 +1,4 @@
-backoff
-cachetools
 requests
+requests-cache
 typeguard
-types-cachetools
 types-requests

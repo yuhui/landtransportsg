@@ -16,12 +16,10 @@
 
 from warnings import warn
 
-from cachetools import cached, TTLCache
 from typeguard import typechecked
 
 from ..client import Lta
 from ..constants import (
-    CACHE_MAXSIZE,
     CACHE_ONE_MINUTE,
     CACHE_TWO_MINUTES,
     CACHE_FIVE_MINUTES,
@@ -60,7 +58,6 @@ class Client(Lta):
         https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
     """
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_MINUTE))
     @typechecked
     def carpark_availability(self) -> list[CarParkAvailabilityDict | dict]:
         """Get number of available lots from HDB, LTA and URA carpark data.
@@ -72,11 +69,11 @@ class Client(Lta):
 
         carpark_availability = self.send_request(
             CARPARK_AVAILABILITY_API_ENDPOINT,
+            cache_duration=CACHE_ONE_MINUTE,
         )
 
         return carpark_availability
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def erp_rates(self) -> list[None]:
         """Get ERP rates of all vehicle types across all timings for each \
@@ -101,7 +98,6 @@ class Client(Lta):
 
         return erp_rates
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
     def estimated_travel_times(self) -> list[EstimatedTravelTimesDict | dict]:
         """Get estimated travel times of expressways (in segments).
@@ -113,11 +109,11 @@ class Client(Lta):
 
         estimated_travel_times = self.send_request(
             ESTIMATED_TRAVEL_TIMES_API_ENDPOINT,
+            cache_duration=CACHE_FIVE_MINUTES,
         )
 
         return estimated_travel_times
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_TWO_MINUTES))
     @typechecked
     def faulty_traffic_lights(self) -> list[FaultyTrafficLightsDict | dict]:
         """Get alerts of traffic lights that are currently faulty, or \
@@ -130,11 +126,11 @@ class Client(Lta):
 
         faulty_traffic_lights = self.send_request(
             FAULTY_TRAFFIC_LIGHTS_API_ENDPOINT,
+            cache_duration=CACHE_TWO_MINUTES,
         )
 
         return faulty_traffic_lights
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def road_openings(self) -> list[RoadOpeningsDict | dict]:
         """Get all planned road openings.
@@ -144,11 +140,13 @@ class Client(Lta):
         """
         road_openings: list[RoadOpeningsDict | dict]
 
-        road_openings = self.send_request(ROAD_OPENINGS_API_ENDPOINT)
+        road_openings = self.send_request(
+            ROAD_OPENINGS_API_ENDPOINT,
+            cache_duration=CACHE_ONE_DAY,
+        )
 
         return road_openings
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_ONE_DAY))
     @typechecked
     def road_works(self) -> list[RoadWorksDict | dict]:
         """Get approved road works to be carried out/being carried out.
@@ -158,11 +156,13 @@ class Client(Lta):
         """
         road_works: list[RoadWorksDict | dict]
 
-        road_works = self.send_request(ROAD_WORKS_API_ENDPOINT)
+        road_works = self.send_request(
+            ROAD_WORKS_API_ENDPOINT,
+            cache_duration=CACHE_ONE_DAY,
+        )
 
         return road_works
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
     def traffic_flow(self) -> Url:
         """Get hourly average traffic flow, taken from a representative month \
@@ -176,11 +176,11 @@ class Client(Lta):
 
         traffic_flow_link = self.send_download_request(
             TRAFFIC_FLOW_API_ENDPOINT,
+            cache_duration=CACHE_FIVE_MINUTES,
         )
 
         return traffic_flow_link
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
     def traffic_images(self) -> list[TrafficImagesDict | dict]:
         """Get links to images of live traffic conditions along expressways \
@@ -191,11 +191,13 @@ class Client(Lta):
         """
         traffic_images: list[TrafficImagesDict | dict]
 
-        traffic_images = self.send_request(TRAFFIC_IMAGES_API_ENDPOINT)
+        traffic_images = self.send_request(
+            TRAFFIC_IMAGES_API_ENDPOINT,
+            cache_duration=CACHE_FIVE_MINUTES,
+        )
 
         return traffic_images
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_TWO_MINUTES))
     @typechecked
     def traffic_incidents(self) -> list[TrafficIncidentsDict | dict]:
         """Get incidents currently happening on the roads, such as Accidents, \
@@ -206,11 +208,13 @@ class Client(Lta):
         """
         traffic_incidents: list[TrafficIncidentsDict | dict]
 
-        traffic_incidents = self.send_request(TRAFFIC_INCIDENTS_API_ENDPOINT)
+        traffic_incidents = self.send_request(
+            TRAFFIC_INCIDENTS_API_ENDPOINT,
+            cache_duration=CACHE_TWO_MINUTES,
+        )
 
         return traffic_incidents
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
     def traffic_speed_bands(self) -> list[TrafficSpeedBandsDict | dict]:
         """Get current traffic speeds on expressways and arterial roads, \
@@ -223,11 +227,11 @@ class Client(Lta):
 
         traffic_speed_bands = self.send_request(
             TRAFFIC_SPEED_BANDS_API_ENDPOINT,
+            cache_duration=CACHE_FIVE_MINUTES,
         )
 
         return traffic_speed_bands
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_TWO_MINUTES))
     @typechecked
     def vms(self) -> list[VMSDict | dict]:
         """Get traffic advisories (via variable message services) concerning \
@@ -239,7 +243,10 @@ class Client(Lta):
         """
         vms: list[VMSDict | dict]
 
-        vms = self.send_request(VMS_API_ENDPOINT)
+        vms = self.send_request(
+            VMS_API_ENDPOINT,
+            cache_duration=CACHE_TWO_MINUTES,
+        )
 
         return vms
 
