@@ -50,7 +50,7 @@ The main steps are:
 
 For more information, `refer to the documentation`_.
 
-.. _refer to the documentation: http://landtransportsg.readthedocs.io/
+.. _refer to the documentation: https://landtransportsg.readthedocs.io/
 
 Usage overview
 ^^^^^^^^^^^^^^
@@ -58,12 +58,13 @@ Usage overview
 Interacting with `LTA DataMall`_'s API is done through one of four clients,
 where each client corresponds with a set of endpoints.
 
-The four clients are:
+The five clients are:
 
-- ``ActiveMobility``
-- ``Geospatial``
-- ``PublicTransport``
-- ``Traffic``
+1. ``ActiveMobility``
+2. ``ElectricVehicle``
+3. ``Geospatial``
+4. ``PublicTransport``
+5. ``Traffic``
 
 Each client contains several public functions, one function per endpoint. A
 function's name is the same as its corresponding endpoint's ending path.

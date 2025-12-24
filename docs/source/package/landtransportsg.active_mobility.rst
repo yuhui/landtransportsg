@@ -19,6 +19,13 @@ Methods
    :members:
    :show-inheritance:
 
+Argument Types
+--------------
+.. autoclass:: BicycleParkingArgsDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
 Types
 -----
 .. autoclass:: BicycleParkingDict

@@ -1,5 +1,5 @@
 landtransportsg.geospatial
-================================
+==========================
 
 .. automodule:: landtransportsg.geospatial
 
@@ -17,6 +17,13 @@ Methods
 
 .. autoclass:: Client
    :members:
+   :show-inheritance:
+
+Argument Types
+--------------
+.. autoclass:: GeospatiaWholeIslandArgsDict
+   :members:
+   :member-order: bysource
    :show-inheritance:
 
 Types

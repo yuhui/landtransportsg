@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui
+# Copyright 2019-2025 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,13 +31,15 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../..'))
 
-from landtransportsg import NAME, AUTHOR, VERSION
+from landtransportsg.constants import NAME
+from landtransportsg.author import __author__ as AUTHOR
+from landtransportsg.version import __version__ as VERSION
 
 
 # -- Project information -----------------------------------------------------
 
 project = NAME
-copyright = f'2019-2024, {AUTHOR}'
+copyright = f'2019-2025, {AUTHOR}'
 
 # The full version, including alpha/beta/rc tags
 release = VERSION
