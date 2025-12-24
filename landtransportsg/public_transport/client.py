@@ -134,25 +134,6 @@ class Client(LandTransportSg):
         return bus_arrival
 
     @typechecked
-    def bus_services(self) -> list[BusServicesDict]:
-        """Get detailed service information for all buses currently in \
-        operation, including: first stop, last stop, peak / offpeak frequency \
-        of dispatch.
-
-        :return: Information about bus services currently in operation.
-        :rtype: list[BusServicesDict]
-        """
-        bus_services: list[BusServicesDict]
-
-        bus_services = self.send_request(
-            BUS_SERVICES_API_ENDPOINT,
-            cache_duration=CACHE_ONE_DAY,
-            sanitise_ignore_keys=BUS_SERVICES_SANITISE_IGNORE_KEYS,
-        )
-
-        return bus_services
-
-    @typechecked
     def bus_routes(self) -> list[BusRoutesDict]:
         """Get detailed route information for all services currently in \
         operation, including: all bus stops along each route, first/last bus \
@@ -170,6 +151,25 @@ class Client(LandTransportSg):
         )
 
         return bus_routes
+
+    @typechecked
+    def bus_services(self) -> list[BusServicesDict]:
+        """Get detailed service information for all buses currently in \
+        operation, including: first stop, last stop, peak / offpeak frequency \
+        of dispatch.
+
+        :return: Information about bus services currently in operation.
+        :rtype: list[BusServicesDict]
+        """
+        bus_services: list[BusServicesDict]
+
+        bus_services = self.send_request(
+            BUS_SERVICES_API_ENDPOINT,
+            cache_duration=CACHE_ONE_DAY,
+            sanitise_ignore_keys=BUS_SERVICES_SANITISE_IGNORE_KEYS,
+        )
+
+        return bus_services
 
     @typechecked
     def bus_stops(self) -> list[BusStopsDict]:
