@@ -37,17 +37,17 @@ NON_LEAP_YEAR_DATE = freeze_time('2019-06-03')
         (datetime(2019, 7, 1, 8, tzinfo=ZoneInfo('UTC')), 8),
     ],
 )
-def test_update_datetime_to_sgt(date_time, expected_hour):
-    sgt_date_time = timezone.update_datetime_to_sgt(date_time)
+def test_datetime_as_sgt(date_time, expected_hour):
+    sgt_date_time = timezone.datetime_as_sgt(date_time)
     assert sgt_date_time.hour is expected_hour
 
 @pytest.mark.parametrize(
     'date_time',
     ['2019-07-13 08:32:17+08:00'],
 )
-def test_update_datetime_to_sgt_from_bad_datetime(date_time):
+def test_datetime_as_sgt_from_bad_datetime(date_time):
     with pytest.raises(TypeCheckError):
-        _ = timezone.update_datetime_to_sgt(date_time)
+        _ = timezone.datetime_as_sgt(date_time)
 
 @pytest.mark.parametrize(
     ('date_time_str', 'expected_date_time'),
@@ -68,9 +68,18 @@ def test_update_datetime_to_sgt_from_bad_datetime(date_time):
             '2019-07-13 08:32:17',
             datetime(2019, 7, 13, 8, 32, 17, tzinfo=ZoneInfo('Asia/Singapore'))
         ),
-        ('2019-07-13', date(2019, 7, 13)),
-        ('0625', time(6, 25, tzinfo=ZoneInfo('Asia/Singapore'))),
-        ('2007', time(20, 7, tzinfo=ZoneInfo('Asia/Singapore'))),
+        (
+            '2019-07-13',
+            date(2019, 7, 13)
+        ),
+        (
+            '0625',
+            time(6, 25, tzinfo=ZoneInfo('Asia/Singapore'))
+        ),
+        (
+            '2007',
+            time(20, 7, tzinfo=ZoneInfo('Asia/Singapore'))
+        ),
     ],
 )
 def test_datetime_from_string(date_time_str, expected_date_time):
