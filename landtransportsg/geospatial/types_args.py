@@ -1,4 +1,4 @@
-# Copyright 2019 Yuhui
+# Copyright 2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# pylint: disable=line-too-long,missing-class-docstring,missing-function-docstring
+"""LandTransportSg DataMall custom types for Geospatial client methods' arguments."""
 
-"""Mock response for the TrainServiceAlerts endpoint."""
+from typing import TypedDict
 
-class APIResponseTrainServiceAlerts:
-    status_code = 200
+class GeospatiaWholeIslandArgsDict(TypedDict):
+    """Type definition for geospatial_whole_island() input arguments"""
 
-    @staticmethod
-    def json():
-        return {
-            'odata.metadata': 'http://datamall2.mytransport.sg/ltaodataservice/$metadata#TrainServicesAlerts',
-            'value': {
-                'Status': 1,
-                'AffectedSegments': [],
-                'Message': [],
-            },
-        }
+    geospatial_layer_id: str
+    """Name of Geospatial Layer. Use ``geospatial_layer_ids()`` for the list \
+        of Geospatial layers.
+
+    :example: "ArrowMarking"
+    """
+
+__all__ = [
+    'GeospatiaWholeIslandArgsDict',
+]

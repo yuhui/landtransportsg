@@ -1,4 +1,4 @@
-# Copyright 2020-2024 Yuhui. All rights reserved.
+# Copyright 2020-2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@
 from ..constants import BASE_API_ENDPOINT
 
 GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT = f'{BASE_API_ENDPOINT}/GeospatialWholeIsland'
+GEOSPATIAL_WHOLE_ISLAND_ARGS_KEY_MAP = {
+    'geospatial_layer_id': 'ID',
+}
 
 GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = (
     'ArrowMarking',
@@ -57,5 +60,6 @@ GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS = (
 
 __all__ = [
     'GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT',
+    'GEOSPATIAL_WHOLE_ISLAND_ARGS_KEY_MAP',
     'GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS',
 ]

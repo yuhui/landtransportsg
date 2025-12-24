@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui. All rights reserved.
+# Copyright 2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,25 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Package init."""
+"""LandTransportSg DataMall custom types for Electric Vehicle client methods' arguments."""
 
-from datetime import datetime
+from typing import TypedDict
 
-from .active_mobility import Client as ActiveMobility
-from .electric_vehicle import Client as ElectricVehicle
-from .geospatial import Client as Geospatial
-from .public_transport import Client as PublicTransport
-from .traffic import Client as Traffic
+class EVChargingPointsArgsDict(TypedDict):
+    """Type definition for ev_charging_points() input arguments"""
 
-from .author import AUTHOR
-from .version import VERSION
+    postal_code: str
+    """Postal code of the location.
+
+    :example: "123456"
+    """
 
 __all__ = [
-    'ActiveMobility',
-    'ElectricVehicle',
-    'Geospatial',
-    'PublicTransport',
-    'Traffic',
+    'EVChargingPointsArgsDict',
 ]
-__author__ = AUTHOR
-__version__ = VERSION

@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui
+# Copyright 2019-2025 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 """Test that the timezone functions are working properly."""
 
-from datetime import date, datetime
+from datetime import date, datetime, time
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -34,7 +34,7 @@ NON_LEAP_YEAR_DATE = freeze_time('2019-06-03')
     ('date_time', 'expected_hour'),
     [
         (datetime(2019, 7, 1, 8, tzinfo=ZoneInfo('Asia/Singapore')), 8),
-        (datetime(2019, 7, 1, 8, tzinfo=ZoneInfo('UTC')), 16),
+        (datetime(2019, 7, 1, 8, tzinfo=ZoneInfo('UTC')), 8),
     ],
 )
 def test_datetime_as_sgt(date_time, expected_hour):
@@ -43,7 +43,7 @@ def test_datetime_as_sgt(date_time, expected_hour):
 
 @pytest.mark.parametrize(
     'date_time',
-    ['2019-07-13 08:32:17', '2019-07-13 08:32:17+08:00'],
+    ['2019-07-13 08:32:17+08:00'],
 )
 def test_datetime_as_sgt_from_bad_datetime(date_time):
     with pytest.raises(TypeCheckError):
@@ -52,19 +52,48 @@ def test_datetime_as_sgt_from_bad_datetime(date_time):
 @pytest.mark.parametrize(
     ('date_time_str', 'expected_date_time'),
     [
-        ('2019-07-13 08:32:17', datetime(2019, 7, 13, 8, 32, 17)),
-        ('2019-07-13', date(2019, 7, 13)),
+        (
+            '2019-07-13T08:32:17+08:00',
+            datetime(2019, 7, 13, 8, 32, 17, tzinfo=ZoneInfo('Asia/Singapore'))
+        ),
+        (
+            '20190713T08:32:17+08:00',
+            datetime(2019, 7, 13, 8, 32, 17, tzinfo=ZoneInfo('Asia/Singapore'))
+        ),
+        (
+            '2019-07-13 08:32:17.789',
+            datetime(2019, 7, 13, 8, 32, 17, 789000, tzinfo=ZoneInfo('Asia/Singapore'))
+        ),
+        (
+            '2019-07-13 08:32:17',
+            datetime(2019, 7, 13, 8, 32, 17, tzinfo=ZoneInfo('Asia/Singapore'))
+        ),
+        (
+            '2019-07-13',
+            date(2019, 7, 13)
+        ),
+        (
+            '0625',
+            time(6, 25, tzinfo=ZoneInfo('Asia/Singapore'))
+        ),
+        (
+            '2007',
+            time(20, 7, tzinfo=ZoneInfo('Asia/Singapore'))
+        ),
     ],
 )
 def test_datetime_from_string(date_time_str, expected_date_time):
     date_time = timezone.datetime_from_string(date_time_str)
-    if isinstance(expected_date_time, datetime):
-        expected_date_time = timezone.datetime_as_sgt(expected_date_time)
     assert date_time == expected_date_time
 
 @pytest.mark.parametrize(
     'date_time_str',
-    ['foobar', '2019-07-13 08:32', '2019-07 08:32:17', '2019-07'],
+    [
+        'foobar',
+        '2019-07-13 08:32', '2019-07 08:32:17',
+        '2019-07',
+        '06:25', '6:25', '625',
+    ],
 )
 def test_datetime_from_bad_string(date_time_str):
     with pytest.raises(ValueError):

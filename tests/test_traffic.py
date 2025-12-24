@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui
+# Copyright 2019-2025 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,46 +19,112 @@
 from warnings import catch_warnings, simplefilter
 
 import pytest
+from requests_cache import CachedSession
+from typeguard import check_type
 
 from landtransportsg import Traffic
+from landtransportsg.traffic.types import (
+    CarParkAvailabilityDict,
+    EstimatedTravelTimesDict,
+    FaultyTrafficLightsDict,
+    RoadOpeningsDict,
+    RoadWorksDict,
+    TrafficImagesDict,
+    TrafficIncidentsDict,
+    TrafficSpeedBandsDict,
+    VMSDict,
+)
 
 from . import TEST_ACCOUNT_KEY
+from .mocks.api_response_traffic import (
+    APIResponseCarParkAvailability,
+    APIResponseEstimatedTravelTimes,
+    APIResponseFaultyTrafficLights,
+    APIResponseRoadOpenings,
+    APIResponseRoadWorks,
+    APIResponseTrafficImages,
+    APIResponseTrafficIncidents,
+    APIResponseTrafficSpeedBands,
+    APIResponseVMS,
+)
 
 @pytest.fixture(scope='module')
 def client():
     return Traffic(TEST_ACCOUNT_KEY)
 
 @pytest.mark.parametrize(
-    'function',
+    ('function', 'expected_type', 'mocked_response_class'),
     [
-        # 'carpark_availability', # this is tested in test_class_function_with_more_than_five_hundred_records()
-        # 'erp_rates', # this is tested in test_class_function_with_more_than_five_hundred_records()
-        'estimated_travel_times',
-        'faulty_traffic_lights',
-        'road_openings',
-        'road_works',
-        'traffic_images',
-        'traffic_incidents',
-        'traffic_speed_bands',
-        'vms',
+        (
+            'carpark_availability',
+            list[CarParkAvailabilityDict],
+            APIResponseCarParkAvailability,
+        ),
+        (
+            'estimated_travel_times',
+            list[EstimatedTravelTimesDict],
+            APIResponseEstimatedTravelTimes,
+        ),
+        (
+            'faulty_traffic_lights',
+            list[FaultyTrafficLightsDict],
+            APIResponseFaultyTrafficLights,
+        ),
+        (
+            'road_openings',
+            list[RoadOpeningsDict],
+            APIResponseRoadOpenings,
+        ),
+        (
+            'road_works',
+            list[RoadWorksDict],
+            APIResponseRoadWorks,
+        ),
+        (
+            'traffic_images',
+            list[TrafficImagesDict],
+            APIResponseTrafficImages,
+        ),
+        (
+            'traffic_incidents',
+            list[TrafficIncidentsDict],
+            APIResponseTrafficIncidents,
+        ),
+        (
+            'traffic_speed_bands',
+            list[TrafficSpeedBandsDict],
+            APIResponseTrafficSpeedBands,
+        ),
+        (
+            'vms',
+            list[VMSDict],
+            APIResponseVMS,
+        ),
     ],
 )
-def test_class_function(client, mock_requests_value_list_response, function):
+def test_class_function_with_mocked_response_class(
+    client,
+    monkeypatch,
+    function,
+    expected_type,
+    mocked_response_class,
+):
+    def mock_requests_get(*args, **kwargs):
+        return mocked_response_class()
+
+    monkeypatch.setattr(CachedSession, 'get', mock_requests_get)
+
     result = getattr(client, function)()
 
-    assert isinstance(result, list)
+    assert check_type(result, expected_type) == result
 
-def test_class_function_with_more_than_five_hundred_records(client):
-    """This test calls the actual API endpoint so as to be able to receive more
-    than 500 entries.
-    """
-    result = client.carpark_availability()
+def test_traffic_flow(
+    client,
+    mock_requests_link_response,
+):
+    traffic_flow = client.traffic_flow()
 
-    assert isinstance(result, list)
-    assert len(result) > 500
-
-    for v in result:
-        assert isinstance(v, dict)
+    assert isinstance(traffic_flow, str)
 
 def test_erp_rates(client):
     with catch_warnings(record=True) as w:
@@ -73,11 +139,3 @@ def test_erp_rates(client):
 
         assert isinstance(erp_rates, list)
         assert len(erp_rates) == 0
-
-def test_traffic_flow(
-    client,
-    mock_requests_value_str_response,
-):
-    traffic_flow = client.traffic_flow()
-
-    assert isinstance(traffic_flow, str)

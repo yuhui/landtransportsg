@@ -6,8 +6,13 @@ where each client corresponds with a set of endpoints.
 
 .. _LTA DataMall: https://www.mytransport.sg/content/mytransport/home/dataMall.html
 
-The four clients are: ``ActiveMobility``, ``Geospatial``, ``PublicTransport``
-and ``Traffic``.
+The five clients are:
+
+1. ``ActiveMobility``
+2. ``ElectricVehicle``
+3. ``Geospatial``
+4. ``PublicTransport``
+5. ``Traffic``
 
 Each client contains several public functions, one function per endpoint. A
 function's name is the same as its corresponding endpoint's ending path.

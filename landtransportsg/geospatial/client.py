@@ -1,4 +1,4 @@
-# Copyright 2020-2024 Yuhui. All rights reserved.
+# Copyright 2020-2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,20 +14,23 @@
 
 """Client for interacting with the Geospatial API endpoints."""
 
-from cachetools import cached, TTLCache
+from typing import Unpack
+
 from typeguard import typechecked
 
-from ..client import Lta
-from ..constants import CACHE_MAXSIZE, CACHE_FIVE_MINUTES
+from ..constants import CACHE_FIVE_MINUTES
+from ..landtransportsg import LandTransportSg
 from ..types import Url
 
 from .constants import (
     GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,
+    GEOSPATIAL_WHOLE_ISLAND_ARGS_KEY_MAP,
 
     GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS,
 )
+from .types_args import GeospatiaWholeIslandArgsDict
 
-class Client(Lta):
+class Client(LandTransportSg):
     """Interact with the geospatial-related endpoints.
 
     References: \
@@ -47,33 +50,40 @@ class Client(Lta):
 
         return geospatial_whole_island_ids
 
-    @cached(cache=TTLCache(maxsize=CACHE_MAXSIZE, ttl=CACHE_FIVE_MINUTES))
     @typechecked
-    def geospatial_whole_island(self, geospatial_layer_id: str) -> Url:
+    def geospatial_whole_island(
+        self,
+        **kwargs: Unpack[GeospatiaWholeIslandArgsDict],
+    ) -> Url:
         """Get the SHP files of the requested geospatial layer.
 
-        :param geospatial_layer_id: Name of geospatial layer. Refer to the \
-            GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS constant for the list of valid \
-            IDs.
-        :type geospatial_layer_id: str
+        :param kwargs: Key-value arguments to be passed as parameters to the \
+            endpoint URL.
+        :type kwargs: GeospatiaWholeIslandArgsDict
 
-        :raises ValueError: geospatial_layer_id is not specified.
         :raises ValueError: geospatial_layer_id is not a valid ID.
 
         :return: Link for downloading the requested SHP file.
         :rtype: Url
         """
-        if geospatial_layer_id not in GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS:
-            allowed_ids_string = ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS)
-            raise ValueError(
-                f'Invalid argument "geospatial_layer_id". Allowed IDs: {allowed_ids_string}',
-            )
-
         geospatial_whole_island_link: Url
+
+        params = self.build_params(
+            params_expected_type=GeospatiaWholeIslandArgsDict,
+            original_params=kwargs,
+            key_map=GEOSPATIAL_WHOLE_ISLAND_ARGS_KEY_MAP,
+        )
+
+        if params['ID'] not in GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS:
+            allowed_ids = ', '.join(GEOSPATIAL_WHOLE_ISLAND_LAYER_IDS)
+            raise ValueError(
+                f'Invalid argument "geospatial_layer_id". Allowed IDs: {allowed_ids}',
+            )
 
         geospatial_whole_island_link = self.send_download_request(
             GEOSPATIAL_WHOLE_ISLAND_API_ENDPOINT,
-            ID=geospatial_layer_id,
+            params=params,
+            cache_duration=CACHE_FIVE_MINUTES,
         )
 
         return geospatial_whole_island_link

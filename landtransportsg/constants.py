@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui. All rights reserved.
+# Copyright 2019-2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +14,15 @@
 
 """Constants that can be used anywhere."""
 
-BASE_API_DOMAIN = 'http://datamall2.mytransport.sg'
+from .version import VERSION
+
+NAME = 'landtransportsg'
+
+BASE_API_DOMAIN = 'https://datamall2.mytransport.sg'
 BASE_API_ENDPOINT = f'{BASE_API_DOMAIN}/ltaodataservice'
 
-CACHE_MAXSIZE = 1024
+CACHE_NAME = 'landtransportsg_cache'
+
 CACHE_ONE_MINUTE = 60
 CACHE_TWO_MINUTES = CACHE_ONE_MINUTE * 2
 CACHE_FIVE_MINUTES = CACHE_ONE_MINUTE * 5
@@ -26,11 +31,16 @@ CACHE_THIRTY_MINUTES = CACHE_ONE_MINUTE * 30
 CACHE_ONE_HOUR = CACHE_ONE_MINUTE * 60
 CACHE_TWELVE_HOURS = CACHE_ONE_HOUR * 12
 CACHE_ONE_DAY = CACHE_ONE_HOUR * 24
-CACHE_ONE_MONTH = CACHE_ONE_DAY * 30
+
+USER_AGENT = f'LTA.gov.sg Python package/{VERSION} https://pypi.org/project/{NAME}'
 
 __all__ = [
+    'NAME',
+
     'BASE_API_ENDPOINT',
-    'CACHE_MAXSIZE',
+
+    'CACHE_NAME',
+
     'CACHE_ONE_MINUTE',
     'CACHE_TWO_MINUTES',
     'CACHE_FIVE_MINUTES',
@@ -39,5 +49,6 @@ __all__ = [
     'CACHE_ONE_HOUR',
     'CACHE_TWELVE_HOURS',
     'CACHE_ONE_DAY',
-    'CACHE_ONE_MONTH',
+
+    'USER_AGENT',
 ]

@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui. All rights reserved.
+# Copyright 2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,25 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Package init."""
+"""Mock custom input types."""
 
-from datetime import datetime
+from datetime import date, datetime
+from typing import NotRequired, TypedDict
 
-from .active_mobility import Client as ActiveMobility
-from .electric_vehicle import Client as ElectricVehicle
-from .geospatial import Client as Geospatial
-from .public_transport import Client as PublicTransport
-from .traffic import Client as Traffic
-
-from .author import AUTHOR
-from .version import VERSION
+class MockArgsDict(TypedDict):
+    """Type definition for unit testing"""
+    foobar: str
+    date: date
+    datetime: datetime
+    meaning_of_universe: NotRequired[int]
 
 __all__ = [
-    'ActiveMobility',
-    'ElectricVehicle',
-    'Geospatial',
-    'PublicTransport',
-    'Traffic',
+    'MockArgsDict',
 ]
-__author__ = AUTHOR
-__version__ = VERSION

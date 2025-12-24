@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui. All rights reserved.
+# Copyright 2019-2025 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,17 +15,20 @@
 """Public Transport module."""
 
 from .client import Client
+from .types_args import *
 from .types import *
 from ..types import Url
 
 __all__ = [
     'Client',
     'BusArrivalDict',
-    'BusServicesDict',
     'BusRoutesDict',
+    'BusServicesDict',
     'BusStopsDict',
-    'PlatformCrowdDensityRealTimeDict',
-    'PlatformCrowdDensityForecastDict',
+    'FacilitiesMaintenanceDict',
+    'PlannedBusRoutesDict',
+    'StationCrowdDensityRealTimeDict',
+    'StationCrowdDensityForecastDict',
     'TaxiAvailabilityDict',
     'TaxiStandsDict',
     'TrainServiceAlertsDict',

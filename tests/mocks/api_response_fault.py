@@ -23,7 +23,7 @@ class APIResponseFault(object):
     def json():
         return {
             'fault': {
-                'faultstring': 'Rate limit quota violation. Quota limit  exceeded. Identifier : API_KEY',
+                'faultstring': 'Rate limit quota violation. Quota limit exceeded. Identifier : API_KEY',
                 'detail': {
                     'errorcode': 'policies.ratelimit.QuotaViolation',
                 },
