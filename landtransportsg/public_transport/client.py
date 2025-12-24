@@ -41,6 +41,7 @@ from .constants import (
     PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_BUS_STOPS_API_ENDPOINT,
     PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_TRAIN_STATIONS_API_ENDPOINT,
     PASSENGER_VOLUME_BY_TRAIN_STATIONS_API_ENDPOINT,
+    PLANNED_BUS_ROUTES_API_ENDPOINT,
     STATION_CROWD_DENSITY_REAL_TIME_API_ENDPOINT,
     STATION_CROWD_DENSITY_FORECAST_API_ENDPOINT,
     TAXI_AVAILABILITY_API_ENDPOINT,
@@ -69,6 +70,7 @@ from .types import (
     BusRoutesDict,
     BusStopsDict,
     FacilitiesMaintenanceDict,
+    PlannedBusRoutesDict,
     StationCrowdDensityRealTimeDict,
     StationCrowdDensityForecastDict,
     TaxiAvailabilityDict,
@@ -362,6 +364,24 @@ class Client(LandTransportSg):
         train_lines = TRAIN_LINES
 
         return train_lines
+
+    @typechecked
+    def planned_bus_routes(self) -> list[PlannedBusRoutesDict]:
+        """Get planned new/updated bus routes information.
+
+        Important note: Data to be released only ON/AFTER the Effective Date.
+
+        :return: Information about planned bus routes.
+        :rtype: list[PlannedBusRoutesDict]
+        """
+        planned_bus_routes: list[PlannedBusRoutesDict]
+
+        planned_bus_routes = self.send_request(
+            PLANNED_BUS_ROUTES_API_ENDPOINT,
+            cache_duration=CACHE_ONE_DAY,
+        )
+
+        return planned_bus_routes
 
     @typechecked
     def station_crowd_density_real_time(

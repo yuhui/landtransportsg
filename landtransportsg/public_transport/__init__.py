@@ -26,6 +26,7 @@ __all__ = [
     'BusServicesDict',
     'BusStopsDict',
     'FacilitiesMaintenanceDict',
+    'PlannedBusRoutesDict',
     'StationCrowdDensityRealTimeDict',
     'StationCrowdDensityForecastDict',
     'TaxiAvailabilityDict',
