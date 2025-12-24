@@ -4,7 +4,7 @@ landtransportsg
 |pyversions| |pypi| |status| |codecov| |downloads| |license| |readthedocs|
 
 .. |pyversions| image:: https://img.shields.io/pypi/pyversions/landtransportsg
-   :alt: Python 3.10
+   :alt: Python 3.13
 .. |pypi| image:: https://img.shields.io/pypi/v/landtransportsg
    :alt: PyPi
    :target: https://pypi.org/project/landtransportsg
