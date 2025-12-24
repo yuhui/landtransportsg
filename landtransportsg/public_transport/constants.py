@@ -49,6 +49,29 @@ STATION_CROWD_DENSITY_ARGS_KEY_MAP = {
     'train_line': 'TrainLine',
 }
 
+BUS_ARRIVAL_SANITISE_IGNORE_KEYS = [
+    'BusStopCode',
+    'Services[].NextBus.DestinationCode',
+    'Services[].NextBus.OriginCode',
+    'Services[].NextBus2.DestinationCode',
+    'Services[].NextBus2.OriginCode',
+    'Services[].NextBus3.DestinationCode',
+    'Services[].NextBus3.OriginCode',
+    'Services[].ServiceNo',
+]
+BUS_ROUTES_SANITISE_IGNORE_KEYS = [
+    '[].ServiceNo',
+    '[].BusStopCode',
+]
+BUS_SERVICES_SANITISE_IGNORE_KEYS = [
+    '[].ServiceNo',
+    '[].OriginCode',
+    '[].DestinationCode',
+    '[].LoopDesc',
+]
+BUS_STOPS_SANITISE_IGNORE_KEYS = [
+    '[].BusStopCode',
+]
 
 TRAIN_LINES = (
     'BPL',
@@ -84,6 +107,11 @@ __all__ = [
     'BUS_ARRIVAL_ARGS_KEY_MAP',
     'PASSENGER_VOLUME_ARGS_KEY_MAP',
     'STATION_CROWD_DENSITY_ARGS_KEY_MAP',
+
+    'BUS_ARRIVAL_SANITISE_IGNORE_KEYS',
+    'BUS_ROUTES_SANITISE_IGNORE_KEYS',
+    'BUS_SERVICES_SANITISE_IGNORE_KEYS',
+    'BUS_STOPS_SANITISE_IGNORE_KEYS',
 
     'TRAIN_LINES',
 ]

@@ -14,32 +14,41 @@
 
 """Active Mobility custom types."""
 
-try:
-    from typing import TypedDict
-except ImportError:
-    TypedDict = dict
+from typing import TypedDict
 
 class BicycleParkingDict(TypedDict):
     """Type definition for bicycle_parking()"""
 
     Description: str
     """Brief description of bicycle parking location.
-    Example: "Bus Stop 43267"."""
+
+    :example: "Bus Stop 43267"
+    """
     Latitude: float
     """Latitude map coordinates of bicycle parking location.
-    Example: 1.3927176306916775."""
+
+    :example: 1.3927176306916775
+    """
     Longitude: float
     """Longitude map coordinates of bicycle parking location.
-    Example: 103.82618266340947."""
+
+    :example: 103.82618266340947
+    """
     RackType: str
     """Type of bicycle parking facility.
-    Example: "Racks or Yellow Box"."""
+
+    :example: "Racks or Yellow Box"
+    """
     RackCount: int
     """Total number of bicycle parking lots.
-    Example: 10."""
+
+    :example: 10
+    """
     ShelterIndicator: str
     """Indicate whether the bicycle parking lots are sheltered.
-    Example: "Y"."""
+
+    :example: "Y"
+    """
 
 __all__ = [
     'BicycleParkingDict',

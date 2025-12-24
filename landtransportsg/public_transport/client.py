@@ -52,6 +52,11 @@ from .constants import (
     PASSENGER_VOLUME_ARGS_KEY_MAP,
     STATION_CROWD_DENSITY_ARGS_KEY_MAP,
 
+    BUS_ARRIVAL_SANITISE_IGNORE_KEYS,
+    BUS_ROUTES_SANITISE_IGNORE_KEYS,
+    BUS_STOPS_SANITISE_IGNORE_KEYS,
+    BUS_SERVICES_SANITISE_IGNORE_KEYS,
+
     TRAIN_LINES,
 )
 from .types_args import (
@@ -82,7 +87,7 @@ class Client(LandTransportSg):
     def bus_arrival(
         self,
         **kwargs: Unpack[BusArrivalArgsDict],
-    ) -> BusArrivalDict | dict:
+    ) -> BusArrivalDict:
         """Get real-time Bus Arrival information of Bus Services at a queried \
         Bus Stop, including Est. Arrival Time, Est. Current Location, Est. \
         Current Load.
@@ -117,18 +122,19 @@ class Client(LandTransportSg):
                 'Argument "bus_stop_code" must be 5-digits long.'
             )
 
-        bus_arrival: BusArrivalDict | dict
+        bus_arrival: BusArrivalDict
 
         bus_arrival = self.send_request(
             BUS_ARRIVAL_API_ENDPOINT,
             params=params,
             cache_duration=CACHE_ONE_MINUTE,
+            sanitise_ignore_keys=BUS_ARRIVAL_SANITISE_IGNORE_KEYS,
         )
 
         return bus_arrival
 
     @typechecked
-    def bus_services(self) -> list[BusServicesDict | dict]:
+    def bus_services(self) -> list[BusServicesDict]:
         """Get detailed service information for all buses currently in \
         operation, including: first stop, last stop, peak / offpeak frequency \
         of dispatch.
@@ -136,17 +142,18 @@ class Client(LandTransportSg):
         :return: Information about bus services currently in operation.
         :rtype: list[BusServicesDict]
         """
-        bus_services: list[BusServicesDict | dict]
+        bus_services: list[BusServicesDict]
 
         bus_services = self.send_request(
             BUS_SERVICES_API_ENDPOINT,
             cache_duration=CACHE_ONE_DAY,
+            sanitise_ignore_keys=BUS_SERVICES_SANITISE_IGNORE_KEYS,
         )
 
         return bus_services
 
     @typechecked
-    def bus_routes(self) -> list[BusRoutesDict | dict]:
+    def bus_routes(self) -> list[BusRoutesDict]:
         """Get detailed route information for all services currently in \
         operation, including: all bus stops along each route, first/last bus \
         timings for each stop.
@@ -154,28 +161,30 @@ class Client(LandTransportSg):
         :return: Information about bus routes currently in operation.
         :rtype: list[BusRoutesDict]
         """
-        bus_routes: list[BusRoutesDict | dict]
+        bus_routes: list[BusRoutesDict]
 
         bus_routes = self.send_request(
             BUS_ROUTES_API_ENDPOINT,
             cache_duration=CACHE_ONE_DAY,
+            sanitise_ignore_keys=BUS_ROUTES_SANITISE_IGNORE_KEYS,
         )
 
         return bus_routes
 
     @typechecked
-    def bus_stops(self) -> list[BusStopsDict | dict]:
+    def bus_stops(self) -> list[BusStopsDict]:
         """Get detailed information for all bus stops currently being \
         serviced by buses, including: Bus Stop Code, location coordinate.
 
         :return: Location coordinaties of bus stops with active services.
         :rtype: list[BusStopsDict]
         """
-        bus_stops: list[BusStopsDict | dict]
+        bus_stops: list[BusStopsDict]
 
         bus_stops = self.send_request(
             BUS_STOPS_API_ENDPOINT,
             cache_duration=CACHE_ONE_DAY,
+            sanitise_ignore_keys=BUS_STOPS_SANITISE_IGNORE_KEYS,
         )
 
         return bus_stops
@@ -399,7 +408,7 @@ class Client(LandTransportSg):
             )
 
         station_crowd_density_real_time: list[
-            StationCrowdDensityRealTimeDict | dict
+            StationCrowdDensityRealTimeDict
         ]
 
         station_crowd_density_real_time = self.send_request(
@@ -444,7 +453,7 @@ class Client(LandTransportSg):
             )
 
         station_crowd_density_forecast: list[
-            StationCrowdDensityForecastDict | dict
+            StationCrowdDensityForecastDict
         ]
 
         station_crowd_density_forecast = self.send_request(
@@ -456,14 +465,14 @@ class Client(LandTransportSg):
         return station_crowd_density_forecast
 
     @typechecked
-    def taxi_availability(self) -> list[TaxiAvailabilityDict | dict]:
+    def taxi_availability(self) -> list[TaxiAvailabilityDict]:
         """Get location coordinates of all Taxis that are currently available \
         for hire. Does not include "Hired" or "Busy" Taxis.
 
         :return: Location coordinaties of available taxis.
         :rtype: list[TaxiAvailabilityDict]
         """
-        taxi_availabilities: list[TaxiAvailabilityDict | dict]
+        taxi_availabilities: list[TaxiAvailabilityDict]
 
         taxi_availabilities = self.send_request(
             TAXI_AVAILABILITY_API_ENDPOINT,
@@ -472,14 +481,14 @@ class Client(LandTransportSg):
 
         return taxi_availabilities
 
-    def taxi_stands(self) -> list[TaxiStandsDict | dict]:
+    def taxi_stands(self) -> list[TaxiStandsDict]:
         """Get detailed information of Taxi stands, such as location and \
         whether is it barrier free.
 
         :return: Detailed information of taxi stands.
         :rtype: list[TaxiStandsDict]
         """
-        taxi_stands: list[TaxiStandsDict | dict]
+        taxi_stands: list[TaxiStandsDict]
 
         taxi_stands = self.send_request(
             TAXI_STANDS_API_ENDPOINT,

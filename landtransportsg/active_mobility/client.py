@@ -40,7 +40,7 @@ class Client(LandTransportSg):
     def bicycle_parking(
         self,
         **kwargs: Unpack[BicycleParkingArgsDict],
-    ) -> list[BicycleParkingDict | dict]:
+    ) -> list[BicycleParkingDict]:
         """Get bicycle parking locations within a radius.
 
         :param kwargs: Key-value arguments to be passed as parameters to the \
@@ -53,6 +53,8 @@ class Client(LandTransportSg):
             location.
         :rtype: list[BicycleParkingDict]
         """
+        bicycle_parking_locations: list[BicycleParkingDict]
+
         params = self.build_params(
             params_expected_type=BicycleParkingArgsDict,
             original_params=kwargs,

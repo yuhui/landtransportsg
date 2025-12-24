@@ -22,8 +22,8 @@ from ..types import Url
 __all__ = [
     'Client',
     'BusArrivalDict',
-    'BusServicesDict',
     'BusRoutesDict',
+    'BusServicesDict',
     'BusStopsDict',
     'StationCrowdDensityRealTimeDict',
     'StationCrowdDensityForecastDict',
