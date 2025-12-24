@@ -14,8 +14,6 @@
 
 """Client for interacting with the Public Transport API endpoints."""
 
-import re
-from datetime import date
 from typing import Unpack
 
 from typeguard import typechecked
@@ -521,42 +519,6 @@ class Client(LandTransportSg):
         )
 
         return train_service_alerts
-
-    # private
-
-    def __get_passenger_volume_link(
-        self,
-        endpoint,
-        dt: Optional[date]=None
-    ) -> Url:
-        """Get download link of the passenger volume data file for the \
-        specific endpoint.
-
-        :param endpoint: API endpoint URL to call.
-        :type endpoint: str
-
-        :param dt: Date of a specific month to get passenger volume. This \
-            must be a valid date object, e.g. `date(2019, 7, 2)`. But only \
-            the year and month will be used since that is what the endpoint \
-            accepts. Must be within the last 3 months of the current month. \
-            Defaults to None.
-        :type dt: date
-
-        :raises ValueError: the specified date is more than 3 months ago.
-
-        :return: Download link of file containing passenger volume data.
-        :rtype: Url
-        """
-        if dt is not None and not date_is_within_last_three_months(dt):
-            raise ValueError('Argument "dt" is not within the last 3 months.')
-
-        passenger_volume_link: Url
-
-        self.validate_kwargs(Date=dt)
-
-        passenger_volume_link = self.send_download_request(endpoint, Date=dt)
-
-        return passenger_volume_link
 
 __all__ = [
     'Client',
