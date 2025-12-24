@@ -41,8 +41,8 @@ from .constants import (
     PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_BUS_STOPS_API_ENDPOINT,
     PASSENGER_VOLUME_BY_ORIGIN_DESTINATION_TRAIN_STATIONS_API_ENDPOINT,
     PASSENGER_VOLUME_BY_TRAIN_STATIONS_API_ENDPOINT,
-    PLATFORM_CROWD_DENSITY_REAL_TIME_API_ENDPOINT,
-    PLATFORM_CROWD_DENSITY_FORECASE_API_ENDPOINT,
+    STATION_CROWD_DENSITY_REAL_TIME_API_ENDPOINT,
+    STATION_CROWD_DENSITY_FORECAST_API_ENDPOINT,
     TAXI_AVAILABILITY_API_ENDPOINT,
     TAXI_STANDS_API_ENDPOINT,
     TRAIN_SERVICE_ALERTS_API_ENDPOINT,
@@ -55,8 +55,8 @@ from .types import (
     BusServicesDict,
     BusRoutesDict,
     BusStopsDict,
-    PlatformCrowdDensityRealTimeDict,
-    PlatformCrowdDensityForecastDict,
+    StationCrowdDensityRealTimeDict,
+    StationCrowdDensityForecastDict,
     TaxiAvailabilityDict,
     TaxiStandsDict,
     TrainServiceAlertsDict,
@@ -322,13 +322,12 @@ class Client(LandTransportSg):
         return train_lines
 
     @typechecked
-    def platform_crowd_density_real_time(
         self,
         train_line: str
-    ) -> list[PlatformCrowdDensityRealTimeDict | dict]:
-        """Get real-time platform crowdedness level for the MRT/LRT stations \
-        of a particular train network line. Refer to the train_lines() \
-        method for the list of valid train network lines.
+    ) -> list[StationCrowdDensityRealTimeDict]:
+        """Get real-time MRT/LRT station crowdedness level of a particular \
+        train network line. Refer to the train_lines() method for the list of \
+        valid train network lines.
 
         :param train_line: Code of train network line.
         :type train_line: str
@@ -336,35 +335,34 @@ class Client(LandTransportSg):
         :raises ValueError: train_line is not specified.
         :raises ValueError: train_line is not a valid train network line.
 
-        :return: Platform crowdedness level of the specified train network \
+        :return: Station crowdedness level of the specified train network \
             line.
-        :rtype: list[PlatformCrowdDensityRealTimeDict]
+        :rtype: list[StationCrowdDensityRealTimeDict]
         """
         if train_line not in TRAIN_LINES:
             raise ValueError(
                 'Invalid argument "train_line". Use train_lines() to get a list of valid train line codes'
             )
 
-        platform_crowd_density_real_time: list[
-            PlatformCrowdDensityRealTimeDict | dict
+        station_crowd_density_real_time: list[
+            StationCrowdDensityRealTimeDict | dict
         ]
 
-        platform_crowd_density_real_time = self.send_request(
-            PLATFORM_CROWD_DENSITY_REAL_TIME_API_ENDPOINT,
-            TrainLine=train_line,
+        station_crowd_density_real_time = self.send_request(
+            STATION_CROWD_DENSITY_REAL_TIME_API_ENDPOINT,
+            TrainLine=train_line
         )
 
-        return platform_crowd_density_real_time
+        return station_crowd_density_real_time
 
     @typechecked
-    def platform_crowd_density_forecast(
+    def station_crowd_density_forecast(
         self,
         train_line: str
-    ) -> list[PlatformCrowdDensityForecastDict | dict]:
-        """Get forecasted platform crowdedness level for the MRT/LRT \
-        stations of a particular train network line at 30 minutes interval. \
-        Refer to the train_lines() method for the list of valid train \
-        network lines.
+    ) -> list[StationCrowdDensityForecastDict]:
+        """Get forecasted MRT/LRT statiion crowdedness level of a particular \
+        train network line at 30 minutes interval. Refer to the train_lines() \
+        method for the list of valid train network lines.
 
         :param train_line: Code of train network line.
         :type train_line: str
@@ -374,23 +372,23 @@ class Client(LandTransportSg):
 
         :return: Forecasted platform crowdedness level of the specified \
             train network line.
-        :rtype: list[PlatformCrowdDensityForecastDict]
+        :rtype: list[StationCrowdDensityForecastDict]
         """
         if train_line not in TRAIN_LINES:
             raise ValueError(
                 'Invalid argument "train_line". Use train_lines() to get a list of valid train line codes'
             )
 
-        platform_crowd_density_forecast: list[
-            PlatformCrowdDensityForecastDict | dict
+        station_crowd_density_forecast: list[
+            StationCrowdDensityForecastDict | dict
         ]
 
-        platform_crowd_density_forecast = self.send_request(
-            PLATFORM_CROWD_DENSITY_FORECASE_API_ENDPOINT,
+        station_crowd_density_forecast = self.send_request(
+            STATION_CROWD_DENSITY_FORECAST_API_ENDPOINT,
             TrainLine=train_line,
         )
 
-        return platform_crowd_density_forecast
+        return station_crowd_density_forecast
 
     @typechecked
     def taxi_availability(self) -> list[TaxiAvailabilityDict | dict]:

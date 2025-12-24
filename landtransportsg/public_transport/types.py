@@ -247,8 +247,8 @@ class PlatformCrowdDensityRealTimeDict(TypedDict):
     Example: "l".
     """
 
-class _PlatformCrowdDensityForecastStationIntervalDict(TypedDict):
-    """Type definition for PlatformCrowdDensityForecastStationDict"""
+class _StationCrowdDensityForecastStationIntervalDict(TypedDict):
+    """Type definition for StationCrowdDensityForecastStationDict"""
 
     Start: datetime
     """The start of the time interval.
@@ -262,24 +262,24 @@ class _PlatformCrowdDensityForecastStationIntervalDict(TypedDict):
     - blank.
     Example: "l".
     """
-class _PlatformCrowdDensityForecastStationDict(TypedDict):
-    """Type definition for PlatformCrowdDensityForecastDict"""
+class _StationCrowdDensityForecastStationDict(TypedDict):
+    """Type definition for StationCrowdDensityForecastDict"""
 
     Station: str
     """Station code.
     Example: "EW13".
     """
-    Interval: list[_PlatformCrowdDensityForecastStationIntervalDict]
-    """Array of platform crowd density forecast per station per time interval."""
-class PlatformCrowdDensityForecastDict(TypedDict):
-    """Type definition for platform_crowd_density_forecast()"""
+    Interval: list[_StationCrowdDensityForecastStationIntervalDict]
+    """Array of station crowd density forecast per time interval."""
+class StationCrowdDensityForecastDict(TypedDict):
+    """Type definition for station_crowd_density_forecast()"""
 
     Date: datetime
     """Midnight of the forecasted date.
     Example: datetime(2021, 9, 15, 0, 0, 0).
     """
-    Stations: list[_PlatformCrowdDensityForecastStationDict]
-    """Array of platform crowd density forecast per station."""
+    Stations: list[_StationCrowdDensityForecastStationDict]
+    """Array of station crowd density forecast."""
 
 class TaxiAvailabilityDict(TypedDict):
     """Type definition for taxi_availability()"""
@@ -396,10 +396,10 @@ __all__ = [
     'BusServicesDict',
     'BusRoutesDict',
     'BusStopsDict',
-    'PlatformCrowdDensityRealTimeDict',
-    '_PlatformCrowdDensityForecastStationIntervalDict',
-    '_PlatformCrowdDensityForecastStationDict',
-    'PlatformCrowdDensityForecastDict',
+    '_StationCrowdDensityForecastStationIntervalDict',
+    '_StationCrowdDensityForecastStationDict',
+    'StationCrowdDensityRealTimeDict',
+    'StationCrowdDensityForecastDict',
     'TaxiAvailabilityDict',
     'TaxiStandsDict',
     'TrainServiceAlertsDict',
