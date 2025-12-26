@@ -39,6 +39,7 @@ from .constants import (
     TRAFFIC_SPEED_BANDS_API_ENDPOINT,
     VMS_API_ENDPOINT,
 
+    CARPARK_AVAILABILITY_SANITISE_IGNORE_KEYS,
     FAULTY_TRAFFIC_LIGHTS_SANITISE_IGNORE_KEYS,
     TRAFFIC_IMAGES_SANITISE_IGNORE_KEYS,
     TRAFFIC_SPEED_BANDS_SANITISE_IGNORE_KEYS,
@@ -74,6 +75,7 @@ class Client(LandTransportSg):
         carpark_availability = self.send_request(
             CARPARK_AVAILABILITY_API_ENDPOINT,
             cache_duration=CACHE_ONE_MINUTE,
+            sanitise_ignore_keys=CARPARK_AVAILABILITY_SANITISE_IGNORE_KEYS,
         )
 
         return carpark_availability
