@@ -44,6 +44,7 @@ from .mocks.api_response_public_transport import (
     APIResponseBusServices,
     APIResponseBusStops,
     APIResponseFacilitiesMaintenance,
+    APIResponsePlannedBusRoutes,
     APIResponseStationCrowdDensityForecast,
     APIResponseStationCrowdDensityRealTime,
     APIResponseTaxiAvailability,
@@ -95,6 +96,11 @@ def test_train_lines(client):
             APIResponseFacilitiesMaintenance,
         ),
         (
+            'planned_bus_routes',
+            list[PlannedBusRoutesDict],
+            APIResponsePlannedBusRoutes,
+        ),
+        (
             'taxi_availability',
             list[TaxiAvailabilityDict],
             APIResponseTaxiAvailability,
@@ -123,17 +129,6 @@ def test_class_function_with_mocked_response_class(
 
     monkeypatch.setattr(CachedSession, 'get', mock_requests_get)
 
-    result = getattr(client, function)()
-
-    assert check_type(result, expected_type) == result
-
-@pytest.mark.parametrize(
-    ('function', 'expected_type'),
-    [
-        ('planned_bus_routes', list[PlannedBusRoutesDict]),
-    ],
-)
-def test_class_function(client, function, expected_type):
     result = getattr(client, function)()
 
     assert check_type(result, expected_type) == result
