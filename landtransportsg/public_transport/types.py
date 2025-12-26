@@ -270,7 +270,7 @@ class BusServicesDict(TypedDict):
 
     :example: "12-15"
     """
-    LoopDesc: str
+    LoopDesc: str | None
     """Location at which the bus service loops, empty if not a loop service.
 
     :example: "Raffles Blvd"

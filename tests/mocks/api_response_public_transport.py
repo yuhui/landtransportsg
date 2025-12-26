@@ -153,6 +153,32 @@ class APIResponseFacilitiesMaintenance:
             ],
         }
 
+class APIResponsePlannedBusRoutes:
+    status_code = 200
+
+    @staticmethod
+    def json():
+        return {
+            "odata.metadata": "https://datamall2.mytransport.sg/ltaodataservice/$metadataBusRoutes",
+            "value": [
+                {
+                    "ServiceNo": "983",
+                    "Operator": "SMRT",
+                    "Direction": 1,
+                    "StopSequence": 25,
+                    "BusStopCode": "44099",
+                    "Distance": 9.1,
+                    "WD_FirstBus": "0533",
+                    "WD_LastBus": "0121",
+                    "SAT_FirstBus": "0546",
+                    "SAT_LastBus": "0023",
+                    "SUN_FirstBus": "0546",
+                    "SUN_LastBus": "0022",
+                    "EffectiveDate": "2025-12-27T00:00:00+0800"
+                }
+            ],
+        }
+
 class APIResponseStationCrowdDensityForecast:
     status_code = 200
 
@@ -264,6 +290,7 @@ __all__ = [
     'APIResponseBusServices',
     'APIResponseBusStops',
     'APIResponseFacilitiesMaintenance',
+    'APIResponsePlannedBusRoutes',
     'APIResponseStationCrowdDensityForecast',
     'APIResponseStationCrowdDensityRealTime',
     'APIResponseTaxiAvailability',
