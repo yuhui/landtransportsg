@@ -1,6 +1,17 @@
 Changelog
 =========
 
+[2.1.1] - 2025-12-26
+--------------------
+
+Changed
+^^^^^^^
+
+- Fixed invalid typehints for Public Transport client's Bus Services endpoint.
+- Fixed invalid sanitisations for the following endpoints:
+    - PublicTransport client: Planned Bus Routes
+    - Traffic client: Car Park Availability, Traffic Speed Bands
+
 [2.1.0] - 2025-12-24
 --------------------
 
