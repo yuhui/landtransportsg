@@ -351,19 +351,6 @@ class Client(LandTransportSg):
         return passenger_volume_link
 
     @typechecked
-    def train_lines(self) -> tuple[str, ...]:
-        """Return the tuple of valid train lines.
-
-        :return: Tuple of valid train lines.
-        :rtype: tuple[str, ...]
-        """
-        train_lines: tuple[str, ...]
-
-        train_lines = TRAIN_LINES
-
-        return train_lines
-
-    @typechecked
     def planned_bus_routes(self) -> list[PlannedBusRoutesDict]:
         """Get planned new/updated bus routes information.
 
@@ -380,6 +367,19 @@ class Client(LandTransportSg):
         )
 
         return planned_bus_routes
+
+    @typechecked
+    def train_lines(self) -> tuple[str, ...]:
+        """Return the tuple of valid train lines.
+
+        :return: Tuple of valid train lines.
+        :rtype: tuple[str, ...]
+        """
+        train_lines: tuple[str, ...]
+
+        train_lines = TRAIN_LINES
+
+        return train_lines
 
     @typechecked
     def station_crowd_density_real_time(
