@@ -323,12 +323,59 @@ class LandTransportSg:
         data: Any
 
         if params is None:
-            params = {
-                '$skip': 0
-            }
+            params = {}
 
         if sanitise_ignore_keys is None:
             sanitise_ignore_keys = []
+
+        response_val = self._collect_response_value(
+            url,
+            params=params,
+            cache_duration=cache_duration,
+        )
+
+        if isinstance(response_val, dict) and 'odata.metadata' in response_val:
+            # this isn't documented in LTA Datamall's API guide
+            del response_val['odata.metadata']
+
+        data = self.sanitise_data(
+            response_val,
+            ignore_keys=sanitise_ignore_keys,
+        )
+
+        return data
+
+# private
+
+    @typechecked
+    def _collect_response_value(
+        self,
+        url: Url,
+        params: dict,
+        cache_duration: int,
+    ) -> Any:
+        """Collect response value from an endpoint. If the response returns a \
+        list of 500 records, then keep calling itself recursively to collect \
+        more records.
+
+        :param url: The endpoint URL to send the request to.
+        :type url: Url
+
+        :param params: List of parameters to be passed to the endpoint URL.
+        :type params: dict
+
+        :param cache_duration: Number of seconds before the cache expires.
+        :type cache_duration: int
+
+        :raises HTTPError: Error occurred during the request process.
+
+        :return: Results from the response.
+        :rtype: Any
+        """
+        response_value: Any
+
+        if '$skip' not in params:
+            params['$skip'] = 0
 
         response = self.session.get(
             url,
@@ -361,11 +408,6 @@ class LandTransportSg:
         response_value = response_json.get('value') \
             if 'value' in response_json else response_json
 
-        data = self.sanitise_data(
-            response_value,
-            ignore_keys=sanitise_ignore_keys,
-        )
-
         # it is possible to paginate "forever" by skipping by 500 records
         # so check if there are any records in the current results first
         if isinstance(response_value, list) and len(response_value) == 500:
@@ -378,20 +420,15 @@ class LandTransportSg:
             if skip % 1000 == 0:
                 time.sleep(1)
 
-            next_data = self.send_request(
+            next_response_value = self._collect_response_value(
                 url,
                 params=params,
                 cache_duration=cache_duration,
-                sanitise_ignore_keys=sanitise_ignore_keys,
             )
             # next_data should be a list too
-            data += next_data
+            response_value += next_response_value
 
-        if isinstance(data, dict) and 'odata.metadata' in data:
-            # this isn't documented in LTA Datamall's API guide
-            del data['odata.metadata']
-
-        return data
+        return response_value
 
 __all__ = [
     'LandTransportSg',
