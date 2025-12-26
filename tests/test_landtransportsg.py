@@ -257,6 +257,23 @@ def test_send_request_with_str_response(
     assert isinstance(response_content, list)
 
 @pytest.mark.parametrize(
+    'url',
+    [
+        'https://datamall2.mytransport.sg/ltaodataservice/BusStops',
+    ],
+)
+def test_send_request_with_more_than_500_records(
+    client,
+    url,
+):
+    response_content = client.send_request(url)
+    assert isinstance(response_content, list)
+    assert len(response_content) > 500
+
+    bus_stops = [r['BusStopCode'] for r in response_content]
+    assert len(bus_stops) == len(set(bus_stops))
+
+@pytest.mark.parametrize(
     ('url', 'kwargs'),
     [
         (
