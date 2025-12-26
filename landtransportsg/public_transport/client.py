@@ -54,6 +54,7 @@ from .constants import (
     BUS_ROUTES_SANITISE_IGNORE_KEYS,
     BUS_STOPS_SANITISE_IGNORE_KEYS,
     BUS_SERVICES_SANITISE_IGNORE_KEYS,
+    PLANNED_BUS_ROUTES_SANITISE_IGNORE_KEYS,
 
     TRAIN_LINES,
 )
@@ -364,6 +365,7 @@ class Client(LandTransportSg):
         planned_bus_routes = self.send_request(
             PLANNED_BUS_ROUTES_API_ENDPOINT,
             cache_duration=CACHE_ONE_DAY,
+            sanitise_ignore_keys=PLANNED_BUS_ROUTES_SANITISE_IGNORE_KEYS,
         )
 
         return planned_bus_routes
