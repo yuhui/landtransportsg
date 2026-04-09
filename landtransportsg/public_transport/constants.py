@@ -48,7 +48,7 @@ FACILITIES_MAINTENANCE_ARGS_KEY_MAP = {
     'station_code': 'StationCode',
 }
 PASSENGER_VOLUME_ARGS_KEY_MAP = {
-    'dt': 'Date',
+    'dt': 'date',
 }
 STATION_CROWD_DENSITY_ARGS_KEY_MAP = {
     'train_line': 'TrainLine',
