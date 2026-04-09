@@ -319,6 +319,7 @@ class LandTransportSg:
         url: Url,
         params: dict | None=None,
         cache_duration: int=0,
+        sanitise: bool=True,
         sanitise_ignore_keys: list[str] | None=None,
     ) -> Any:
         """Send a request to an endpoint and return its response.
@@ -340,6 +341,10 @@ class LandTransportSg:
         :param cache_duration: Number of seconds before the cache expires. \
             Defaults to 0, i.e. do not cache.
         :type cache_duration: int
+
+        :param sanitise: If true, then the response's values are sanitised \
+            using the ``sanitise_data()`` method. Defaults to True.
+        :type iterate: bool
 
         :param sanitise_ignore_keys: List of keys to ignore in the response \
             value during sanitising when that response value is a ``dict``. \
@@ -372,7 +377,7 @@ class LandTransportSg:
         data = self.sanitise_data(
             response_val,
             ignore_keys=sanitise_ignore_keys,
-        )
+        ) if sanitise else response_val
 
         return data
 
