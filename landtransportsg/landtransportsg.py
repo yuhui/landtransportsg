@@ -90,6 +90,7 @@ class LandTransportSg:
         original_params: Any,
         default_params: dict[str, Any] | None=None,
         key_map: dict[str, str] | None=None,
+        remove_none_values: bool=True,
     ) -> dict:
         """Build the list of parameters that are compatible for use with the \
             endpoint URLs, e.g. camelCase parameter names instead of Python's \
@@ -112,6 +113,10 @@ class LandTransportSg:
             keys expected by the endpoint. Defaults to None.
         :type key_map: dict[str, str] or None
 
+        :param remove_none_values: If True, then parameters with None values \
+            are removed from the returned parameters. Defaults to True.
+        :type remove_none_values: bool
+
         :return: The set of parameters that can be used with the API endpoints.
         :rtype: dict
         """
@@ -121,6 +126,11 @@ class LandTransportSg:
             key_map = {}
 
         joined_params = default_params | original_params
+        if remove_none_values:
+            joined_params = {
+                k: v \
+                    for k, v in joined_params.items() if v is not None
+            }
 
         # Ensure that the parameters match the expected input parameter types.
         _ = check_type(joined_params, params_expected_type)
