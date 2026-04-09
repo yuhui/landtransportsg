@@ -1,6 +1,18 @@
 Changelog
 =========
 
+[2.2.0] - 2026-04-09
+--------------------
+
+Changed
+^^^^^^^
+- Compatibility with DataMall API v6.7:
+    - **Breaking:** Removed ``Traffic`` client's ``erp_rates()`` method.
+    - Includes the EV Charging Points Batch and Flood Alerts endpoints.
+- Specify allowed date and datetime string formats.
+- Allow arguments with None values to be removed when building query parameters.
+- Sanitise comma-separated numbers as tuples of those numbers.
+
 [2.1.1] - 2025-12-26
 --------------------
 
