@@ -14,8 +14,6 @@
 
 """Client for interacting with the Traffic API endpoints."""
 
-from warnings import warn
-
 from typeguard import typechecked
 
 from ..constants import (
@@ -79,30 +77,6 @@ class Client(LandTransportSg):
         )
 
         return carpark_availability
-
-    @typechecked
-    def erp_rates(self) -> list[None]:
-        """Get ERP rates of all vehicle types across all timings for each \
-        zone.
-
-        This endpoint was removed from DataMall v6.1 on 30 September 2024. \
-        This method will be removed from this package's next major release or \
-        31 December 2025, whichever comes earlier.
-
-        :warns DeprecationWarning: Inform the developer that this method has \
-            been deprecated.
-
-        :return: ERP rates per vehicle type by zones. Empty list.
-        :rtype: list[None]
-        """
-        warn(
-            'ERP rates was removed from LTA DataMall v6.1 on 30 September 2024.',
-            DeprecationWarning
-        )
-
-        erp_rates: list[None] = []
-
-        return erp_rates
 
     @typechecked
     def estimated_travel_times(self) -> list[EstimatedTravelTimesDict]:
