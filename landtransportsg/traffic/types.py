@@ -153,6 +153,108 @@ class FaultyTrafficLightsDict(TypedDict):
         North Street 1 Junc."
     """
 
+class FloodAlertsDict(TypedDict):
+    """Type definition for flood_alerts()"""
+
+    alertId: str
+    """A number or string uniquely identifying this observation, assigned by \
+        the sender.
+
+    :example: "2.49.0.0.702.2-BCM-17612003774680-PUBCON-DYOONG"
+    """
+    dateTime: datetime
+    """Date and Time the flood observation was issued by PUB.
+
+    :example: datetime(2025, 5, 22, 9, 55, 0)
+    """
+    msgType: str
+    """Code denoting the nature of the alert message. Possible Code Values:
+
+    - "Alert" - Initial information requiring attention by targeted recipients
+    - "Cancel" - Cancels the earlier message(s) identified in 'references'.
+
+    :example: "Alert"
+    """
+    event: str
+    """Text denoting the type of the subject event of the alert message. \
+        Event will always be 'Flood'.
+
+    :example: "Flood"
+    """
+    responseType: str
+    """Alert response type. Code denoting the type of action recommended for \
+        the target audience. Default Code Value: 'Avoid'.
+
+    :example: "Avoid"
+    """
+    urgency: str
+    """Code denoting the severity of the subject event of the alert message. \
+        Default Code Value: 'Immediate' - Responsive action SHOULD be taken \
+        immediately.
+
+    :example: "Immediate"
+    """
+    severity: str
+    """Code denoting the severity of the subject event of the alert message. \
+        Possible Code Values:
+
+    - "Extreme" - Extraordinary threat to life or property
+    - "Severe" - Significant threat to life or property
+    - "Moderate" - Possible threat to life or property
+    - "Minor" – Minimal to no known threat to life or property.
+
+    :example: "Minor"
+    """
+    expires: datetime
+    """A flood alert automatically expires after 24 hours by default. To \
+        remove or update a flood alert before it expires, follow the \
+        cancelled alert issued.
+
+    :example: datetime(2025, 10, 24, 14, 19, 37)
+    """
+    senderName: str
+    """Text naming the originator of the alert message. senderName will \
+        always be 'PUB'.
+
+    :example: "PUB"
+    """
+    headline: str
+    """Text headline of the alert message.
+
+    :example: "Flash Flood Alert"
+    """
+    description: str
+    """Location of Flood. Text describing the subject event of the alert \
+        message.
+
+    :example: "Flash flood at Bt Timah Rd from Wilby Rd to Blackmore Dr. \
+        Please avoid the area. Issued 1705 hrs."
+    """
+    instruction: str
+    """Text describing the recommended action to be taken by recipients of \
+        the alert message.
+
+    :example: "Please avoid this area for the next one (1) hour."
+    """
+    areaDesc: str
+    """Area description.
+
+    :example: "Jalan Mastuli, Singapore"
+    """
+    circle: tuple[float, float, float]
+    """Lat/long and radius in kilometers. The radius refers to the \
+        broadcasting radius of the specific alert, it is NOT indicative of \
+        the extent of the flooding.
+
+    :example: (1.35479, 103.88611, 0.05)
+    """
+    status: str
+    """Code denoting the appropriate handling of the alert message. Default \
+        Code Value: "Actual" - Actionable by all targeted recipients.
+
+    :example: "Actual"
+    """
+
 class RoadOpeningsDict(TypedDict):
     """Type definition for road_openings()"""
 
@@ -371,6 +473,7 @@ __all__ = [
     'CarParkAvailabilityDict',
     'EstimatedTravelTimesDict',
     'FaultyTrafficLightsDict',
+    'FloodAlertsDict',
     'RoadOpeningsDict',
     'RoadWorksDict',
     'TrafficImagesDict',

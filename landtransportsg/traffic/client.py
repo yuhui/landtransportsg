@@ -19,6 +19,7 @@ from typeguard import typechecked
 from ..constants import (
     CACHE_ONE_MINUTE,
     CACHE_TWO_MINUTES,
+    CACHE_THREE_MINUTES,
     CACHE_FIVE_MINUTES,
     CACHE_ONE_DAY,
 )
@@ -29,6 +30,7 @@ from .constants import (
     CARPARK_AVAILABILITY_API_ENDPOINT,
     ESTIMATED_TRAVEL_TIMES_API_ENDPOINT,
     FAULTY_TRAFFIC_LIGHTS_API_ENDPOINT,
+    FLOOD_ALERTS_API_ENDPOINT,
     ROAD_OPENINGS_API_ENDPOINT,
     ROAD_WORKS_API_ENDPOINT,
     TRAFFIC_FLOW_API_ENDPOINT,
@@ -39,6 +41,7 @@ from .constants import (
 
     CARPARK_AVAILABILITY_SANITISE_IGNORE_KEYS,
     FAULTY_TRAFFIC_LIGHTS_SANITISE_IGNORE_KEYS,
+    FLOOD_ALERTS_SANITISE_IGNORE_KEYS,
     TRAFFIC_IMAGES_SANITISE_IGNORE_KEYS,
     TRAFFIC_SPEED_BANDS_SANITISE_IGNORE_KEYS,
 )
@@ -46,6 +49,7 @@ from .types import (
     CarParkAvailabilityDict,
     EstimatedTravelTimesDict,
     FaultyTrafficLightsDict,
+    FloodAlertsDict,
     RoadOpeningsDict,
     RoadWorksDict,
     TrafficImagesDict,
@@ -111,6 +115,23 @@ class Client(LandTransportSg):
         )
 
         return faulty_traffic_lights
+
+    @typechecked
+    def flood_alerts(self) -> list[FloodAlertsDict]:
+        """Get flood alert information across Singapore, provided by PUB.
+
+        :return: Flood alerts.
+        :rtype: list[FloodAlertsDict]
+        """
+        flood_alerts: list[FloodAlertsDict]
+
+        flood_alerts = self.send_request(
+            FLOOD_ALERTS_API_ENDPOINT,
+            cache_duration=CACHE_THREE_MINUTES,
+            sanitise_ignore_keys=FLOOD_ALERTS_SANITISE_IGNORE_KEYS,
+        )
+
+        return flood_alerts
 
     @typechecked
     def road_openings(self) -> list[RoadOpeningsDict]:
