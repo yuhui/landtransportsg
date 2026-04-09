@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui
+# Copyright 2019-2026 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,14 +16,16 @@
 
 """Test that the Active Mobility class is working properly."""
 
+from os import getenv
+
 import pytest
+from dotenv import load_dotenv
 from requests_cache import CachedSession
 from typeguard import check_type
 
 from landtransportsg import ActiveMobility
 from landtransportsg.active_mobility.types import BicycleParkingDict
 
-from . import TEST_ACCOUNT_KEY
 from .mocks.api_response_active_mobility import APIResponseBicycleParking
 
 GOOD_LATITUDE = 1.364897
@@ -34,7 +36,9 @@ NEGATIVE_DISTANCE = -1.2
 
 @pytest.fixture(scope='module')
 def client():
-    return ActiveMobility(TEST_ACCOUNT_KEY)
+    load_dotenv()
+    api_key = getenv('ACCOUNT_KEY')
+    return ActiveMobility(api_key)
 
 @pytest.mark.parametrize(
     'kwargs',
@@ -75,8 +79,8 @@ def test_bicycle_parking(
 
     assert check_type(
         bicycle_parking_locations,
-        list[BicycleParkingDict,
-    ]) == bicycle_parking_locations
+        list[BicycleParkingDict],
+    ) == bicycle_parking_locations
 
 @pytest.mark.parametrize(
     'kwargs',

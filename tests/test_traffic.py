@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui
+# Copyright 2019-2026 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 """Test that the Traffic class is working properly."""
 
-from warnings import catch_warnings, simplefilter
+from os import getenv
 
 import pytest
+from dotenv import load_dotenv
 from requests_cache import CachedSession
 from typeguard import check_type
 
@@ -27,6 +28,7 @@ from landtransportsg.traffic.types import (
     CarParkAvailabilityDict,
     EstimatedTravelTimesDict,
     FaultyTrafficLightsDict,
+    FloodAlertsDict,
     RoadOpeningsDict,
     RoadWorksDict,
     TrafficImagesDict,
@@ -35,11 +37,11 @@ from landtransportsg.traffic.types import (
     VMSDict,
 )
 
-from . import TEST_ACCOUNT_KEY
 from .mocks.api_response_traffic import (
     APIResponseCarParkAvailability,
     APIResponseEstimatedTravelTimes,
     APIResponseFaultyTrafficLights,
+    APIResponseFloodAlerts,
     APIResponseRoadOpenings,
     APIResponseRoadWorks,
     APIResponseTrafficImages,
@@ -50,7 +52,9 @@ from .mocks.api_response_traffic import (
 
 @pytest.fixture(scope='module')
 def client():
-    return Traffic(TEST_ACCOUNT_KEY)
+    load_dotenv()
+    api_key = getenv('ACCOUNT_KEY')
+    return Traffic(api_key)
 
 @pytest.mark.parametrize(
     ('function', 'expected_type', 'mocked_response_class'),
@@ -69,6 +73,11 @@ def client():
             'faulty_traffic_lights',
             list[FaultyTrafficLightsDict],
             APIResponseFaultyTrafficLights,
+        ),
+        (
+            'flood_alerts',
+            list[FloodAlertsDict],
+            APIResponseFloodAlerts,
         ),
         (
             'road_openings',
@@ -125,17 +134,3 @@ def test_traffic_flow(
     traffic_flow = client.traffic_flow()
 
     assert isinstance(traffic_flow, str)
-
-def test_erp_rates(client):
-    with catch_warnings(record=True) as w:
-        # Cause all warnings to always be triggered.
-        simplefilter('always')
-
-        erp_rates = client.erp_rates()
-
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert 'ERP rates was removed from LTA DataMall' in str(w[-1].message)
-
-        assert isinstance(erp_rates, list)
-        assert len(erp_rates) == 0

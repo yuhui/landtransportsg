@@ -16,7 +16,7 @@
 
 """Mock response to return an error response."""
 
-class APIResponseFault(object):
+class APIResponseFault:
     status_code = 500
 
     @staticmethod
@@ -29,3 +29,7 @@ class APIResponseFault(object):
                 },
             },
         }
+
+__all__ = [
+    'APIResponseFault',
+]

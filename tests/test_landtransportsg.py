@@ -1,4 +1,4 @@
-# Copyright 2020-2025 Yuhui
+# Copyright 2020-2026 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@
 """Test that the LandTransportSg class is working properly."""
 
 from datetime import date, datetime, timedelta
+from os import getenv
 from zoneinfo import ZoneInfo
 
 import pytest
+from dotenv import load_dotenv
 from requests import HTTPError
 from requests_cache import CachedSession
 
@@ -27,16 +29,17 @@ from landtransportsg.landtransportsg import LandTransportSg
 from landtransportsg.constants import USER_AGENT
 from landtransportsg.exceptions import APIError
 
-from . import TEST_ACCOUNT_KEY
-
 from .mocks.types_args import MockArgsDict
-from .mocks.api_response_public_transport import APIResponseBusArrival
+from .mocks.api_response_fault import APIResponseFault
 from .mocks.api_response_landtransportsg import (
     APIResponseBadLink,
-    APIResponseFault,
     APIResponseMissingLink,
+    APIResponseMoreThan500RecordsPage1,
+    APIResponseMoreThan500RecordsPage2,
+    APIResponseMoreThan500RecordsPage3,
     APIResponseValueList,
 )
+from .mocks.api_response_public_transport import APIResponseBusArrival
 
 SANITISE_DATA_DICT = {
     'value_str': 'foo bar',
@@ -53,6 +56,9 @@ SANITISE_DATA_DICT = {
         'key1': '316',
         'date_time': '2024-12-01 09:57:45.789',
     },
+    'value_tuple_int': '1,2,3',
+    'value_tuple_float': '1.1,2.2,3.3,4.4',
+    'value_tuple_int_float': '1,2.2,3',
 }
 
 # constants for testing date as date object
@@ -64,39 +70,31 @@ GOOD_DATETIME_STR = '2019-07-13T04:56:08'
 # constants for testing date as string object
 TWO_MONTHS_AGO_DATE_STR = (date.today() + timedelta(-40)).strftime('%Y%m')
 
-@pytest.fixture
-def mock_requests_value_bus_arrival_response(monkeypatch):
-    """Requests.get() mocked to return sample Bus Arrival API response."""
-
-    def mock_requests_get(*args, **kwargs):
-        return APIResponseBusArrival()
-
-    monkeypatch.setattr(CachedSession, 'get', mock_requests_get)
-
-@pytest.fixture
-def mock_requests_fault_response(monkeypatch):
-    """Requests.Session().get() mocked to return sample Fault response."""
-    def mock_requests_get(*args, **kwargs):
-        return APIResponseFault()
-
-    monkeypatch.setattr(CachedSession, 'get', mock_requests_get)
-
 @pytest.fixture(scope='module')
 def client():
-    return LandTransportSg(TEST_ACCOUNT_KEY)
+    load_dotenv()
+    api_key = getenv('ACCOUNT_KEY')
+    return LandTransportSg(api_key)
 
 def test_repr(client):
     assert repr(client).startswith(str(client.__class__))
     assert USER_AGENT in repr(client)
 
 @pytest.mark.parametrize(
-    ('original_params', 'default_params', 'key_map', 'expected_params'),
+    (
+        'original_params',
+        'default_params',
+        'key_map',
+        'remove_none_values',
+        'expected_params',
+    ),
     [
         (
             {
                 'foobar': 'foo bar',
                 'date': GOOD_DATE,
                 'datetime': GOOD_DATETIME,
+                'none_value': None,
             },
             {
                 'foobar': 'foo and bar',
@@ -106,6 +104,7 @@ def test_repr(client):
                 'datetime': 'DATE_TIME',
                 'meaning_of_universe': 'meaningOfUniverse',
             },
+            True,
             {
                 'foobar': 'foo bar',
                 'date': GOOD_DATE_STR,
@@ -118,13 +117,16 @@ def test_repr(client):
                 'foobar': 'foo bar',
                 'date': GOOD_DATE,
                 'datetime': GOOD_DATETIME,
+                'none_value': None,
             },
             None,
             None,
+            False,
             {
                 'foobar': 'foo bar',
                 'date': GOOD_DATE_STR,
                 'datetime': GOOD_DATETIME_STR,
+                'none_value': None,
             },
         ),
     ],
@@ -134,9 +136,16 @@ def test_build_params(
     original_params,
     default_params,
     key_map,
+    remove_none_values,
     expected_params,
 ):
-    params = client.build_params(MockArgsDict, original_params, default_params, key_map)
+    params = client.build_params(
+        MockArgsDict,
+        original_params,
+        default_params,
+        key_map,
+        remove_none_values,
+    )
     assert params == expected_params
 
 @pytest.mark.parametrize(
@@ -159,6 +168,9 @@ def test_build_params(
                     'key1': 316,
                     'date_time': datetime(2024, 12, 1, 9, 57, 45, 789000, tzinfo=ZoneInfo(key='Asia/Singapore')),
                 },
+                'value_tuple_int': (1, 2, 3),
+                'value_tuple_float': (1.1, 2.2, 3.3, 4.4),
+                'value_tuple_int_float': '1,2.2,3',
             },
         ),
         (
@@ -188,6 +200,9 @@ def test_build_params(
                     'key1': 316,
                     'date_time': '2024-12-01 09:57:45.789',
                 },
+                'value_tuple_int': (1, 2, 3),
+                'value_tuple_float': (1.1, 2.2, 3.3, 4.4),
+                'value_tuple_int_float': '1,2.2,3',
             },
         ),
     ],
@@ -264,14 +279,24 @@ def test_send_request_with_str_response(
 )
 def test_send_request_with_more_than_500_records(
     client,
+    monkeypatch,
     url,
 ):
+    def mock_requests_get(*args, **kwargs):
+        params = kwargs.get('params', {})
+        skip = params.get('$skip', None)
+        if skip is None or skip == 0:
+            return APIResponseMoreThan500RecordsPage1()
+        elif skip == 500:
+            return APIResponseMoreThan500RecordsPage2()
+        elif skip == 1000:
+            return APIResponseMoreThan500RecordsPage3()
+
+    monkeypatch.setattr(CachedSession, 'get', mock_requests_get)
+
     response_content = client.send_request(url)
     assert isinstance(response_content, list)
-    assert len(response_content) > 500
-
-    bus_stops = [r['BusStopCode'] for r in response_content]
-    assert len(bus_stops) == len(set(bus_stops))
+    assert len(response_content) == 500 + 500 + 499
 
 @pytest.mark.parametrize(
     ('url', 'kwargs'),
@@ -293,18 +318,22 @@ def test_send_request_with_more_than_500_records(
 )
 def test_send_request_with_sanitise_ignored_keys(
     client,
-    mock_requests_value_bus_arrival_response,
+    monkeypatch,
     url,
     kwargs,
 ):
+    def mock_requests_get(*args, **kwargs):
+        return APIResponseBusArrival()
+
+    monkeypatch.setattr(CachedSession, 'get', mock_requests_get)
+
     response_content = client.send_request(url, **kwargs)
 
-    print(response_content)
     bus_stop_code = response_content.get('BusStopCode', None)
     assert isinstance (bus_stop_code, str)
 
     service_no = response_content['Services'][0].get('ServiceNo', None)
-    assert isinstance (service_no, str)
+    assert isinstance(service_no, str)
 
 @pytest.mark.parametrize(
     ('url', 'kwargs'),
@@ -332,8 +361,13 @@ def test_send_request_with_invalid_endpoint(client):
 
 def test_send_request_with_fault_response(
     client,
-    mock_requests_fault_response,
+    monkeypatch,
 ):
+    def mock_requests_get(*args, **kwargs):
+        return APIResponseFault()
+
+    monkeypatch.setattr(CachedSession, 'get', mock_requests_get)
+
     with pytest.raises(APIError) as excinfo:
         def send_fault_request():
             _ = client.send_request(

@@ -14,6 +14,8 @@ jobs:
     - name: Install requirements
       run: pip install -r requirements_dev.txt
     - name: Run tests and collect coverage
+      env:
+        ACCOUNT_KEY: ${{ secrets.ACCOUNT_KEY }}
       run: pytest --cov=landtransportsg --cov-report=xml
     - name: Upload coverage reports to Codecov with GitHub Action
       uses: codecov/codecov-action@v5

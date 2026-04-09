@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui
+# Copyright 2019-2026 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -72,6 +72,34 @@ class APIResponseFaultyTrafficLights:
                     "Message": "(23/12)10:43 Black Out at CIRCUIT RD/CIRCUIT LINK."
                 }
             ],
+        }
+
+class APIResponseFloodAlerts:
+    status_code = 200
+
+    @staticmethod
+    def json():
+        return {
+            "odata.metadata": "https://datamall2.mytransport.sg/ltaodataservice/PubFloodAlerts",
+            "value": [
+                {
+                    "alertId": "2.49.0.0.702.2-BCM-17612003774680-PUBCON-DYOONG",
+                    "dateTime": "2025-05-22T09:55:00+08:00",
+                    "msgType": "Alert",
+                    "event": "Flood",
+                    "responseType": "Avoid",
+                    "urgency": "Immediate",
+                    "severity": "Minor",
+                    "expires": "2025-10-24T14:19:37+08:00",
+                    "senderName": "PUB",
+                    "headline": "Flash Flood Alert",
+                    "description": "Flash flood at Bt Timah Rd from Wilby Rd to Blackmore Dr. Please avoid the area. Issued 1705 hrs.",
+                    "instruction": "Please avoid this area for the next one (1) hour.",
+                    "areaDesc": "Jalan Mastuli, Singapore",
+                    "circle": "1.35479,103.88611,0.05",
+                    "status": "Actual"
+                }
+            ]
         }
 
 class APIResponseRoadOpenings:
@@ -191,6 +219,7 @@ __all__ = [
     'APIResponseCarParkAvailability',
     'APIResponseEstimatedTravelTimes',
     'APIResponseFaultyTrafficLights',
+    'APIResponseFloodAlerts',
     'APIResponseRoadOpenings',
     'APIResponseRoadWorks',
     'APIResponseTrafficImages',

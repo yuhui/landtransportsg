@@ -1,4 +1,4 @@
-# Copyright 2025 Yuhui. All rights reserved.
+# Copyright 2025-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ class MockArgsDict(TypedDict):
     date: date
     datetime: datetime
     meaning_of_universe: NotRequired[int]
+    none_value: NotRequired[None]
 
 __all__ = [
     'MockArgsDict',

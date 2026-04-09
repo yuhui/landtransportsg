@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui
+# Copyright 2019-2026 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,20 +30,6 @@ class APIResponseBadLink:
             ],
         }
 
-class APIResponseFault:
-    status_code = 500
-
-    @staticmethod
-    def json():
-        return {
-            'fault': {
-                'faultstring': 'Rate limit quota violation. Quota limit exceeded. Identifier : API_KEY',
-                'detail': {
-                    'errorcode': 'policies.ratelimit.QuotaViolation',
-                },
-            },
-        }
-
 class APIResponseMissingLink:
     status_code = 200
 
@@ -52,6 +38,57 @@ class APIResponseMissingLink:
         return {
             'odata.metadata': 'https://datamall2.mytransport.sg/ltaodataservice/$metadata#ValueStr',
             'value': [],
+        }
+
+class APIResponseMoreThan500RecordsPage1:
+    status_code = 200
+
+    @staticmethod
+    def json():
+        mock_data = {
+            "BusStopCode": "01012",
+            "RoadName": "Victoria St",
+            "Description": "Hotel Grand Pacific",
+            "Latitude": 1.29684825487647,
+            "Longitude": 103.85253591654006
+        }
+        return {
+            "odata.metadata": "https://datamall2.mytransport.sg/ltaodataservice/$metadata#BusStops",
+            "value": [mock_data.copy() for _ in range(500)],
+        }
+
+class APIResponseMoreThan500RecordsPage2:
+    status_code = 200
+
+    @staticmethod
+    def json():
+        mock_data = {
+            "BusStopCode": "01013",
+            "RoadName": "Victoria St",
+            "Description": "St. Joseph's Ch",
+            "Latitude": 1.29770970610083,
+            "Longitude": 103.8532247463225
+        }
+        return {
+            "odata.metadata": "https://datamall2.mytransport.sg/ltaodataservice/$metadata#BusStops",
+            "value": [mock_data.copy() for _ in range(500)],
+        }
+
+class APIResponseMoreThan500RecordsPage3:
+    status_code = 200
+
+    @staticmethod
+    def json():
+        mock_data = {
+            "BusStopCode": "01019",
+            "RoadName": "Victoria St",
+            "Description": "Bras Basah Cplx",
+            "Latitude": 1.29698951191332,
+            "Longitude": 103.85302201172507
+        }
+        return {
+            "odata.metadata": "https://datamall2.mytransport.sg/ltaodataservice/$metadata#BusStops",
+            "value": [mock_data.copy() for _ in range(499)],
         }
 
 class APIResponseValueList:
@@ -75,7 +112,8 @@ class APIResponseValueList:
 
 __all__ = [
     'APIResponseBadLink',
-    'APIResponseFault',
     'APIResponseMissingLink',
+    'APIResponseMoreThan500RecordsPage1',
+    'APIResponseMoreThan500RecordsPage2',
     'APIResponseValueList',
 ]

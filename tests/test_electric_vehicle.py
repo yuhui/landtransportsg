@@ -1,4 +1,4 @@
-# Copyright 2025 Yuhui
+# Copyright 2025-2026 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
 
 """Test that the Electric Vehicle class is working properly."""
 
+from os import getenv
+
 import pytest
+from dotenv import load_dotenv
 from requests_cache import CachedSession
 from typeguard import check_type
 
 from landtransportsg import ElectricVehicle
 from landtransportsg.electric_vehicle.types import EVChargingPointsDict
+from landtransportsg.types import Url
 
-from . import TEST_ACCOUNT_KEY
 from .mocks.api_response_electric_vehicle import APIResponseEVChargingPoints
 
 GOOD_POSTAL_CODE = '219428'
@@ -33,7 +36,9 @@ INVALID_POSTAL_CODE = 'foo'
 
 @pytest.fixture(scope='module')
 def client():
-    return ElectricVehicle(TEST_ACCOUNT_KEY)
+    load_dotenv()
+    api_key = getenv('ACCOUNT_KEY')
+    return ElectricVehicle(api_key)
 
 @pytest.mark.parametrize(
     'postal_code',
@@ -68,3 +73,11 @@ def test_ev_charging_points(
 def test_ev_charging_points_with_invalid_inputs(client, postal_code):
     with pytest.raises(ValueError):
         _ = client.ev_charging_points(postal_code=postal_code)
+
+def test_ev_charging_points_batch(
+    client,
+    mock_requests_link_response,
+):
+    ev_charging_points_batch = client.ev_charging_points_batch()
+
+    assert isinstance(ev_charging_points_batch, Url)
