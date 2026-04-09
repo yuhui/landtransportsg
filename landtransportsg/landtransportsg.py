@@ -60,6 +60,12 @@ class LandTransportSg:
         cache_backend: str | BaseCache='sqlite',
     ) -> None:
         """Constructor method"""
+        headers = {
+            'AccountKey': account_key,
+            'Accept': 'application/json',
+            'User-Agent': USER_AGENT,
+        }
+
         retries = Retry(
             total=5,
             backoff_factor=0.1,
@@ -72,11 +78,7 @@ class LandTransportSg:
             stale_if_error=False,
         )
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
-        self.session.headers.update({
-            'AccountKey': account_key,
-            'Accept': 'application/json',
-            'User-Agent': USER_AGENT,
-        })
+        self.session.headers.update(headers)
 
     @typechecked
     def __repr__(self) -> str:
@@ -263,57 +265,6 @@ class LandTransportSg:
         return value
 
     @typechecked
-    def send_download_request(
-        self,
-        url: Url,
-        params: dict | None=None,
-        cache_duration: int=0,
-    ) -> Url:
-        """Send a request to an endpoint that expects a response with a \
-        download link.
-
-        Normally, this method does not need to be called directly. However, \
-            if LTA Datamall were to change their API specification but this \
-            package has not yet been updated to support that change, then \
-            applications may use this method to call the changed endpoints.
-
-        :param url: The endpoint URL to send the request to.
-        :type url: Url
-
-        :param params: List of parameters to be passed to the endpoint URL. \
-            Parameter names **must** match the names required by the \
-            endpoints, particularly with typecase (e.g. camelCase). Defaults \
-            to None.
-        :type params: dict
-
-        :param cache_duration: Number of seconds before the cache expires. \
-            Defaults to 0, i.e. do not cache.
-        :type cache_duration: int
-
-        :raises HTTPError: Error occurred during the request process.
-
-        :return: Link for downloading the requested file.
-        :rtype: Url
-        """
-        download_link: Url
-
-        download: list[dict] = self.send_request(
-            url,
-            params=params,
-            cache_duration=cache_duration,
-        )
-
-        if len(download) == 0:
-            raise APIError('No download link returned.')
-
-        download_link = download[0].get('Link', '')
-
-        if download_link == '':
-            raise APIError('No download link returned.')
-
-        return download_link
-
-    @typechecked
     def send_request(
         self,
         url: Url,
@@ -364,7 +315,7 @@ class LandTransportSg:
         if sanitise_ignore_keys is None:
             sanitise_ignore_keys = []
 
-        response_val = self._collect_response_value(
+        response_val = self.__collect_response_value(
             url,
             params=params,
             cache_duration=cache_duration,
@@ -381,10 +332,61 @@ class LandTransportSg:
 
         return data
 
+    @typechecked
+    def send_download_request(
+        self,
+        url: Url,
+        params: dict | None=None,
+        cache_duration: int=0,
+    ) -> Url:
+        """Send a request to an endpoint that expects a response with a \
+        download link.
+
+        Normally, this method does not need to be called directly. However, \
+            if LTA Datamall were to change their API specification but this \
+            package has not yet been updated to support that change, then \
+            applications may use this method to call the changed endpoints.
+
+        :param url: The endpoint URL to send the request to.
+        :type url: Url
+
+        :param params: List of parameters to be passed to the endpoint URL. \
+            Parameter names **must** match the names required by the \
+            endpoints, particularly with typecase (e.g. camelCase). Defaults \
+            to None.
+        :type params: dict
+
+        :param cache_duration: Number of seconds before the cache expires. \
+            Defaults to 0, i.e. do not cache.
+        :type cache_duration: int
+
+        :raises HTTPError: Error occurred during the request process.
+
+        :return: Link for downloading the requested file.
+        :rtype: Url
+        """
+        download_link: Url
+
+        download: list[dict] = self.send_request(
+            url,
+            params=params,
+            cache_duration=cache_duration,
+        )
+
+        if len(download) == 0:
+            raise APIError('No download link returned.')
+
+        download_link = download[0].get('Link', '')
+
+        if download_link == '':
+            raise APIError('No download link returned.')
+
+        return download_link
+
 # private
 
     @typechecked
-    def _collect_response_value(
+    def __collect_response_value(
         self,
         url: Url,
         params: dict,
@@ -456,12 +458,12 @@ class LandTransportSg:
             if skip % 1000 == 0:
                 time.sleep(1)
 
-            next_response_value = self._collect_response_value(
+            next_response_value = self.__collect_response_value(
                 url,
                 params=params,
                 cache_duration=cache_duration,
             )
-            # next_data should be a list too
+            # next_response_value should be a list too
             response_value += next_response_value
 
         return response_value
