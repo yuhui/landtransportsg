@@ -41,7 +41,7 @@ Using the package
 
 Pre-requisite:
 
-- API key. `Request for API access`_.
+- Account key. `Request for API access`_.
 
 .. _Request for API access: https://datamall.lta.gov.sg/content/datamall/en/request-for-api.html
 

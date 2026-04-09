@@ -38,7 +38,7 @@ Using the package
 
 Pre-requisite:
 
-- API key from LTA. `Request for API access`_.
+- Account key from LTA. `Request for API access`_.
 
 .. _Request for API access: https://datamall.lta.gov.sg/content/datamall/en/request-for-api.html
 

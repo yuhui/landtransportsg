@@ -42,6 +42,7 @@ Types
    :members:
    :member-order: bysource
    :show-inheritance:
+
 .. autoclass:: _NextBusDict
    :members:
    :member-order: bysource
@@ -81,10 +82,12 @@ Types
    :members:
    :member-order: bysource
    :show-inheritance:
+
 .. autoclass:: _StationCrowdDensityForecastStationDict
    :members:
    :member-order: bysource
    :show-inheritance:
+
 .. autoclass:: _StationCrowdDensityForecastStationIntervalDict
    :members:
    :member-order: bysource
