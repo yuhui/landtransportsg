@@ -25,7 +25,7 @@ class BusArrivalArgsDict(TypedDict):
 
     :example: "83139"
     """
-    service_number: NotRequired[str | None]
+    service_number: NotRequired[str]
     """Bus service number.
 
     :example: "15"
@@ -36,7 +36,7 @@ class PassengerVolumeArgsDict(TypedDict):
     """Type definition for platform_crowd_density_real_time() and \
         platform_crowd_density_forecast() input arguments"""
 
-    dt: NotRequired[date | None]
+    dt: NotRequired[date]
     """Date of a specific month to get passenger volume. Only the year and \
         month are used since those are what the endpoint accepts. Must be \
         within the last 3 months of the current month.

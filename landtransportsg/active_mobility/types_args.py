@@ -29,7 +29,7 @@ class BicycleParkingArgsDict(TypedDict):
 
     :example: 103.766094
     """
-    distance: NotRequired[float | None]
+    distance: NotRequired[float]
     """Radius in kilometre.
 
     :example: 0.5
