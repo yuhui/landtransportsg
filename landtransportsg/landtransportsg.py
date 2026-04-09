@@ -16,7 +16,7 @@
 
 import time
 from datetime import date, datetime
-from typing import Any, Optional
+from typing import Any
 
 from requests import codes as requests_codes
 from requests.adapters import HTTPAdapter, Retry
@@ -88,8 +88,8 @@ class LandTransportSg:
         self,
         params_expected_type: Any,
         original_params: Any,
-        default_params: Optional[dict]=None,
-        key_map: Optional[dict[str, str]]=None,
+        default_params: dict[str, Any] | None=None,
+        key_map: dict[str, str] | None=None,
     ) -> dict:
         """Build the list of parameters that are compatible for use with the \
             endpoint URLs, e.g. camelCase parameter names instead of Python's \
@@ -106,11 +106,11 @@ class LandTransportSg:
         :param default_params: The set of parameters' default values. Should \
             be of the same type as what is specified in \
             ``params_expected_type``. Defaults to None.
-        :type default_params: dict
+        :type default_params: dict[str, Any] or None
 
         :param key_map: Mapping of keys used in ``params_expected_types`` to \
             keys expected by the endpoint. Defaults to None.
-        :type key_map: dict[str, str]
+        :type key_map: dict[str, str] or None
 
         :return: The set of parameters that can be used with the API endpoints.
         :rtype: dict
@@ -145,9 +145,9 @@ class LandTransportSg:
     def sanitise_data(
         self,
         value: Any,
-        iterate: Optional[bool]=True,
-        ignore_keys: Optional[list[str]]=None,
-        key_path: Optional[str]=None,
+        iterate: bool=True,
+        ignore_keys: list[str] | None=None,
+        key_path: str='',
     ) -> Any:
         """Convert the following:
 
@@ -169,9 +169,10 @@ class LandTransportSg:
 
         :param ignore_keys: List of dict keys to ignore when sanitising, if \
             value is a ``dict``. Defaults to None.
-        :type ignore_keys: list[str]
+        :type ignore_keys: list[str] or None
 
-        :param key_path: Current path of key in the dict. Defaults to None.
+        :param key_path: Current path of key in the dict. Defaults to blank \
+            string.
         :type key_path: str
 
         :return: The sanitised value.
@@ -179,9 +180,6 @@ class LandTransportSg:
         """
         if ignore_keys is None:
             ignore_keys = []
-
-        if key_path is None:
-            key_path = ''
 
         sanitised_value: Any = value
 
@@ -235,8 +233,8 @@ class LandTransportSg:
     def send_download_request(
         self,
         url: Url,
-        params: Optional[dict]=None,
-        cache_duration: Optional[int]=0,
+        params: dict | None=None,
+        cache_duration: int=0,
     ) -> Url:
         """Send a request to an endpoint that expects a response with a \
         download link.
@@ -286,9 +284,9 @@ class LandTransportSg:
     def send_request(
         self,
         url: Url,
-        params: Optional[dict]=None,
-        cache_duration: Optional[int]=0,
-        sanitise_ignore_keys: Optional[list[str]]=None,
+        params: dict | None=None,
+        cache_duration: int=0,
+        sanitise_ignore_keys: list[str] | None=None,
     ) -> Any:
         """Send a request to an endpoint and return its response.
 
@@ -312,7 +310,7 @@ class LandTransportSg:
 
         :param sanitise_ignore_keys: List of keys to ignore in the response \
             value during sanitising when that response value is a ``dict``. \
-            Defaults to [], i.e. empty list.
+            Defaults to [].
         :type sanitise_options: list[str]
 
         :raises HTTPError: Error occurred during the request process.

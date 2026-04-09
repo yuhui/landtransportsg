@@ -14,7 +14,7 @@
 
 """Exceptions that could occur when interacting with any API endpoint."""
 
-from typing import Optional
+from typing import Any
 
 from typeguard import typechecked
 
@@ -28,12 +28,12 @@ class APIError(Exception):
 
     :param errors: Other messages that were part of the raised error. \
         Defaults to None.
-    :type errors: list[str]
+    :type errors: Any or None
     """
     def __init__(
         self,
         message: str,
-        errors: Optional[list[str]]=None
+        errors: Any | None=None,
     ) -> None:
         """Constructor method"""
         super().__init__(message)
