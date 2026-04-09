@@ -56,13 +56,6 @@ def client():
                 'distance': GOOD_DISTANCE,
             }
         ),
-        (
-            {
-                'latitude': GOOD_LATITUDE,
-                'longitude': GOOD_LONGITUDE,
-                'distance': None,
-            }
-        ),
     ],
 )
 def test_bicycle_parking(

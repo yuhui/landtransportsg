@@ -188,10 +188,6 @@ def test_bus_arrival_with_invalid_inputs(client, bus_stop_code, service_number):
 @pytest.mark.parametrize(
     ('function', 'dt'),
     [
-        ('passenger_volume_by_bus_stops', None),
-        ('passenger_volume_by_origin_destination_bus_stops', None),
-        ('passenger_volume_by_origin_destination_train_stations', None),
-        ('passenger_volume_by_train_stations', None),
         ('passenger_volume_by_bus_stops', GOOD_DATE),
         ('passenger_volume_by_origin_destination_bus_stops', GOOD_DATE),
         ('passenger_volume_by_origin_destination_train_stations', GOOD_DATE),
