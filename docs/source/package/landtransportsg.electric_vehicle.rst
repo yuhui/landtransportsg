@@ -32,18 +32,22 @@ Types
    :members:
    :member-order: bysource
    :show-inheritance:
+
 .. autoclass:: _EVChargingPointsLocationDataDict
    :members:
    :member-order: bysource
    :show-inheritance:
+
 .. autoclass:: _EVChargingPointsLocationDataChargingPointDict
    :members:
    :member-order: bysource
    :show-inheritance:
+
 .. autoclass:: _EVChargingPointsLocationDataChargingPointPlugTypeDict
    :members:
    :member-order: bysource
    :show-inheritance:
+
 .. autoclass:: _EVChargingPointsLocationDataChargingPointPlugTypeEVIdDict
    :members:
    :member-order: bysource

@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui. All rights reserved.
+# Copyright 2019-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
 
 """Client for interacting with the Traffic API endpoints."""
 
-from warnings import warn
-
 from typeguard import typechecked
 
 from ..constants import (
     CACHE_ONE_MINUTE,
     CACHE_TWO_MINUTES,
+    CACHE_THREE_MINUTES,
     CACHE_FIVE_MINUTES,
     CACHE_ONE_DAY,
 )
@@ -31,6 +30,7 @@ from .constants import (
     CARPARK_AVAILABILITY_API_ENDPOINT,
     ESTIMATED_TRAVEL_TIMES_API_ENDPOINT,
     FAULTY_TRAFFIC_LIGHTS_API_ENDPOINT,
+    FLOOD_ALERTS_API_ENDPOINT,
     ROAD_OPENINGS_API_ENDPOINT,
     ROAD_WORKS_API_ENDPOINT,
     TRAFFIC_FLOW_API_ENDPOINT,
@@ -41,6 +41,7 @@ from .constants import (
 
     CARPARK_AVAILABILITY_SANITISE_IGNORE_KEYS,
     FAULTY_TRAFFIC_LIGHTS_SANITISE_IGNORE_KEYS,
+    FLOOD_ALERTS_SANITISE_IGNORE_KEYS,
     TRAFFIC_IMAGES_SANITISE_IGNORE_KEYS,
     TRAFFIC_SPEED_BANDS_SANITISE_IGNORE_KEYS,
 )
@@ -48,6 +49,7 @@ from .types import (
     CarParkAvailabilityDict,
     EstimatedTravelTimesDict,
     FaultyTrafficLightsDict,
+    FloodAlertsDict,
     RoadOpeningsDict,
     RoadWorksDict,
     TrafficImagesDict,
@@ -79,30 +81,6 @@ class Client(LandTransportSg):
         )
 
         return carpark_availability
-
-    @typechecked
-    def erp_rates(self) -> list[None]:
-        """Get ERP rates of all vehicle types across all timings for each \
-        zone.
-
-        This endpoint was removed from DataMall v6.1 on 30 September 2024. \
-        This method will be removed from this package's next major release or \
-        31 December 2025, whichever comes earlier.
-
-        :warns DeprecationWarning: Inform the developer that this method has \
-            been deprecated.
-
-        :return: ERP rates per vehicle type by zones. Empty list.
-        :rtype: list[None]
-        """
-        warn(
-            'ERP rates was removed from LTA DataMall v6.1 on 30 September 2024.',
-            DeprecationWarning
-        )
-
-        erp_rates: list[None] = []
-
-        return erp_rates
 
     @typechecked
     def estimated_travel_times(self) -> list[EstimatedTravelTimesDict]:
@@ -137,6 +115,23 @@ class Client(LandTransportSg):
         )
 
         return faulty_traffic_lights
+
+    @typechecked
+    def flood_alerts(self) -> list[FloodAlertsDict]:
+        """Get flood alert information across Singapore, provided by PUB.
+
+        :return: Flood alerts.
+        :rtype: list[FloodAlertsDict]
+        """
+        flood_alerts: list[FloodAlertsDict]
+
+        flood_alerts = self.send_request(
+            FLOOD_ALERTS_API_ENDPOINT,
+            cache_duration=CACHE_THREE_MINUTES,
+            sanitise_ignore_keys=FLOOD_ALERTS_SANITISE_IGNORE_KEYS,
+        )
+
+        return flood_alerts
 
     @typechecked
     def road_openings(self) -> list[RoadOpeningsDict]:

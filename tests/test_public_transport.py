@@ -1,4 +1,4 @@
-# Copyright 2020-2025 Yuhui
+# Copyright 2020-2026 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@
 """Test that the Public Transport class is working properly."""
 
 from datetime import date, timedelta
+from os import getenv
 
 import pytest
+from dotenv import load_dotenv
 from requests_cache import CachedSession
 from typeguard import check_type
 
@@ -37,7 +39,6 @@ from landtransportsg.public_transport.types import (
     TrainServiceAlertsDict,
 )
 
-from . import TEST_ACCOUNT_KEY
 from .mocks.api_response_public_transport import (
     APIResponseBusArrival,
     APIResponseBusRoutes,
@@ -64,7 +65,9 @@ VERY_OLD_DATE = date.today() - timedelta(200)
 
 @pytest.fixture
 def client():
-    return PublicTransport(TEST_ACCOUNT_KEY)
+    load_dotenv()
+    api_key = getenv('ACCOUNT_KEY')
+    return PublicTransport(api_key)
 
 def test_train_lines(client):
     train_lines = client.train_lines()
@@ -185,10 +188,6 @@ def test_bus_arrival_with_invalid_inputs(client, bus_stop_code, service_number):
 @pytest.mark.parametrize(
     ('function', 'dt'),
     [
-        ('passenger_volume_by_bus_stops', None),
-        ('passenger_volume_by_origin_destination_bus_stops', None),
-        ('passenger_volume_by_origin_destination_train_stations', None),
-        ('passenger_volume_by_train_stations', None),
         ('passenger_volume_by_bus_stops', GOOD_DATE),
         ('passenger_volume_by_origin_destination_bus_stops', GOOD_DATE),
         ('passenger_volume_by_origin_destination_train_stations', GOOD_DATE),

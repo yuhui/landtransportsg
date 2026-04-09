@@ -1,4 +1,4 @@
-# Copyright 2025 Yuhui. All rights reserved.
+# Copyright 2025-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,9 +21,12 @@ from typeguard import typechecked
 
 from ..constants import CACHE_FIVE_MINUTES
 from ..landtransportsg import LandTransportSg
+from ..types import Url
 
 from .constants import (
     EV_CHARGING_POINTS_API_ENDPOINT,
+    EV_CHARGING_POINTS_BATCH_API_ENDPOINT,
+
     EV_CHARGING_POINTS_ARGS_KEY_MAP,
 
     EV_CHARGING_POINTS_SANITISE_IGNORE_KEYS,
@@ -76,6 +79,23 @@ class Client(LandTransportSg):
         )
 
         return ev_charging_points
+
+    @typechecked
+    def ev_charging_points_batch(self) -> Url:
+        """Get all electric vehicle charging points in Singapore and their \
+            availabilities in a single file.
+
+        :return: Link for downloading the requested file.
+        :rtype: Url
+        """
+        ev_charging_points_batch_link: Url
+
+        ev_charging_points_batch_link = self.send_download_request(
+            EV_CHARGING_POINTS_BATCH_API_ENDPOINT,
+            cache_duration=CACHE_FIVE_MINUTES,
+        )
+
+        return ev_charging_points_batch_link
 
 __all__ = [
     'Client',

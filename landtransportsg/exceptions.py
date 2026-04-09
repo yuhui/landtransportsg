@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Yuhui. All rights reserved.
+# Copyright 2019-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,10 @@ class APIError(Exception):
         raised.
     :type message: str
 
+    :param data: Data response obtained by the calling method. Defaults to \
+        None.
+    :type data: Any or None
+
     :param errors: Other messages that were part of the raised error. \
         Defaults to None.
     :type errors: Any or None
@@ -33,10 +37,14 @@ class APIError(Exception):
     def __init__(
         self,
         message: str,
+        data: Any | None=None,
         errors: Any | None=None,
     ) -> None:
         """Constructor method"""
         super().__init__(message)
+        if data:
+            self.data = data
+        self.message = message
         if errors:
             self.errors = errors
 

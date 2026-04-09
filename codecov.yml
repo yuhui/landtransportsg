@@ -1,5 +1,4 @@
 ignore:
   - "docs/*"
   - "tests/*"
-  - "noxfile.py"
   - "setup.py"

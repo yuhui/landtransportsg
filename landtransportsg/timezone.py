@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui. All rights reserved.
+# Copyright 2019-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,16 +15,31 @@
 """Standardise all datetime-related timezones to SGT (Singapore Time)."""
 
 from datetime import date, datetime, time, timedelta
+from re import fullmatch, match
 from zoneinfo import ZoneInfo
 
 from typeguard import typechecked
 
 ALLOWED_DATE_FORMATS = (
+    '%Y-%m-%dT%H:%M:%S.%f%z',
     '%Y-%m-%dT%H:%M:%S%z',
+    '%Y-%m-%dT%H:%M:%S.%f',
+    '%Y-%m-%dT%H:%M:%S',
+    '%Y%m%dT%H:%M:%S.%f%z',
     '%Y%m%dT%H:%M:%S%z',
+    '%Y%m%dT%H:%M:%S.%f',
+    '%Y%m%dT%H:%M:%S',
+    '%Y-%m-%d %H:%M:%S.%f%z',
+    '%Y-%m-%d %H:%M:%S%z',
     '%Y-%m-%d %H:%M:%S.%f',
     '%Y-%m-%d %H:%M:%S',
     '%Y-%m-%d',
+    '%Y%m%d',
+    '%H:%M:%S.%f%z',
+    '%H:%M:%S%z',
+    '%H:%M:%S.%f',
+    '%H:%M%z',
+    '%H:%M',
     '%H%M',
 )
 
@@ -50,12 +65,26 @@ def datetime_from_string(val: str) -> datetime | date | time:
     """Convert a string into a datetime in SGT timezone.
 
     Strings are parsed according to the following formats, in order:
-    1. %Y-%m-%dT%H:%M:%S%z
-    2. %Y%m%dT%H:%M:%S%z
-    3. %Y-%m-%d %H:%M:%S.%f
-    4. %Y-%m-%d %H:%M:%S
-    5. %Y-%m-%d
-    6. %H%M
+    1. %Y-%m-%dT%H:%M:%S.%f%z
+    2. %Y-%m-%dT%H:%M:%S%z
+    3. %Y-%m-%dT%H:%M:%S.%f
+    4. %Y-%m-%dT%H:%M:%S
+    5. %Y%m%dT%H:%M:%S.%f%z
+    6. %Y%m%dT%H:%M:%S%z
+    7. %Y%m%dT%H:%M:%S.%f
+    8. %Y%m%dT%H:%M:%S
+    9. %Y-%m-%d %H:%M:%S.%f%z
+    10. %Y-%m-%d %H:%M:%S%z
+    11. %Y-%m-%d %H:%M:%S.%f
+    12. %Y-%m-%d %H:%M:%S
+    13. %Y-%m-%d
+    14. %Y%m%d
+    15. %H:%M:%S.%f%z
+    16. %H:%M:%S%z
+    17. %H:%M:%S.%f
+    18. %H:%M%z
+    19. %H:%M
+    20. %H%M
 
     :param val: String to convert to a datetime.
     :type val: str
@@ -74,6 +103,8 @@ def datetime_from_string(val: str) -> datetime | date | time:
         try:
             if date_format == '%H%M' and len(val) != 4:
                 raise ValueError('val is not a 4-digit time')
+            elif date_format == '%H:%M' and len(val) != 5:
+                raise ValueError('val is not a 5-digit time')
 
             dt_datetime = datetime.strptime(val, date_format)
             dt_format = date_format
@@ -87,10 +118,12 @@ def datetime_from_string(val: str) -> datetime | date | time:
     dt_date_sgt = dt_datetime_sgt.date()
     dt_time_sgt = dt_datetime_sgt.time()
 
-    if dt_format == '%H%M':
+    if match('%H:?%M', dt_format) is not None:
         dt = dt_time_sgt
+    elif fullmatch('%Y-?%m-?%d', dt_format) is not None:
+        dt = dt_date_sgt
     else:
-        dt = dt_date_sgt if dt_format == '%Y-%m-%d' else dt_datetime_sgt
+        dt = dt_datetime_sgt
 
     return dt
 

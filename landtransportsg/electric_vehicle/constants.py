@@ -1,4 +1,4 @@
-# Copyright 2025 Yuhui. All rights reserved.
+# Copyright 2025-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 from ..constants import BASE_API_ENDPOINT
 
 EV_CHARGING_POINTS_API_ENDPOINT = f'{BASE_API_ENDPOINT}/EVChargingPoints'
+EV_CHARGING_POINTS_BATCH_API_ENDPOINT = f'{BASE_API_ENDPOINT}/EVCBatch'
+
 EV_CHARGING_POINTS_ARGS_KEY_MAP = {
     'postal_code': 'PostalCode',
 }
@@ -32,6 +34,8 @@ EV_CHARGING_POINTS_SANITISE_IGNORE_KEYS = [
 
 __all__ = [
     'EV_CHARGING_POINTS_API_ENDPOINT',
+    'EV_CHARGING_POINTS_BATCH_API_ENDPOINT',
+
     'EV_CHARGING_POINTS_ARGS_KEY_MAP',
 
     'EV_CHARGING_POINTS_SANITISE_IGNORE_KEYS',

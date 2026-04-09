@@ -37,6 +37,11 @@ Types
    :member-order: bysource
    :show-inheritance:
 
+.. autoclass:: FloodAlertsDict
+   :members:
+   :member-order: bysource
+   :show-inheritance:
+
 .. autoclass:: RoadOpeningsDict
    :members:
    :member-order: bysource

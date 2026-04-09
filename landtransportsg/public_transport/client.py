@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui. All rights reserved.
+# Copyright 2019-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -103,12 +103,6 @@ class Client(LandTransportSg):
         :return: Information about bus arrival at the specified bus stop.
         :rtype: BusArrivalDict
         """
-        params = self.build_params(
-            params_expected_type=BusArrivalArgsDict,
-            original_params=kwargs,
-            key_map=BUS_ARRIVAL_ARGS_KEY_MAP,
-        )
-
         bus_stop_code = kwargs['bus_stop_code']
 
         try:
@@ -122,6 +116,12 @@ class Client(LandTransportSg):
             raise ValueError(
                 'Argument "bus_stop_code" must be 5-digits long.'
             )
+
+        params = self.build_params(
+            params_expected_type=BusArrivalArgsDict,
+            original_params=kwargs,
+            key_map=BUS_ARRIVAL_ARGS_KEY_MAP,
+        )
 
         bus_arrival: BusArrivalDict
 
@@ -219,19 +219,21 @@ class Client(LandTransportSg):
             endpoint URL.
         :type kwargs: PassengerVolumeArgsDict
 
+        :raises ValueError: dt is not within the last 3 months.
+
         :return: Download link of file containing passenger volume data.
         :rtype: Url
         """
+        if 'dt' in kwargs:
+            dt = kwargs['dt']
+            if not date_is_within_last_three_months(dt):
+                raise ValueError('Argument "dt" is not within the last 3 months.')
+
         params = self.build_params(
             params_expected_type=PassengerVolumeArgsDict,
             original_params=kwargs,
             key_map=PASSENGER_VOLUME_ARGS_KEY_MAP,
         )
-
-        if 'dt' in kwargs:
-            dt = kwargs['dt']
-            if dt is not None and not date_is_within_last_three_months(dt):
-                raise ValueError('Argument "dt" is not within the last 3 months.')
 
         passenger_volume_link: Url
 
@@ -255,19 +257,21 @@ class Client(LandTransportSg):
             endpoint URL.
         :type kwargs: PassengerVolumeArgsDict
 
+        :raises ValueError: dt is not within the last 3 months.
+
         :return: Download link of file containing passenger volume data.
         :rtype: Url
         """
+        if 'dt' in kwargs:
+            dt = kwargs['dt']
+            if not date_is_within_last_three_months(dt):
+                raise ValueError('Argument "dt" is not within the last 3 months.')
+
         params = self.build_params(
             params_expected_type=PassengerVolumeArgsDict,
             original_params=kwargs,
             key_map=PASSENGER_VOLUME_ARGS_KEY_MAP,
         )
-
-        if 'dt' in kwargs:
-            dt = kwargs['dt']
-            if dt is not None and not date_is_within_last_three_months(dt):
-                raise ValueError('Argument "dt" is not within the last 3 months.')
 
         passenger_volume_link: Url
 
@@ -291,19 +295,21 @@ class Client(LandTransportSg):
             endpoint URL.
         :type kwargs: PassengerVolumeArgsDict
 
+        :raises ValueError: dt is not within the last 3 months.
+
         :return: Download link of file containing passenger volume data.
         :rtype: Url
         """
+        if 'dt' in kwargs:
+            dt = kwargs['dt']
+            if not date_is_within_last_three_months(dt):
+                raise ValueError('Argument "dt" is not within the last 3 months.')
+
         params = self.build_params(
             params_expected_type=PassengerVolumeArgsDict,
             original_params=kwargs,
             key_map=PASSENGER_VOLUME_ARGS_KEY_MAP,
         )
-
-        if 'dt' in kwargs:
-            dt = kwargs['dt']
-            if dt is not None and not date_is_within_last_three_months(dt):
-                raise ValueError('Argument "dt" is not within the last 3 months.')
 
         passenger_volume_link: Url
 
@@ -327,19 +333,21 @@ class Client(LandTransportSg):
             endpoint URL.
         :type kwargs: PassengerVolumeArgsDict
 
+        :raises ValueError: dt is not within the last 3 months.
+
         :return: Download link of file containing passenger volume data.
         :rtype: Url
         """
+        if 'dt' in kwargs:
+            dt = kwargs['dt']
+            if not date_is_within_last_three_months(dt):
+                raise ValueError('Argument "dt" is not within the last 3 months.')
+
         params = self.build_params(
             params_expected_type=PassengerVolumeArgsDict,
             original_params=kwargs,
             key_map=PASSENGER_VOLUME_ARGS_KEY_MAP,
         )
-
-        if 'dt' in kwargs:
-            dt = kwargs['dt']
-            if dt is not None and not date_is_within_last_three_months(dt):
-                raise ValueError('Argument "dt" is not within the last 3 months.')
 
         passenger_volume_link: Url
 

@@ -1,4 +1,4 @@
-# Copyright 2020-2025 Yuhui
+# Copyright 2020-2026 Yuhui
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 
 """Test that the Geospatial class is working properly."""
 
+from os import getenv
+
 import pytest
+from dotenv import load_dotenv
 
 from landtransportsg import Geospatial
-
-from . import TEST_ACCOUNT_KEY
+from landtransportsg.types import Url
 
 GOOD_LAYER_ID = 'ArrowMarking'
 
@@ -28,7 +30,9 @@ BAD_LAYER_ID = 'ArrowMarkings'
 
 @pytest.fixture
 def client():
-    return Geospatial(TEST_ACCOUNT_KEY)
+    load_dotenv()
+    api_key = getenv('ACCOUNT_KEY')
+    return Geospatial(api_key)
 
 def test_geospatial_layer_ids(client):
     geospatial_layer_ids = client.geospatial_layer_ids()
@@ -44,7 +48,7 @@ def test_geospatial_whole_island(
         geospatial_layer_id=GOOD_LAYER_ID,
     )
 
-    assert isinstance(geospatial_whole_island, str)
+    assert isinstance(geospatial_whole_island, Url)
 
 @pytest.mark.parametrize(
     'geospatial_layer_id',

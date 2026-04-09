@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui. All rights reserved.
+# Copyright 2019-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -53,6 +53,11 @@ class Client(LandTransportSg):
             location.
         :rtype: list[BicycleParkingDict]
         """
+        if 'distance' in kwargs:
+            distance = kwargs['distance']
+            if distance < 0:
+                raise ValueError('Argument "distance" cannot be less than zero.')
+
         bicycle_parking_locations: list[BicycleParkingDict]
 
         params = self.build_params(
@@ -61,11 +66,6 @@ class Client(LandTransportSg):
             default_params=BICYCLE_PARKING_DEFAULT_ARGS,
             key_map=BICYCLE_PARKING_ARGS_KEY_MAP,
         )
-
-        distance = params['Dist']
-
-        if isinstance(distance, float) and distance < 0:
-            raise ValueError('Argument "distance" cannot be less than zero.')
 
         bicycle_parking_locations = self.send_request(
             BICYCLE_PARKING_API_ENDPOINT,

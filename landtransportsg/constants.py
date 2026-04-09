@@ -1,4 +1,4 @@
-# Copyright 2019-2025 Yuhui. All rights reserved.
+# Copyright 2019-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,10 +21,11 @@ NAME = 'landtransportsg'
 BASE_API_DOMAIN = 'https://datamall2.mytransport.sg'
 BASE_API_ENDPOINT = f'{BASE_API_DOMAIN}/ltaodataservice'
 
-CACHE_NAME = 'landtransportsg_cache'
+CACHE_NAME = f'{NAME}_cache'
 
 CACHE_ONE_MINUTE = 60
 CACHE_TWO_MINUTES = CACHE_ONE_MINUTE * 2
+CACHE_THREE_MINUTES = CACHE_ONE_MINUTE * 3
 CACHE_FIVE_MINUTES = CACHE_ONE_MINUTE * 5
 CACHE_TEN_MINUTES = CACHE_ONE_MINUTE * 10
 CACHE_THIRTY_MINUTES = CACHE_ONE_MINUTE * 30
@@ -43,6 +44,7 @@ __all__ = [
 
     'CACHE_ONE_MINUTE',
     'CACHE_TWO_MINUTES',
+    'CACHE_THREE_MINUTES',
     'CACHE_FIVE_MINUTES',
     'CACHE_TEN_MINUTES',
     'CACHE_THIRTY_MINUTES',

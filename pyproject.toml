@@ -1,8 +1,7 @@
 [build-system]
 requires = [
-    "requests-cache",
-    "setuptools",
     "landtransportsg",
+    "setuptools",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -10,11 +9,10 @@ build-backend = "setuptools.build_meta"
 name = "landtransportsg"
 dynamic = [
     "dependencies",
-    "version"
+    "version",
 ]
-authors = [
-    { name = "Yuhui", email = "yuhuibc@gmail.com" },
-]
+authors = [{name = "Yuhui", email = "yuhuibc@gmail.com"}]
+maintainers = [{name = "Yuhui", email = "yuhuibc@gmail.com"}]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
@@ -37,20 +35,21 @@ keywords = [
     "singapore",
     "wrapper",
 ]
-license-files = [ "LICENSE.txt" ]
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE.txt"]
 readme = "README.rst"
 requires-python = ">= 3.13"
 
-    [project.urls]
-    Homepage = "https://github.com/yuhui/landtransportsg"
-    Documentation = "https://landtransportsg.readthedocs.io/en/latest/"
-    Repository = "https://github.com/yuhui/landtransportsg.git"
-    "Bug Tracker" = "https://github.com/yuhui/landtransportsg/issues"
-    Changelog = "https://github.com/yuhui/landtransportsg/blob/master/CHANGELOG.rst"
+[project.urls]
+homepage = "https://github.com/yuhui/landtransportsg"
+documentation = "https://landtransportsg.readthedocs.io/en/latest/"
+repository = "https://github.com/yuhui/landtransportsg.git"
+issues = "https://github.com/yuhui/landtransportsg/issues"
+changelog = "https://github.com/yuhui/landtransportsg/blob/master/CHANGELOG.rst"
 
 [tool.setuptools.dynamic]
-dependencies = { file = [ "requirements.txt" ] }
-version = { attr = "landtransportsg.__version__" }
+dependencies = {file = ["requirements.txt"]}
+version = {attr = "landtransportsg.__version__"}
 
 [tool.setuptools.package-data]
-landtransportsg = [ "py.typed" ]
+landtransportsg = ["py.typed"]
