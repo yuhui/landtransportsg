@@ -1,4 +1,4 @@
-# Copyright 2020-2025 Yuhui. All rights reserved.
+# Copyright 2020-2026 Yuhui. All rights reserved.
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class LandTransportSg:
         for more information and allowed values. Defaults to "sqlite".
     :type cache_backend: str | BaseCache
 
-    :param account_key: The LTA DataMall-assigned API key.
+    :param account_key: The LTA DataMall-assigned Account key.
     :type account_key: str
     """
 
